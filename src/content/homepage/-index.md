@@ -21,6 +21,6 @@ banner:
     link: https://github.com/dashingmza/powerai-astro
   button_primary:
     enable: true
-    label: Edit with Sitepins
+    label: Edit with cSofts
     link: https://app.csofts.tech/new/clone?name=PoweraiAstro&repository=https://github.com/DashingMZA/powerai-astro&aff=poweraiastro
 ---
