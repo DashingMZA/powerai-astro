@@ -32,7 +32,7 @@ type PageData = {
 };
 
 export const getSinglePage = async <C extends CollectionKey>(
-  collectionName: C
+  collectionName: C,
 ): Promise<CollectionEntry<C>[]> => {
   // NOTE: the predicate is inlined here on purpose. A module-level helper
   // const in this file's frontmatter is dropped by the Astro compiler
@@ -51,16 +51,16 @@ export const getSinglePage = async <C extends CollectionKey>(
 
 export const getListPage = async <C extends CollectionKey>(
   collectionName: C,
-  documentId: "-index" | string
+  documentId: "-index" | string,
 ): Promise<CollectionEntry<C>> => {
   const data = (await getEntry(
     collectionName,
-    documentId
+    documentId,
   )) as CollectionEntry<C> | null;
 
   if (!data) {
     throw new Error(
-      `No page found for the collection: ${collectionName} with filename: ${documentId}`
+      `No page found for the collection: ${collectionName} with filename: ${documentId}`,
     );
   }
 

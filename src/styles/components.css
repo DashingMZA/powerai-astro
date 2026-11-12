@@ -171,7 +171,7 @@
   @apply prose-strong:text-text;
   @apply prose-hr:border-border;
   @apply prose-pre:rounded-lg prose-pre:bg-dark;
-  @apply prose-li:text-text prose-ul:marker:text-primary! ;
+  @apply prose-li:text-text prose-ul:marker:text-primary!;
   @apply prose-blockquote:rounded-lg prose-blockquote:border prose-blockquote:border-l-10 prose-blockquote:border-primary prose-blockquote:bg-card prose-blockquote:px-8 prose-blockquote:py-10 prose-blockquote:text-2xl prose-blockquote:not-italic prose-blockquote:text-text;
   @apply prose-table:relative prose-table:overflow-hidden prose-table:rounded-lg prose-table:before:absolute prose-table:before:left-0 prose-table:before:top-0 prose-table:before:h-full prose-table:before:w-full prose-table:before:rounded-[inherit] prose-table:before:border prose-table:before:border-border/20 prose-table:before:content-[""];
   @apply prose-thead:border-border/20 prose-thead:bg-white/8;

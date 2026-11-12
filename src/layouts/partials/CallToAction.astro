@@ -13,11 +13,18 @@ const uid = `cta-${Math.random().toString(36).slice(2, 8)}`;
     <div class="main-container">
       <div class="container">
         <div id={uid} style="opacity:0" class="container-padding-y text-center">
-          <h2 class="mb-5 hero-text sm:w-4/6 mx-auto">{data.frontmatter.title}</h2>
-          <p class="text-lg mb-10 sm:w-3/6 mx-auto">{data.frontmatter.description}</p>
+          <h2 class="mb-5 hero-text sm:w-4/6 mx-auto">
+            {data.frontmatter.title}
+          </h2>
+          <p class="text-lg mb-10 sm:w-3/6 mx-auto">
+            {data.frontmatter.description}
+          </p>
           <div class="mt-10 flex justify-center gap-4">
             {data.frontmatter.button?.enable && (
-              <AnimatedButton href={data.frontmatter.button.link} classNames="btn btn-primary">
+              <AnimatedButton
+                href={data.frontmatter.button.link}
+                classNames="btn btn-primary"
+              >
                 {data.frontmatter.button.label}
               </AnimatedButton>
             )}
@@ -36,9 +43,20 @@ const uid = `cta-${Math.random().toString(36).slice(2, 8)}`;
   function initCTAs() {
     document.querySelectorAll<HTMLElement>('[id^="cta-"]').forEach((el) => {
       el.style.opacity = "0";
-      inView(el, () => {
-        animate(el, { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] }, { duration: 0.5, ease: "easeInOut" });
-      }, { margin: "0px", amount: 0.05 });
+      inView(
+        el,
+        () => {
+          animate(
+            el,
+            {
+              opacity: [0, 1],
+              transform: ["translateY(20px)", "translateY(0)"],
+            },
+            { duration: 0.5, ease: "easeInOut" },
+          );
+        },
+        { margin: "0px", amount: 0.05 },
+      );
     });
   }
   document.addEventListener("astro:page-load", initCTAs);

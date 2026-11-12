@@ -54,10 +54,14 @@ const {
 
 const pageTitle = plainify(
   meta_title ? meta_title : title ? title : config.site.title,
-).replace(/\s+/g, " ").trim();
+)
+  .replace(/\s+/g, " ")
+  .trim();
 const pageDescription = plainify(
   description ? description : config.metadata.meta_description,
-).replace(/\s+/g, " ").trim();
+)
+  .replace(/\s+/g, " ")
+  .trim();
 // Canonical is ALWAYS emitted: frontmatter override wins, else the
 // current pathname resolved against base_url (no string surgery on it).
 const canonicalHref = canonicalUrl(Astro.url.pathname, canonical);
@@ -80,15 +84,18 @@ const ogImage = toAbsoluteUrl(
 <html lang="en">
   <head>
     <!-- Google Tag Manager -->
-    {gtmEnabled && (
-      <script is:inline define:vars={{ gtmId }}>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer', gtmId);
-      </script>
-    )}
+    {gtmEnabled && <script is:inline define:vars={{ gtmId }}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", gtmId);
+    </script>}
     <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
     <!-- theme meta -->
@@ -103,12 +110,10 @@ const ogImage = toAbsoluteUrl(
     <meta charset="utf-8" />
 
     <!-- google font css -->
-    {
-      fontEntries.map(([key]) => {
-        const cssVar = `--font-${key}` as any;
-        return <Font cssVariable={cssVar} preload />;
-      })
-    }
+    {fontEntries.map(([key]) => {
+      const cssVar = `--font-${key}` as any;
+      return <Font cssVariable={cssVar} preload />;
+    })}
 
     <!-- responsive meta -->
     <meta
@@ -161,10 +166,7 @@ const ogImage = toAbsoluteUrl(
 
     <!-- structured data: exactly one JSON-LD block per page -->
     {jsonLd && (
-      <script
-        type="application/ld+json"
-        set:html={serializeJsonLd(jsonLd)}
-      />
+      <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />
     )}
     <ClientRouter />
   </head>
@@ -180,12 +182,14 @@ const ogImage = toAbsoluteUrl(
         />
       </noscript>
     )}
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">
+      Skip to main content
+    </a>
     <TwSizeIndicator />
-    <Header  />
+    <Header />
     <main id="main-content" transition:animate="fade">
       <slot />
     </main>
-    <Footer  />
+    <Footer />
   </body>
 </html>

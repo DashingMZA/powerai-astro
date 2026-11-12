@@ -25,11 +25,10 @@ const page_header = {
   subtitle: description,
 };
 const callToAction = await getListPage("sections/call-to-action.md");
-const featuredPost = sortedPosts.filter((post: any) => post.frontmatter.featured)[0];
-const breadcrumbs = [
-  { label: "Home", href: "/" },
-  { label: "Blog" },
-];
+const featuredPost = sortedPosts.filter(
+  (post: any) => post.frontmatter.featured,
+)[0];
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Blog" }];
 ---
 
 <Base
@@ -52,7 +51,11 @@ const breadcrumbs = [
             </div>
           ))}
         </div>
-        <Pagination section={blog_folder} currentPage={1} totalPages={totalPages} />
+        <Pagination
+          section={blog_folder}
+          currentPage={1}
+          totalPages={totalPages}
+        />
       </div>
     </MainContainer>
   </section>

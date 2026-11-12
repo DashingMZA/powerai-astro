@@ -3,11 +3,7 @@ import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
-import {
-  articleJsonLd,
-  breadcrumbJsonLd,
-  canonicalUrl,
-} from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export async function getStaticPaths() {
   const posts = await getSinglePage("blog");

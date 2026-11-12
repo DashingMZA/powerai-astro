@@ -33,16 +33,28 @@ const sortedCaseStudies = sortByDate(caseStudies);
 const totalPages = Math.ceil(caseStudies.length / pagination);
 const indexOfLastStudy = currentPage * pagination;
 const indexOfFirstStudy = indexOfLastStudy - pagination;
-const currentCaseStudies = sortedCaseStudies.slice(indexOfFirstStudy, indexOfLastStudy);
+const currentCaseStudies = sortedCaseStudies.slice(
+  indexOfFirstStudy,
+  indexOfLastStudy,
+);
 
 const page_header = { title, badge: "Case Studies", description };
 const callToAction = await getListPage("sections/call-to-action.md");
-const featuredCaseStudy = sortedCaseStudies.filter((study: any) => study.frontmatter.featured)[0];
+const featuredCaseStudy = sortedCaseStudies.filter(
+  (study: any) => study.frontmatter.featured,
+)[0];
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
   <PageHeader page_header={page_header} client:load>
-    {featuredCaseStudy && <FeaturedCaseStudy data={featuredCaseStudy} client:visible />}
+    {featuredCaseStudy && (
+      <FeaturedCaseStudy data={featuredCaseStudy} client:visible />
+    )}
   </PageHeader>
   <section>
     <MainContainer>
@@ -54,9 +66,13 @@ const featuredCaseStudy = sortedCaseStudies.filter((study: any) => study.frontma
             </div>
           ))}
         </div>
-        <Pagination section={case_studies_folder} currentPage={currentPage} totalPages={totalPages} />
+        <Pagination
+          section={case_studies_folder}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     </MainContainer>
   </section>
-  <CallToAction data={callToAction}/>
+  <CallToAction data={callToAction} />
 </Base>

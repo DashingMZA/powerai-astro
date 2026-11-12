@@ -10,38 +10,35 @@ const { data } = Astro.props;
 ---
 
 <section class="overflow-hidden relative">
-  <div class="h-full w-px bg-light/8 absolute top-0 left-1/2 -translate-x-1/2">
-  </div>
+  <div class="h-full w-px bg-light/8 absolute top-0 left-1/2 -translate-x-1/2"></div>
   <div class="main-container">
     <div class="container px-0">
       <div class="container-padding-y pb-0 px-0">
         <div class="flex justify-center items-center flex-col text-center px-4">
           <!-- BADGE -->
-          {
-            data.badge?.enable && (
-              <div
-                id="hero-badge"
-                class="bg-gradient-secondary p-px rounded-full mb-2"
-              >
-                <div class="px-1.5 py-1.75 bg-gradient-black-grid rounded-full flex items-center gap-2.5">
-                  <ul class="flex">
-                    {data.badge.images.map((src: string) => (
-                      <li class="border border-secondary rounded-full -mr-2 last:mr-0 size-6">
-                        <ImageMod
-                          src={src}
-                          alt="avatar"
-                          width={24}
-                          height={24}
-                          class="rounded-full object-cover size-full"
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                  <p class="gradient-text-primary pr-3">{data.badge.label}</p>
-                </div>
+          {data.badge?.enable && (
+            <div
+              id="hero-badge"
+              class="bg-gradient-secondary p-px rounded-full mb-2"
+            >
+              <div class="px-1.5 py-1.75 bg-gradient-black-grid rounded-full flex items-center gap-2.5">
+                <ul class="flex">
+                  {data.badge.images.map((src: string) => (
+                    <li class="border border-secondary rounded-full -mr-2 last:mr-0 size-6">
+                      <ImageMod
+                        src={src}
+                        alt="avatar"
+                        width={24}
+                        height={24}
+                        class="rounded-full object-cover size-full"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <p class="gradient-text-primary pr-3">{data.badge.label}</p>
               </div>
-            )
-          }
+            </div>
+          )}
           <!-- TITLE -->
           <h1
             id="hero-title"
@@ -57,26 +54,22 @@ const { data } = Astro.props;
             id="hero-buttons"
             class="mt-10 flex items-center gap-5 flex-wrap justify-center"
           >
-            {
-              data.button_dark?.enable && (
-                <AnimatedButton
-                  classNames="btn btn-dark"
-                  href={data.button_dark?.link || "/"}
-                >
-                  {data.button_dark?.label}
-                </AnimatedButton>
-              )
-            }
-            {
-              data.button_primary?.enable && (
-                <AnimatedButton
-                  classNames="btn btn-primary"
-                  href={data.button_primary?.link || "/"}
-                >
-                  {data.button_primary?.label}
-                </AnimatedButton>
-              )
-            }
+            {data.button_dark?.enable && (
+              <AnimatedButton
+                classNames="btn btn-dark"
+                href={data.button_dark?.link || "/"}
+              >
+                {data.button_dark?.label}
+              </AnimatedButton>
+            )}
+            {data.button_primary?.enable && (
+              <AnimatedButton
+                classNames="btn btn-primary"
+                href={data.button_primary?.link || "/"}
+              >
+                {data.button_primary?.label}
+              </AnimatedButton>
+            )}
           </div>
         </div>
 

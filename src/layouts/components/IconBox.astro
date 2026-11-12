@@ -20,9 +20,17 @@ const uid = `iconbox-${Math.random().toString(36).slice(2, 8)}`;
   function initIconBoxes() {
     document.querySelectorAll<HTMLElement>('[id^="iconbox-"]').forEach((el) => {
       el.style.opacity = "0";
-      inView(el, () => {
-        animate(el, { opacity: [0, 1], transform: ["scale(0.8)", "scale(1)"] }, { duration: 0.5, ease: "easeInOut" });
-      }, { margin: "0px", amount: 0.05 });
+      inView(
+        el,
+        () => {
+          animate(
+            el,
+            { opacity: [0, 1], transform: ["scale(0.8)", "scale(1)"] },
+            { duration: 0.5, ease: "easeInOut" },
+          );
+        },
+        { margin: "0px", amount: 0.05 },
+      );
     });
   }
   document.addEventListener("astro:page-load", initIconBoxes);

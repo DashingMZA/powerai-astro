@@ -148,55 +148,24 @@ export default function PricingTable({ data }: PricingTableProps) {
 
   return (
     <section>
-      <div className="main-container"><div className="container">
-        <div className="container-padding-y container-padding-x">
-          <CardShape>
-            <div className="flex justify-center">
-              {" "}
-              {/* Background top glow */}
-              <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute left-1/2 -translate-x-1/2 -top-40 w-96 h-96 opacity-20">
-                  <svg viewBox="0 0 384 384" fill="none" className="size-full">
-                    <circle cx="192" cy="192" r="192" fill="url(#bg-glow)" />
-                    <defs>
-                      <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
-                        <stop stopColor={secondaryColor} />
-                        <stop
-                          offset="1"
-                          stopColor={primaryColor}
-                          stopOpacity="0"
-                        />
-                      </radialGradient>
-                    </defs>
-                  </svg>
-                </div>
-              </div>
-              <div className="relative w-full ">
-                {/* Title */}
-                <h2
-                  className="text-center text-text my-10 capitalize font-bold"
-                  style={{
-                    fontSize: "clamp(28px, 4vw, 48px)",
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.25,
-                  }}
-                >
-                  {title}
-                </h2>
-
-                {/* Card */}
-                <div className="relative overflow-hidden rounded-3xl border border-border/6 p-5 md:p-8 bg-card/70">
-                  {/* Corner glows */}
-                  <div className="absolute -bottom-32 -left-16 w-72 h-72 pointer-events-none opacity-40">
+      <div className="main-container">
+        <div className="container">
+          <div className="container-padding-y container-padding-x">
+            <CardShape>
+              <div className="flex justify-center">
+                {" "}
+                {/* Background top glow */}
+                <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-40 w-96 h-96 opacity-20">
                     <svg
-                      viewBox="0 0 288 288"
+                      viewBox="0 0 384 384"
                       fill="none"
                       className="size-full"
                     >
-                      <circle cx="144" cy="144" r="144" fill="url(#gl-bl)" />
+                      <circle cx="192" cy="192" r="192" fill="url(#bg-glow)" />
                       <defs>
-                        <radialGradient id="gl-bl">
-                          <stop stopColor={primaryColor} />
+                        <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
+                          <stop stopColor={secondaryColor} />
                           <stop
                             offset="1"
                             stopColor={primaryColor}
@@ -206,111 +175,148 @@ export default function PricingTable({ data }: PricingTableProps) {
                       </defs>
                     </svg>
                   </div>
-                  <div className="absolute -top-32 -right-16 w-72 h-72 pointer-events-none opacity-40">
-                    <svg
-                      viewBox="0 0 288 288"
-                      fill="none"
-                      className="size-full"
-                    >
-                      <circle cx="144" cy="144" r="144" fill="url(#gl-tr)" />
-                      <defs>
-                        <radialGradient id="gl-tr">
-                          <stop stopColor={secondaryColor} />
-                          <stop
-                            offset="1"
-                            stopColor={secondaryColor}
-                            stopOpacity="0"
-                          />
-                        </radialGradient>
-                      </defs>
-                    </svg>
-                  </div>
+                </div>
+                <div className="relative w-full ">
+                  {/* Title */}
+                  <h2
+                    className="text-center text-text my-10 capitalize font-bold"
+                    style={{
+                      fontSize: "clamp(28px, 4vw, 48px)",
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {title}
+                  </h2>
 
-                  {/* Pricing table */}
-                  <div className="overflow-x-auto">
-                    <div className="flex min-w-[540px] items-stretch py-5">
-                      {/* ── Feature labels column ── */}
-                      <div className="flex flex-col flex-[2]">
-                        {/* header spacer */}
-                        <div className={`${HEADER_H} flex items-center px-3`}>
-                          <span className="text-text font-bold text-xl">
-                            Features
-                          </span>
+                  {/* Card */}
+                  <div className="relative overflow-hidden rounded-3xl border border-border/6 p-5 md:p-8 bg-card/70">
+                    {/* Corner glows */}
+                    <div className="absolute -bottom-32 -left-16 w-72 h-72 pointer-events-none opacity-40">
+                      <svg
+                        viewBox="0 0 288 288"
+                        fill="none"
+                        className="size-full"
+                      >
+                        <circle cx="144" cy="144" r="144" fill="url(#gl-bl)" />
+                        <defs>
+                          <radialGradient id="gl-bl">
+                            <stop stopColor={primaryColor} />
+                            <stop
+                              offset="1"
+                              stopColor={primaryColor}
+                              stopOpacity="0"
+                            />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className="absolute -top-32 -right-16 w-72 h-72 pointer-events-none opacity-40">
+                      <svg
+                        viewBox="0 0 288 288"
+                        fill="none"
+                        className="size-full"
+                      >
+                        <circle cx="144" cy="144" r="144" fill="url(#gl-tr)" />
+                        <defs>
+                          <radialGradient id="gl-tr">
+                            <stop stopColor={secondaryColor} />
+                            <stop
+                              offset="1"
+                              stopColor={secondaryColor}
+                              stopOpacity="0"
+                            />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                    </div>
+
+                    {/* Pricing table */}
+                    <div className="overflow-x-auto">
+                      <div className="flex min-w-[540px] items-stretch py-5">
+                        {/* ── Feature labels column ── */}
+                        <div className="flex flex-col flex-[2]">
+                          {/* header spacer */}
+                          <div className={`${HEADER_H} flex items-center px-3`}>
+                            <span className="text-text font-bold text-xl">
+                              Features
+                            </span>
+                          </div>
+                          {features.map((f, i) => (
+                            <div
+                              key={f.key + i}
+                              className={`${ROW_H} flex items-center px-3 text-text text-sm md:text-base rounded-l-lg ${
+                                i % 2 === 0 ? "bg-white/[0.06]" : ""
+                              }`}
+                            >
+                              {f.name}
+                            </div>
+                          ))}
                         </div>
-                        {features.map((f, i) => (
+
+                        {/* ── Plan columns ── */}
+                        {plans.map((plan) => (
                           <div
-                            key={f.key + i}
-                            className={`${ROW_H} flex items-center px-3 text-text text-sm md:text-base rounded-l-lg ${
-                              i % 2 === 0 ? "bg-white/[0.06]" : ""
+                            key={plan.name}
+                            className={`flex flex-col ${
+                              plan.highlighted
+                                ? "flex-[1.2] -my-5 rounded-2xl overflow-hidden shadow-2xl shadow-purple-900/60 z-10"
+                                : "flex-1"
                             }`}
+                            style={
+                              plan.highlighted
+                                ? {
+                                    background: `linear-gradient(180deg, ${secondaryColor} 0%, ${primaryColor} 100%)`,
+                                  }
+                                : {}
+                            }
                           >
-                            {f.name}
+                            {/* Plan name header */}
+                            <div
+                              className={`${plan.highlighted ? "h-[68px]" : HEADER_H} flex items-center justify-center px-3`}
+                            >
+                              <span className="text-text font-bold text-xl">
+                                {plan.name}
+                              </span>
+                            </div>
+
+                            {/* Feature value rows */}
+                            {features.map((f, i) => {
+                              const planFeature = plan.features.find(
+                                (pf) => pf.key === f.key,
+                              );
+                              const value = planFeature?.value || "";
+                              const isEven = i % 2 === 0;
+                              const isLast = i === features.length - 1;
+                              return (
+                                <div
+                                  key={f.key + i}
+                                  className={`${plan.highlighted ? "h-[56px]" : ROW_H} flex items-center justify-center px-3 text-sm md:text-base ${
+                                    !plan.highlighted && isEven
+                                      ? "bg-white/[0.06]"
+                                      : ""
+                                  } ${!plan.highlighted && isLast ? "rounded-r-lg" : ""}`}
+                                >
+                                  {renderCellContent(
+                                    value,
+                                    plan.highlighted ?? false,
+                                    primaryColor,
+                                    secondaryColor,
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         ))}
                       </div>
-
-                      {/* ── Plan columns ── */}
-                      {plans.map((plan) => (
-                        <div
-                          key={plan.name}
-                          className={`flex flex-col ${
-                            plan.highlighted
-                              ? "flex-[1.2] -my-5 rounded-2xl overflow-hidden shadow-2xl shadow-purple-900/60 z-10"
-                              : "flex-1"
-                          }`}
-                          style={
-                            plan.highlighted
-                              ? {
-                                  background: `linear-gradient(180deg, ${secondaryColor} 0%, ${primaryColor} 100%)`,
-                                }
-                              : {}
-                          }
-                        >
-                          {/* Plan name header */}
-                          <div
-                            className={`${plan.highlighted ? "h-[68px]" : HEADER_H} flex items-center justify-center px-3`}
-                          >
-                            <span className="text-text font-bold text-xl">
-                              {plan.name}
-                            </span>
-                          </div>
-
-                          {/* Feature value rows */}
-                          {features.map((f, i) => {
-                            const planFeature = plan.features.find(
-                              (pf) => pf.key === f.key,
-                            );
-                            const value = planFeature?.value || "";
-                            const isEven = i % 2 === 0;
-                            const isLast = i === features.length - 1;
-                            return (
-                              <div
-                                key={f.key + i}
-                                className={`${plan.highlighted ? "h-[56px]" : ROW_H} flex items-center justify-center px-3 text-sm md:text-base ${
-                                  !plan.highlighted && isEven
-                                    ? "bg-white/[0.06]"
-                                    : ""
-                                } ${!plan.highlighted && isLast ? "rounded-r-lg" : ""}`}
-                              >
-                                {renderCellContent(
-                                  value,
-                                  plan.highlighted ?? false,
-                                  primaryColor,
-                                  secondaryColor,
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </CardShape>
+            </CardShape>
+          </div>
         </div>
-      </div></div>
+      </div>
     </section>
   );
 }

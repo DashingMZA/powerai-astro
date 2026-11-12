@@ -13,7 +13,8 @@ import { getListPage, getSinglePage } from "@/lib/contentParser";
 const { career_folder } = config.settings;
 
 const data = await getListPage("careers/-index.md");
-const { title, description, meta_title, image, page_header, gallery } = data.frontmatter;
+const { title, description, meta_title, image, page_header, gallery } =
+  data.frontmatter;
 const faq = await getListPage("sections/faq.md");
 const our_value = await getListPage("sections/our-value.md");
 const callToAction = await getListPage("sections/call-to-action.md");
@@ -21,7 +22,12 @@ const careers = await getSinglePage(career_folder);
 const openPositions = data.frontmatter.open_positions;
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
   <PageHeader page_header={page_header}>
     <div class="border border-border/6 bg-card/60 rounded-4xl p-2.5">
       <CardShape>

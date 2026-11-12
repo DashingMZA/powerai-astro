@@ -8,12 +8,18 @@ import theme from "@/config/theme.json";
 import { getListPage } from "@/lib/contentParser";
 
 const data = await getListPage("changelog/-index.md");
-const { title, description, meta_title, image, page_header, changelog_list } = data.frontmatter;
+const { title, description, meta_title, image, page_header, changelog_list } =
+  data.frontmatter;
 const callToAction = await getListPage("sections/call-to-action.md");
 const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
   <PageHeader page_header={page_header} />
 
   {changelog_list && changelog_list.length > 0 && (
@@ -36,11 +42,15 @@ const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
                           <span class="text-primary text-sm">Updates</span>
                         </div>
                         <div class="flex items-center gap-2">
-                          <span class="text-text text-sm font-medium">{item.author}</span>
+                          <span class="text-text text-sm font-medium">
+                            {item.author}
+                          </span>
                         </div>
                         <div class="flex items-center gap-2">
                           <div class="w-1 h-1 rounded-full bg-text"></div>
-                          <span class="text-text text-sm font-medium">{item.time}</span>
+                          <span class="text-text text-sm font-medium">
+                            {item.time}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -49,14 +59,21 @@ const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
                   <div class="flex flex-col gap-6">
                     {item.categories.map((category: any) => (
                       <div class="flex flex-col gap-4">
-                        <h3 class="text-lg font-bold text-text">{category.name}</h3>
+                        <h3 class="text-lg font-bold text-text">
+                          {category.name}
+                        </h3>
                         <div class="flex flex-col gap-4">
                           {category.items.map((listItem: any) => (
                             <div class="flex items-start gap-3">
                               <div class="mt-2.5 shrink-0">
-                                <div class="w-2 h-2 rounded-full" style={`background-color: ${primaryColor}`}></div>
+                                <div
+                                  class="w-2 h-2 rounded-full"
+                                  style={`background-color: ${primaryColor}`}
+                                ></div>
                               </div>
-                              <p class="text-base text-gray leading-relaxed">{listItem.text}</p>
+                              <p class="text-base text-gray leading-relaxed">
+                                {listItem.text}
+                              </p>
                             </div>
                           ))}
                         </div>

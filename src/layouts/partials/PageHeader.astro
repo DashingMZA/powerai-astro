@@ -24,16 +24,24 @@ const uid = `ph-${Math.random().toString(36).slice(2, 8)}`;
         <div class="text-center">
           {badge && <Badge>{badge}</Badge>}
           <h1 set:html={markdownify(title).__html} class="hero-text" />
-          {subtitle && <p class="mt-4 text-lg sm:w-2/4 mx-auto text-gray">{subtitle}</p>}
+          {subtitle && (
+            <p class="mt-4 text-lg sm:w-2/4 mx-auto text-gray">{subtitle}</p>
+          )}
           {(button_dark || button_primary) && (
             <div class="mt-10 flex items-center gap-5 flex-wrap justify-center">
               {button_dark?.enable && (
-                <AnimatedButton classNames="btn bg-dark/30 border border-border/6" href={button_dark?.link || "/"}>
+                <AnimatedButton
+                  classNames="btn bg-dark/30 border border-border/6"
+                  href={button_dark?.link || "/"}
+                >
                   {button_dark?.label}
                 </AnimatedButton>
               )}
               {button_primary?.enable && (
-                <AnimatedButton classNames="btn btn-primary" href={button_primary?.link || "/"}>
+                <AnimatedButton
+                  classNames="btn btn-primary"
+                  href={button_primary?.link || "/"}
+                >
                   {button_primary?.label}
                 </AnimatedButton>
               )}
@@ -56,9 +64,20 @@ const uid = `ph-${Math.random().toString(36).slice(2, 8)}`;
   function initPageHeaders() {
     document.querySelectorAll<HTMLElement>('[id^="ph-"]').forEach((el) => {
       el.style.opacity = "0";
-      inView(el, () => {
-        animate(el, { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] }, { duration: 0.5, ease: "easeInOut" });
-      }, { margin: "0px", amount: 0.05 });
+      inView(
+        el,
+        () => {
+          animate(
+            el,
+            {
+              opacity: [0, 1],
+              transform: ["translateY(20px)", "translateY(0)"],
+            },
+            { duration: 0.5, ease: "easeInOut" },
+          );
+        },
+        { margin: "0px", amount: 0.05 },
+      );
     });
   }
   document.addEventListener("astro:page-load", initPageHeaders);

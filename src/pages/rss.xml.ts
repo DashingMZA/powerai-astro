@@ -22,7 +22,8 @@ export async function GET(context: any) {
   );
   const sorted = posts.sort(
     (a, b) =>
-      new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime(),
+      new Date(b.data.date ?? 0).getTime() -
+      new Date(a.data.date ?? 0).getTime(),
   );
   return rss({
     title: config.site.title,

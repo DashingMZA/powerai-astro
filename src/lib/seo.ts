@@ -105,7 +105,7 @@ export function articleJsonLd(input: ArticleInput): JsonLdObject {
     ...(input.description ? { description: input.description } : {}),
     ...(image ? { image } : {}),
     ...(published ? { datePublished: published } : {}),
-    ...(isoDate(input.dateModified) ?? published
+    ...((isoDate(input.dateModified) ?? published)
       ? { dateModified: isoDate(input.dateModified) ?? published }
       : {}),
     ...(input.authorName
@@ -178,9 +178,7 @@ export function jobPostingJsonLd(input: JobInput): JsonLdObject | null {
 }
 
 /** Serialize one JSON-LD block; `</script>` inside values is escaped. */
-export function serializeJsonLd(
-  data: JsonLdObject | JsonLdObject[],
-): string {
+export function serializeJsonLd(data: JsonLdObject | JsonLdObject[]): string {
   const payload = Array.isArray(data)
     ? data.length === 1
       ? data[0]

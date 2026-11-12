@@ -4,11 +4,7 @@ import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import FeaturedCaseStudy from "@/components/FeaturedCaseStudy";
 import MainContainer from "@/components/MainContainer.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
-import {
-  articleJsonLd,
-  breadcrumbJsonLd,
-  canonicalUrl,
-} from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { render } from "astro:content";
 import CaseStudyCard from "@/components/CaseStudyCard.astro";
 
@@ -23,7 +19,9 @@ export async function getStaticPaths() {
 const { caseStudy } = Astro.props;
 
 const allCaseStudies = await getSinglePage("case-studies");
-const otherCaseStudies = allCaseStudies.filter((s: any) => s.id !== caseStudy.id);
+const otherCaseStudies = allCaseStudies.filter(
+  (s: any) => s.id !== caseStudy.id,
+);
 const sameCategoryStudies = otherCaseStudies.filter(
   (s: any) => s.data.category === caseStudy.data.category,
 );
@@ -85,7 +83,13 @@ const caseStudyLegacy = {
   <section>
     <MainContainer>
       <div class="container-padding-x container-padding-y pb-14">
-        <FeaturedCaseStudy data={caseStudyLegacy} hideButton disableLink headingTag="h1" client:visible />
+        <FeaturedCaseStudy
+          data={caseStudyLegacy}
+          hideButton
+          disableLink
+          headingTag="h1"
+          client:visible
+        />
       </div>
     </MainContainer>
   </section>
@@ -104,10 +108,12 @@ const caseStudyLegacy = {
     <section>
       <MainContainer>
         <div class="container-padding-x py-14">
-          <h2 class="font-primary font-semibold text-3xl text-text text-center mb-10">Related Case Studies</h2>
+          <h2 class="font-primary font-semibold text-3xl text-text text-center mb-10">
+            Related Case Studies
+          </h2>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {relatedCaseStudies.map((study: any) => (
-             <CaseStudyCard data={study} />
+              <CaseStudyCard data={study} />
             ))}
           </div>
         </div>

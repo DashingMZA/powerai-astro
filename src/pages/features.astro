@@ -15,7 +15,12 @@ const key_features = await getListPage("sections/key-features.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
   <PageHeader page_header={page_header} />
   <EssentialFeatures data={essential_features} />
   <TrustedClients data={trusted_clients} client:load />

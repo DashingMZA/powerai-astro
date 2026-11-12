@@ -41,8 +41,16 @@ const svgPaths = {
             y="0"
           >
             <feFlood flood-opacity="0" result="BackgroundImageFix" />
-            <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
-            <feGaussianBlur result="effect1_foregroundBlur_contact" stdDeviation="50" />
+            <feBlend
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              mode="normal"
+              result="shape"
+            />
+            <feGaussianBlur
+              result="effect1_foregroundBlur_contact"
+              stdDeviation="50"
+            />
           </filter>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -65,7 +73,9 @@ const svgPaths = {
     <!-- Header -->
     <div class="flex flex-col gap-4 relative z-10">
       <h2 class="text-text text-h3 font-semibold">Contact Information</h2>
-      <p class="text-gray text-base leading-6 font-normal">{contact_info.subtitle}</p>
+      <p class="text-gray text-base leading-6 font-normal">
+        {contact_info.subtitle}
+      </p>
     </div>
 
     <!-- Contact Details -->
@@ -74,39 +84,57 @@ const svgPaths = {
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <div class="relative shrink-0 size-6">
-            <svg class="absolute block size-full" fill="none" viewBox="0 0 24 24">
+            <svg
+              class="absolute block size-full"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <path d={svgPaths.phone} fill="var(--color-text)" />
             </svg>
           </div>
           <span class="text-text text-lg font-medium">Phone</span>
         </div>
-        <p class="text-gray text-base leading-6 font-normal">{contact_info.phone}</p>
+        <p class="text-gray text-base leading-6 font-normal">
+          {contact_info.phone}
+        </p>
       </div>
 
       <!-- Email -->
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <div class="relative shrink-0 size-6">
-            <svg class="absolute block size-full" fill="none" viewBox="0 0 24 24">
+            <svg
+              class="absolute block size-full"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <path d={svgPaths.email} fill="var(--color-text)" />
             </svg>
           </div>
           <span class="text-text text-lg font-medium">Email</span>
         </div>
-        <p class="text-gray text-base leading-6 font-normal">{contact_info.email}</p>
+        <p class="text-gray text-base leading-6 font-normal">
+          {contact_info.email}
+        </p>
       </div>
 
       <!-- Address -->
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <div class="relative shrink-0 size-6">
-            <svg class="absolute block size-full" fill="none" viewBox="0 0 24 24">
+            <svg
+              class="absolute block size-full"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <path d={svgPaths.location} fill="var(--color-text)" />
             </svg>
           </div>
           <span class="text-text text-lg font-medium">Address</span>
         </div>
-        <p class="text-gray text-base leading-6 font-normal w-58.25">{contact_info.address}</p>
+        <p class="text-gray text-base leading-6 font-normal w-58.25">
+          {contact_info.address}
+        </p>
       </div>
     </div>
   </div>
@@ -205,8 +233,8 @@ const svgPaths = {
             </svg>
           </button>
           <p class="text-gray text-base leading-6 font-normal flex-1">
-            This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service
-            apply.
+            This site is protected by reCAPTCHA and the Google Privacy Policy
+            and Terms of Service apply.
           </p>
         </label>
 

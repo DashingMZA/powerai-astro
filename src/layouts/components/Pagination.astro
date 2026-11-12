@@ -28,27 +28,59 @@ const nextHref = `${section ? "/" + section : ""}/page/${currentPage + 1}`;
         class="size-10 flex items-center justify-center text-text hover:bg-light duration-300 hover:text-text-dark border-r border-border/6"
       >
         <span class="sr-only">Previous</span>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g clip-path="url(#clip0_35_10935)">
-            <path d="M16.875 10H3.125M3.125 10L8.75 4.375M3.125 10L8.75 15.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M16.875 10H3.125M3.125 10L8.75 4.375M3.125 10L8.75 15.625"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </g>
-          <defs><clipPath id="clip0_35_10935"><rect width="20" height="20" fill="currentColor"/></clipPath></defs>
+          <defs>
+            <clipPath id="clip0_35_10935">
+              <rect width="20" height="20" fill="currentColor" />
+            </clipPath>
+          </defs>
         </svg>
       </a>
     ) : (
       <span class="size-10 flex items-center justify-center text-gray border-r border-border/6">
         <span class="sr-only">Previous</span>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g clip-path="url(#clip0_35_10935b)">
-            <path d="M16.875 10H3.125M3.125 10L8.75 4.375M3.125 10L8.75 15.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M16.875 10H3.125M3.125 10L8.75 4.375M3.125 10L8.75 15.625"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </g>
-          <defs><clipPath id="clip0_35_10935b"><rect width="20" height="20" fill="currentColor"/></clipPath></defs>
+          <defs>
+            <clipPath id="clip0_35_10935b">
+              <rect width="20" height="20" fill="currentColor" />
+            </clipPath>
+          </defs>
         </svg>
       </span>
     )}
 
     <!-- page index -->
-    {pageList.map((pagination, i) => (
+    {pageList.map((pagination, i) =>
       pagination === currentPage ? (
         <span
           aria-current="page"
@@ -58,14 +90,18 @@ const nextHref = `${section ? "/" + section : ""}/page/${currentPage + 1}`;
         </span>
       ) : (
         <a
-          href={i === 0 ? `${section ? "/" + section : "/"}` : `${section ? "/" + section : ""}/page/${pagination}`}
+          href={
+            i === 0
+              ? `${section ? "/" + section : "/"}`
+              : `${section ? "/" + section : ""}/page/${pagination}`
+          }
           aria-current="page"
           class="rounded-full size-10 flex items-center justify-center text-text hover:bg-light duration-300 hover:text-text-dark"
         >
           {pagination}
         </a>
-      )
-    ))}
+      ),
+    )}
 
     <!-- next page -->
     {hasNextPage ? (
@@ -74,21 +110,53 @@ const nextHref = `${section ? "/" + section : ""}/page/${currentPage + 1}`;
         class="size-10 flex items-center justify-center text-text hover:bg-light duration-300 hover:text-text-dark border-l border-border/6"
       >
         <span class="sr-only">Next</span>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g clip-path="url(#clip0_35_10946)">
-            <path d="M3.125 10H16.875M16.875 10L11.25 4.375M16.875 10L11.25 15.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M3.125 10H16.875M16.875 10L11.25 4.375M16.875 10L11.25 15.625"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </g>
-          <defs><clipPath id="clip0_35_10946"><rect width="20" height="20" fill="currentColor"/></clipPath></defs>
+          <defs>
+            <clipPath id="clip0_35_10946">
+              <rect width="20" height="20" fill="currentColor" />
+            </clipPath>
+          </defs>
         </svg>
       </a>
     ) : (
       <span class="size-10 flex items-center justify-center text-gray border-l border-border/6">
         <span class="sr-only">Next</span>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g clip-path="url(#clip0_35_10946b)">
-            <path d="M3.125 10H16.875M16.875 10L11.25 4.375M16.875 10L11.25 15.625" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M3.125 10H16.875M16.875 10L11.25 4.375M16.875 10L11.25 15.625"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </g>
-          <defs><clipPath id="clip0_35_10946b"><rect width="20" height="20" fill="currentColor"/></clipPath></defs>
+          <defs>
+            <clipPath id="clip0_35_10946b">
+              <rect width="20" height="20" fill="currentColor" />
+            </clipPath>
+          </defs>
         </svg>
       </span>
     )}

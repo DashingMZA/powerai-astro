@@ -12,21 +12,19 @@ const logoPath = src ?? logo;
 ---
 
 <a href="/" class="navbar-brand inline-block">
-  {
-    logoPath ? (
-      <ImageMod
-        src={logoPath}
-        alt={title || "Site logo"}
-        width={w * 2}
-        height={h * 2}
-        fetchpriority="high"
-        loading="eager"
-        style={`height:${h}px;width:${w}px`}
-      />
-    ) : logo_text ? (
-      logo_text
-    ) : (
-      title
-    )
-  }
+  {logoPath ? (
+    <ImageMod
+      src={logoPath}
+      alt={title || "Site logo"}
+      width={w * 2}
+      height={h * 2}
+      fetchpriority="high"
+      loading="eager"
+      style={`height:${h}px;width:${w}px`}
+    />
+  ) : logo_text ? (
+    logo_text
+  ) : (
+    title
+  )}
 </a>

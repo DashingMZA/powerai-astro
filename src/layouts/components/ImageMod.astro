@@ -62,37 +62,33 @@ const isValidPath = isAbsolute ? true : !!(localPath && images[localPath]);
   );
 ---
 
-{
-  isValidPath && (isAbsolute || isSvg) && (
-    <img
-      src={isAbsolute ? src : src.replace(/^\/public/, "")}
-      alt={alt}
-      width={width}
-      height={height}
-      loading={loading ?? "lazy"}
-      decoding={decoding ?? "async"}
-      class={className}
-      fetchpriority={fetchpriority}
-      style={style}
-    />
-  )
-}
+{isValidPath && (isAbsolute || isSvg) && (
+  <img
+    src={isAbsolute ? src : src.replace(/^\/public/, "")}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading ?? "lazy"}
+    decoding={decoding ?? "async"}
+    class={className}
+    fetchpriority={fetchpriority}
+    style={style}
+  />
+)}
 
-{
-  isValidPath && !isAbsolute && !isSvg && localPath && (
-    <Image
-      src={images[localPath]() as Promise<{ default: ImageMetadata }>}
-      alt={alt}
-      width={width}
-      height={height}
-      loading={loading ?? "lazy"}
-      fit={fit ? fit : "contain"}
-      decoding={decoding ?? "async"}
-      class={className}
-      format={format || "webp"}
-      fetchpriority={fetchpriority}
-      style={style}
-      quality={"mid"}
-    />
-  )
-}
+{isValidPath && !isAbsolute && !isSvg && localPath && (
+  <Image
+    src={images[localPath]() as Promise<{ default: ImageMetadata }>}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading ?? "lazy"}
+    fit={fit ? fit : "contain"}
+    decoding={decoding ?? "async"}
+    class={className}
+    format={format || "webp"}
+    fetchpriority={fetchpriority}
+    style={style}
+    quality={"mid"}
+  />
+)}

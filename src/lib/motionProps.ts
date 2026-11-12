@@ -34,25 +34,37 @@ export type VariantEntry = {
 export const variants: Record<string, VariantEntry> = {
   // Fade in from below
   fadeInUp: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(30px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(30px)", "translateY(0)"],
+    },
     options: { ...smooth },
   },
 
   // Fade in from above
   fadeInDown: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(-30px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(-30px)", "translateY(0)"],
+    },
     options: { ...smooth },
   },
 
   // Fade in from left
   fadeInLeft: {
-    keyframes: { opacity: [0, 1], transform: ["translateX(-30px)", "translateX(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateX(-30px)", "translateX(0)"],
+    },
     options: { ...smooth },
   },
 
   // Fade in from right
   fadeInRight: {
-    keyframes: { opacity: [0, 1], transform: ["translateX(30px)", "translateX(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateX(30px)", "translateX(0)"],
+    },
     options: { ...smooth },
   },
 
@@ -64,31 +76,46 @@ export const variants: Record<string, VariantEntry> = {
 
   // Hero badge slide down
   heroBadge: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(-20px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(-20px)", "translateY(0)"],
+    },
     options: { ...smooth, delay: 0.2 },
   },
 
   // Hero title slow reveal
   heroTitle: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(20px)", "translateY(0)"],
+    },
     options: { ...slow, delay: 0.3 },
   },
 
   // Hero content
   heroContent: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(20px)", "translateY(0)"],
+    },
     options: { ...smooth, delay: 0.5 },
   },
 
   // Hero buttons
   heroButtons: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(20px)", "translateY(0)"],
+    },
     options: { ...smooth, delay: 0.6 },
   },
 
   // Hero image
   heroImage: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(40px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(40px)", "translateY(0)"],
+    },
     options: { ...verySlow, delay: 0.4 },
   },
 
@@ -100,7 +127,10 @@ export const variants: Record<string, VariantEntry> = {
 
   // Card reveal on scroll
   cardReveal: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(30px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(30px)", "translateY(0)"],
+    },
     options: { ...smooth },
   },
 
@@ -112,7 +142,10 @@ export const variants: Record<string, VariantEntry> = {
 
   // Stagger helper — use delay offset per item
   staggerItem: {
-    keyframes: { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
+    keyframes: {
+      opacity: [0, 1],
+      transform: ["translateY(20px)", "translateY(0)"],
+    },
     options: { ...smooth },
   },
 };
@@ -133,10 +166,9 @@ export async function animateOnScroll(
   if (!v) return;
 
   inView(selector, (element) => {
-    animate(
-      element,
-      v.keyframes,
-      { ...v.options, delay: (v.options.delay || 0) + delayOffset },
-    );
+    animate(element, v.keyframes, {
+      ...v.options,
+      delay: (v.options.delay || 0) + delayOffset,
+    });
   });
 }

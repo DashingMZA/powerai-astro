@@ -81,14 +81,12 @@ const iconPaths: Record<string, string> = {
         <title>Menu Open</title>
         <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
       </svg>
-      <svg
-        class="menu-icon-close h-6 fill-current hidden"
-        viewBox="0 0 20 20"
-      >
+      <svg class="menu-icon-close h-6 fill-current hidden" viewBox="0 0 20 20">
         <title>Menu Close</title>
         <polygon
           points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"></polygon>
+          transform="rotate(45 10 10)"
+        ></polygon>
       </svg>
     </button>
 
@@ -97,39 +95,85 @@ const iconPaths: Record<string, string> = {
       id="nav-menu"
       class="navbar-nav order-3 xl:order-1 xl:flex xl:w-auto xl:pb-0 xl:space-x-8 hidden"
     >
-      {
-        main.map((item) =>
-          item.hasChildren ? (
-            <li
-              class="nav-item nav-dropdown group relative"
-              data-menu-name={item.name}
+      {main.map((item) =>
+        item.hasChildren ? (
+          <li
+            class="nav-item nav-dropdown group relative"
+            data-menu-name={item.name}
+          >
+            <!-- Dropdown toggle button (pointer-events disabled on desktop; hover handles it via CSS) -->
+            <button
+              class:list={[
+                "nav-link inline-flex items-center w-full xl:pointer-events-none justify-center",
+                isMegaMenuActive(item) && "active",
+              ]}
+              data-submenu-toggle={item.name}
+              aria-expanded="false"
             >
-              <!-- Dropdown toggle button (pointer-events disabled on desktop; hover handles it via CSS) -->
-              <button
-                class:list={[
-                  "nav-link inline-flex items-center w-full xl:pointer-events-none justify-center",
-                  isMegaMenuActive(item) && "active",
-                ]}
-                data-submenu-toggle={item.name}
-                aria-expanded="false"
+              {item.name}
+              <svg
+                class="chevron h-4 w-4 fill-current transition-transform xl:transition-none"
+                viewBox="0 0 20 20"
               >
-                {item.name}
-                <svg
-                  class="chevron h-4 w-4 fill-current transition-transform xl:transition-none"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </button>
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </button>
 
-              {item.mega_menu ? (
-                <>
-                  <!-- Mobile: mega menu (JS-controlled visibility) -->
-                  <div
-                    class="xl:hidden hidden"
-                    data-submenu={item.name}
-                  >
-                    <div class="p-2.5 w-full rounded-3xl mt-3 bg-card border border-border/6 grid gap-3">
+            {item.mega_menu ? (
+              <>
+                <!-- Mobile: mega menu (JS-controlled visibility) -->
+                <div class="xl:hidden hidden" data-submenu={item.name}>
+                  <div class="p-2.5 w-full rounded-3xl mt-3 bg-card border border-border/6 grid gap-3">
+                    <div class="nav-dropdown-list nav-mega-menu col-span-2">
+                      <div class="nav-mega-grid">
+                        <p class="nav-mega-title nav-mega-company-title">
+                          {item.mega_menu.mega_menu_title}
+                        </p>
+                        {item.mega_menu.mega_menu_groups?.map((group) => (
+                          <div class="nav-mega-company-col">
+                            {group.map((child) => (
+                              <a
+                                href={child.url}
+                                data-close-menu
+                                data-nav-url={child.url}
+                                class:list={[
+                                  "nav-mega-link",
+                                  isPathActive(child.url) && "active",
+                                ]}
+                              >
+                                {child.icon && iconPaths[child.icon] && (
+                                  <span class="nav-mega-icon-wrap">
+                                    <svg
+                                      class="nav-mega-icon"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      stroke-width="1.5"
+                                      set:html={iconPaths[child.icon]}
+                                    />
+                                  </span>
+                                )}
+                                <span class="nav-mega-content">
+                                  <span class="nav-mega-name">
+                                    {child.name}
+                                  </span>
+                                  <span class="nav-mega-description">
+                                    {child.description}
+                                  </span>
+                                </span>
+                              </a>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Desktop: mega menu (CSS hover + transition animation) -->
+                <div class="hidden xl:block">
+                  <div class="desktop-dropdown absolute left-1/5 w-245 -translate-x-1/2">
+                    <div class="p-2.5 w-full rounded-3xl mt-4 bg-card border border-border/6 grid gap-3 grid-cols-3 items-start">
                       <div class="nav-dropdown-list nav-mega-menu col-span-2">
                         <div class="nav-mega-grid">
                           <p class="nav-mega-title nav-mega-company-title">
@@ -140,7 +184,6 @@ const iconPaths: Record<string, string> = {
                               {group.map((child) => (
                                 <a
                                   href={child.url}
-                                  data-close-menu
                                   data-nav-url={child.url}
                                   class:list={[
                                     "nav-mega-link",
@@ -173,100 +216,70 @@ const iconPaths: Record<string, string> = {
                           ))}
                         </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <!-- Desktop: mega menu (CSS hover + transition animation) -->
-                  <div class="hidden xl:block">
-                    <div class="desktop-dropdown absolute left-1/5 w-245 -translate-x-1/2">
-                      <div class="p-2.5 w-full rounded-3xl mt-4 bg-card border border-border/6 grid gap-3 grid-cols-3 items-start">
-                        <div class="nav-dropdown-list nav-mega-menu col-span-2">
-                          <div class="nav-mega-grid">
-                            <p class="nav-mega-title nav-mega-company-title">
-                              {item.mega_menu.mega_menu_title}
-                            </p>
-                            {item.mega_menu.mega_menu_groups?.map((group) => (
-                              <div class="nav-mega-company-col">
-                                {group.map((child) => (
-                                  <a
-                                    href={child.url}
-                                    data-nav-url={child.url}
-                                    class:list={[
-                                      "nav-mega-link",
-                                      isPathActive(child.url) && "active",
-                                    ]}
-                                  >
-                                    {child.icon && iconPaths[child.icon] && (
-                                      <span class="nav-mega-icon-wrap">
-                                        <svg
-                                          class="nav-mega-icon"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                          stroke-width="1.5"
-                                          set:html={iconPaths[child.icon]}
-                                        />
-                                      </span>
-                                    )}
-                                    <span class="nav-mega-content">
-                                      <span class="nav-mega-name">
-                                        {child.name}
-                                      </span>
-                                      <span class="nav-mega-description">
-                                        {child.description}
-                                      </span>
-                                    </span>
-                                  </a>
-                                ))}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div class="col-span-1 p-4">
-                          <p class="nav-mega-title nav-mega-legal-title">
-                            {item.mega_menu.page_title}
-                          </p>
-                          <div class="nav-mega-legal-list">
-                            {item.mega_menu.page_links?.map((link) => (
-                              <a
-                                href={link.url}
-                                data-nav-url={link.url}
-                                class:list={[
-                                  "nav-mega-legal-link",
-                                  isPathActive(link.url) && "active",
-                                ]}
-                              >
-                                {link.icon && iconPaths[link.icon] && (
-                                  <svg
-                                    class="nav-mega-legal-icon"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="1.5"
-                                    set:html={iconPaths[link.icon]}
-                                  />
-                                )}
-                                <span>{link.name}</span>
-                              </a>
-                            ))}
-                          </div>
+                      <div class="col-span-1 p-4">
+                        <p class="nav-mega-title nav-mega-legal-title">
+                          {item.mega_menu.page_title}
+                        </p>
+                        <div class="nav-mega-legal-list">
+                          {item.mega_menu.page_links?.map((link) => (
+                            <a
+                              href={link.url}
+                              data-nav-url={link.url}
+                              class:list={[
+                                "nav-mega-legal-link",
+                                isPathActive(link.url) && "active",
+                              ]}
+                            >
+                              {link.icon && iconPaths[link.icon] && (
+                                <svg
+                                  class="nav-mega-legal-icon"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"
+                                  set:html={iconPaths[link.icon]}
+                                />
+                              )}
+                              <span>{link.name}</span>
+                            </a>
+                          ))}
                         </div>
                       </div>
                     </div>
                   </div>
-                </>
-              ) : (
-                <>
-                  <!-- Mobile: simple dropdown (JS-controlled visibility) -->
-                  <ul
-                    class="nav-dropdown-list xl:hidden hidden"
-                    data-submenu={item.name}
-                  >
+                </div>
+              </>
+            ) : (
+              <>
+                <!-- Mobile: simple dropdown (JS-controlled visibility) -->
+                <ul
+                  class="nav-dropdown-list xl:hidden hidden"
+                  data-submenu={item.name}
+                >
+                  {item.children?.map((child) => (
+                    <li class="nav-dropdown-item">
+                      <a
+                        href={child.url}
+                        data-close-menu
+                        data-nav-url={child.url}
+                        class:list={[
+                          "nav-dropdown-link block",
+                          isPathActive(child.url) && "active",
+                        ]}
+                      >
+                        {child.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+
+                <!-- Desktop: simple dropdown (CSS hover + transition animation) -->
+                <div class="hidden xl:block">
+                  <ul class="desktop-dropdown nav-dropdown-list absolute top-full left-0">
                     {item.children?.map((child) => (
                       <li class="nav-dropdown-item">
                         <a
                           href={child.url}
-                          data-close-menu
                           data-nav-url={child.url}
                           class:list={[
                             "nav-dropdown-link block",
@@ -278,75 +291,34 @@ const iconPaths: Record<string, string> = {
                       </li>
                     ))}
                   </ul>
-
-                  <!-- Desktop: simple dropdown (CSS hover + transition animation) -->
-                  <div class="hidden xl:block">
-                    <ul class="desktop-dropdown nav-dropdown-list absolute top-full left-0">
-                      {item.children?.map((child) => (
-                        <li class="nav-dropdown-item">
-                          <a
-                            href={child.url}
-                            data-nav-url={child.url}
-                            class:list={[
-                              "nav-dropdown-link block",
-                              isPathActive(child.url) && "active",
-                            ]}
-                          >
-                            {child.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
-              )}
-            </li>
-          ) : (
-            <li class="nav-item">
-              <a
-                href={item.url}
-                data-close-menu
-                data-nav-url={item.url}
-                class:list={["nav-link block", isPathActive(item.url) && "active"]}
-              >
-                {item.name}
-              </a>
-            </li>
-          )
-        )
-      }
-
-      <!-- Mobile CTA button (inside the drawer) -->
-      {
-        navigation_button.enable && (
-          <li class="mt-4 inline-block xl:hidden">
+                </div>
+              </>
+            )}
+          </li>
+        ) : (
+          <li class="nav-item">
             <a
-              class="btn btn-primary"
-              href={navigation_button.link}
+              href={item.url}
               data-close-menu
-              target={
-                navigation_button.link.startsWith("http") ? "_blank" : "_self"
-              }
-              rel={
-                navigation_button.link.startsWith("http")
-                  ? "noopener noreferrer"
-                  : undefined
-              }
+              data-nav-url={item.url}
+              class:list={[
+                "nav-link block",
+                isPathActive(item.url) && "active",
+              ]}
             >
-              {navigation_button.label}
+              {item.name}
             </a>
           </li>
-        )
-      }
-    </ul>
+        ),
+      )}
 
-    <!-- Desktop CTA button -->
-    <div class="order-1 ml-auto flex items-center md:order-2 xl:ml-0">
-      {
-        navigation_button.enable && (
+      <!-- Mobile CTA button (inside the drawer) -->
+      {navigation_button.enable && (
+        <li class="mt-4 inline-block xl:hidden">
           <a
-            class="btn btn-primary hidden xl:inline-block"
+            class="btn btn-primary"
             href={navigation_button.link}
+            data-close-menu
             target={
               navigation_button.link.startsWith("http") ? "_blank" : "_self"
             }
@@ -358,8 +330,28 @@ const iconPaths: Record<string, string> = {
           >
             {navigation_button.label}
           </a>
-        )
-      }
+        </li>
+      )}
+    </ul>
+
+    <!-- Desktop CTA button -->
+    <div class="order-1 ml-auto flex items-center md:order-2 xl:ml-0">
+      {navigation_button.enable && (
+        <a
+          class="btn btn-primary hidden xl:inline-block"
+          href={navigation_button.link}
+          target={
+            navigation_button.link.startsWith("http") ? "_blank" : "_self"
+          }
+          rel={
+            navigation_button.link.startsWith("http")
+              ? "noopener noreferrer"
+              : undefined
+          }
+        >
+          {navigation_button.label}
+        </a>
+      )}
     </div>
   </nav>
 </header>
@@ -435,9 +427,9 @@ const iconPaths: Record<string, string> = {
       .forEach((btn) => {
         const li = btn.closest("[data-menu-name]");
         if (!li) return;
-        const hasActiveChild = [...li.querySelectorAll<HTMLElement>("[data-nav-url]")].some(
-          (a) => a.classList.contains("active"),
-        );
+        const hasActiveChild = [
+          ...li.querySelectorAll<HTMLElement>("[data-nav-url]"),
+        ].some((a) => a.classList.contains("active"));
         btn.classList.toggle("active", hasActiveChild);
       });
 
@@ -445,18 +437,32 @@ const iconPaths: Record<string, string> = {
     let openSubmenu: string | null = null;
 
     const syncToggleIcons = (open: boolean) => {
-      menuToggle.querySelector(".menu-icon-open")?.classList.toggle("hidden", open);
-      menuToggle.querySelector(".menu-icon-close")?.classList.toggle("hidden", !open);
+      menuToggle
+        .querySelector(".menu-icon-open")
+        ?.classList.toggle("hidden", open);
+      menuToggle
+        .querySelector(".menu-icon-close")
+        ?.classList.toggle("hidden", !open);
     };
 
     const mobileOpenClasses = [
-      "absolute", "top-full", "inset-x-0", "bg-body",
-      "border-b", "border-border/6", "z-40", "w-full",
-      "pb-6", "max-h-[calc(100dvh-6rem)]", "overflow-y-auto",
+      "absolute",
+      "top-full",
+      "inset-x-0",
+      "bg-body",
+      "border-b",
+      "border-border/6",
+      "z-40",
+      "w-full",
+      "pb-6",
+      "max-h-[calc(100dvh-6rem)]",
+      "overflow-y-auto",
     ] as const;
 
     const closeAllSubmenus = () => {
-      document.querySelectorAll("[data-submenu]").forEach((el) => el.classList.add("hidden"));
+      document
+        .querySelectorAll("[data-submenu]")
+        .forEach((el) => el.classList.add("hidden"));
       document.querySelectorAll("[data-submenu-toggle]").forEach((btn) => {
         btn.classList.remove("is-open");
         btn.setAttribute("aria-expanded", "false");
@@ -501,8 +507,12 @@ const iconPaths: Record<string, string> = {
         } else {
           // Close previously open submenu
           if (openSubmenu) {
-            document.querySelector(`[data-submenu="${openSubmenu}"]`)?.classList.add("hidden");
-            const prev = document.querySelector(`[data-submenu-toggle="${openSubmenu}"]`);
+            document
+              .querySelector(`[data-submenu="${openSubmenu}"]`)
+              ?.classList.add("hidden");
+            const prev = document.querySelector(
+              `[data-submenu-toggle="${openSubmenu}"]`,
+            );
             prev?.classList.remove("is-open");
             prev?.setAttribute("aria-expanded", "false");
           }
@@ -536,8 +546,12 @@ const iconPaths: Record<string, string> = {
     const cleanup = () => {
       menuToggle.removeEventListener("click", handleMenuToggle);
       window.removeEventListener("resize", handleResize);
-      submenuHandlers.forEach((handler, btn) => btn.removeEventListener("click", handler));
-      closeLinkHandlers.forEach((handler, el) => el.removeEventListener("click", handler));
+      submenuHandlers.forEach((handler, btn) =>
+        btn.removeEventListener("click", handler),
+      );
+      closeLinkHandlers.forEach((handler, el) =>
+        el.removeEventListener("click", handler),
+      );
       document.removeEventListener("astro:before-swap", cleanup);
     };
 

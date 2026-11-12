@@ -16,7 +16,6 @@ const CTAShape = () => {
   const secondaryColor =
     theme?.colors?.default?.theme_color?.secondary ?? "#E87CFF";
 
-
   /* stable star field */
   const stars = useMemo(() => {
     const r = seededRand(7);

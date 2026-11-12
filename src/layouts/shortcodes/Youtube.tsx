@@ -13,8 +13,15 @@ const Youtube = ({
     import("@justinribeiro/lite-youtube");
   }, []);
 
-  // @ts-ignore
-  return <lite-youtube className="rounded-lg" videoid={id} videotitle={title} {...rest} />;
+  return (
+    // @ts-ignore - <lite-youtube> is a custom element registered by @justinribeiro/lite-youtube
+    <lite-youtube
+      className="rounded-lg"
+      videoid={id}
+      videotitle={title}
+      {...rest}
+    />
+  );
 };
 
 export default Youtube;

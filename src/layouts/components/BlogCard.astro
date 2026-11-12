@@ -47,14 +47,24 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
       <div class="flex items-center gap-2.5">
         {author?.avatar && (
           <div class="shrink-0 size-8 rounded-full overflow-hidden border border-border/6">
-            <img src={author.avatar} alt={author.name} width="32" height="32" class="object-cover size-full" />
+            <img
+              src={author.avatar}
+              alt={author.name}
+              width="32"
+              height="32"
+              class="object-cover size-full"
+            />
           </div>
         )}
         {author && (
           <div class="flex flex-col">
-            <p class="font-primary font-medium text-sm text-text leading-tight">{author.name}</p>
+            <p class="font-primary font-medium text-sm text-text leading-tight">
+              {author.name}
+            </p>
             {author.designation && (
-              <p class="font-primary font-normal text-xs text-gray leading-tight">{author.designation}</p>
+              <p class="font-primary font-normal text-xs text-gray leading-tight">
+                {author.designation}
+              </p>
             )}
           </div>
         )}
@@ -71,12 +81,25 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
 <script>
   import { animateMini as animate, inView } from "motion";
   function initBlogCards() {
-    document.querySelectorAll<HTMLElement>('[id^="blogcard-"]').forEach((el) => {
-      el.style.opacity = "0";
-      inView(el, () => {
-        animate(el, { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] }, { duration: 0.5, ease: "easeInOut" });
-      }, { margin: "0px", amount: 0.05 });
-    });
+    document
+      .querySelectorAll<HTMLElement>('[id^="blogcard-"]')
+      .forEach((el) => {
+        el.style.opacity = "0";
+        inView(
+          el,
+          () => {
+            animate(
+              el,
+              {
+                opacity: [0, 1],
+                transform: ["translateY(20px)", "translateY(0)"],
+              },
+              { duration: 0.5, ease: "easeInOut" },
+            );
+          },
+          { margin: "0px", amount: 0.05 },
+        );
+      });
   }
   document.addEventListener("astro:page-load", initBlogCards);
 </script>

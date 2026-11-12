@@ -38,24 +38,18 @@ if (headings) {
   <MainContainer>
     <div class="container-padding-x container-padding-y pb-14">
       <div class="flex flex-col items-center gap-10">
-        <h1
-          class="font-primary font-semibold leading-[1.2] md:text-[60px] text-center text-text"
-        >
+        <h1 class="font-primary font-semibold leading-[1.2] md:text-[60px] text-center text-text">
           {title}
         </h1>
         <p class="text-lg text-gray sm:w-2/3 text-center">{description}</p>
         <div class="flex items-center gap-4 flex-wrap justify-center">
-          <div
-            class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl"
-          >
+          <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-base text-gray">Author</p>
             <p class="font-primary font-medium text-xl text-text">
               {author?.name || "Unknown"}
             </p>
           </div>
-          <div
-            class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl"
-          >
+          <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-[16px] text-gray">
               Category
             </p>
@@ -63,17 +57,13 @@ if (headings) {
               {category || "Uncategorized"}
             </p>
           </div>
-          <div
-            class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl"
-          >
+          <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-[16px] text-gray">
               Read Time
             </p>
             <p class="font-primary font-medium text-xl text-text">{readTime}</p>
           </div>
-          <div
-            class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl"
-          >
+          <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-[16px] text-gray">
               Published Date
             </p>
@@ -82,17 +72,15 @@ if (headings) {
             </p>
           </div>
         </div>
-        {
-          image && (
-            <img
-              src={image}
-              alt={title}
-              width="640"
-              height="640"
-              class="w-full h-auto sm:h-100 object-cover rounded-2xl"
-            />
-          )
-        }
+        {image && (
+          <img
+            src={image}
+            alt={title}
+            width="640"
+            height="640"
+            class="w-full h-auto sm:h-100 object-cover rounded-2xl"
+          />
+        )}
       </div>
     </div>
   </MainContainer>
@@ -108,36 +96,34 @@ if (headings) {
               <h2 class="font-primary font-medium text-xl text-text mb-8">
                 Inside the page
               </h2>
-              {
-                toc.length > 0 ? (
-                  <ul class="flex flex-col gap-1">
-                    {toc.map((item) => {
-                      const indentClass =
-                        item.level < 2
-                          ? "pl-0"
-                          : item.level === 2
-                            ? "pl-3"
-                            : item.level === 3
-                              ? "pl-6"
-                              : "pl-9";
-                      return (
-                        <li class={indentClass}>
-                          <a
-                            href={`#${item.slug}`}
-                            class="font-primary text-[15px] leading-6 text-gray hover:text-text transition-colors duration-200 wrap-break-word"
-                          >
-                            {item.text}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : (
-                  <p class="font-primary text-[15px] leading-6 text-gray">
-                    No headings available in this post.
-                  </p>
-                )
-              }
+              {toc.length > 0 ? (
+                <ul class="flex flex-col gap-1">
+                  {toc.map((item) => {
+                    const indentClass =
+                      item.level < 2
+                        ? "pl-0"
+                        : item.level === 2
+                          ? "pl-3"
+                          : item.level === 3
+                            ? "pl-6"
+                            : "pl-9";
+                    return (
+                      <li class={indentClass}>
+                        <a
+                          href={`#${item.slug}`}
+                          class="font-primary text-[15px] leading-6 text-gray hover:text-text transition-colors duration-200 wrap-break-word"
+                        >
+                          {item.text}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p class="font-primary text-[15px] leading-6 text-gray">
+                  No headings available in this post.
+                </p>
+              )}
             </div>
             <div class="border border-border/6 bg-card/70 p-8 rounded-2xl">
               <h2 class="font-primary font-medium text-xl text-text mb-8">
@@ -167,9 +153,9 @@ if (headings) {
                     class="w-full px-7.5 py-3 bg-transparent border border-border/6 rounded-[120px] font-primary font-normal text-[16px] text-text placeholder:text-gray focus:outline-none focus:border-primary/50 transition-colors duration-200"
                   />
                 </div>
-                <button class="w-full px-7.5 py-3.5 btn btn-primary"
-                  >Subscribe</button
-                >
+                <button class="w-full px-7.5 py-3.5 btn btn-primary">
+                  Subscribe
+                </button>
               </form>
             </div>
           </div>
@@ -179,15 +165,13 @@ if (headings) {
             <div class="content">
               <Content />
             </div>
-            {
-              config["open-remark-comment"].enable && (
-                <div class="mt-10">
-                  <OpenRemarkComment
-                    siteKey={config["open-remark-comment"].siteKey}
-                  />
-                </div>
-              )
-            }
+            {config["open-remark-comment"].enable && (
+              <div class="mt-10">
+                <OpenRemarkComment
+                  siteKey={config["open-remark-comment"].siteKey}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -195,21 +179,19 @@ if (headings) {
   </MainContainer>
 </section>
 
-{
-  relatedPosts.length > 0 && (
-    <section>
-      <MainContainer>
-        <div class="container-padding-x py-14">
-          <h2 class="font-primary font-semibold text-3xl text-text text-center mb-10">
-            Related Blogs
-          </h2>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {relatedPosts.map((relatedPost: any) => (
-              <BlogCard data={relatedPost} />
-            ))}
-          </div>
+{relatedPosts.length > 0 && (
+  <section>
+    <MainContainer>
+      <div class="container-padding-x py-14">
+        <h2 class="font-primary font-semibold text-3xl text-text text-center mb-10">
+          Related Blogs
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          {relatedPosts.map((relatedPost: any) => (
+            <BlogCard data={relatedPost} />
+          ))}
         </div>
-      </MainContainer>
-    </section>
-  )
-}
+      </div>
+    </MainContainer>
+  </section>
+)}

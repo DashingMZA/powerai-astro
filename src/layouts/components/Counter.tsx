@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { fadeInUpVariants } from "@/lib/animations";

@@ -1,4 +1,3 @@
-
 import type { CaseStudy } from "@/types/index";
 import ImageFallback from "@/helpers/ImageFallback";
 import { plainify } from "@/lib/utils/textConverter";

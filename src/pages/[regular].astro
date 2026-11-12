@@ -21,7 +21,12 @@ const { Content } = await render(page);
 const { title, meta_title, description, image, page_header } = page.data;
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
   {page_header && <PageHeader page_header={page_header} />}
   <section>
     <MainContainer>

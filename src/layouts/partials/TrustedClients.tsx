@@ -1,4 +1,3 @@
-
 import ImageFallback from "@/helpers/ImageFallback";
 import type { LogoMarqueeType } from "@/types/index";
 import { motion } from "motion/react";
@@ -63,31 +62,33 @@ const TrustedClients = ({ data }: { data: PageData }) => {
 
   return (
     <section>
-      <div className="main-container"><div className="container">
-        <div className="py-20">
-          <h2 className="text-h6 text-center mb-10 text-text-light font-medium">
-            {data.frontmatter.title}
-          </h2>
-          <div className="z-10 flex items-center relative  overflow-hidden">
-            <motion.div
-              className="flex w-max gap-18"
-              animate={loopDistance ? { x: [0, -loopDistance] } : undefined}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: loopDuration,
-                  ease: "linear",
-                },
-              }}
-              style={{ willChange: "transform" }}
-            >
-              {renderLogoList("primary")}
-              {renderLogoList("duplicate", true)}
-            </motion.div>
+      <div className="main-container">
+        <div className="container">
+          <div className="py-20">
+            <h2 className="text-h6 text-center mb-10 text-text-light font-medium">
+              {data.frontmatter.title}
+            </h2>
+            <div className="z-10 flex items-center relative  overflow-hidden">
+              <motion.div
+                className="flex w-max gap-18"
+                animate={loopDistance ? { x: [0, -loopDistance] } : undefined}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: loopDuration,
+                    ease: "linear",
+                  },
+                }}
+                style={{ willChange: "transform" }}
+              >
+                {renderLogoList("primary")}
+                {renderLogoList("duplicate", true)}
+              </motion.div>
+            </div>
           </div>
         </div>
-      </div></div>
+      </div>
     </section>
   );
 };
