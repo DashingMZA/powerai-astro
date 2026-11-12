@@ -433,7 +433,6 @@ const iconPaths: Record<string, string> = {
     document
       .querySelectorAll<HTMLElement>("[data-submenu-toggle]")
       .forEach((btn) => {
-        const name = btn.dataset.submenuToggle;
         const li = btn.closest("[data-menu-name]");
         if (!li) return;
         const hasActiveChild = [...li.querySelectorAll<HTMLElement>("[data-nav-url]")].some(

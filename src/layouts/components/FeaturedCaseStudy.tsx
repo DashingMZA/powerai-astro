@@ -11,14 +11,19 @@ const FeaturedCaseStudy = ({
   data,
   hideButton = false,
   disableLink = true,
+  headingTag = "h2",
 }: {
   data: CaseStudy;
   hideButton?: boolean;
   disableLink?: boolean;
+  // Single case-study pages render the title as the page's only h1;
+  // listings keep it an h2 under the page header.
+  headingTag?: "h1" | "h2";
 }) => {
   const [showModal, setShowModal] = useState(false);
   if (!data) return null;
 
+  const TitleTag = headingTag;
   const { title, image, logo, description, review_video } = data.frontmatter;
   const caseStudyPath = `/case-studies/${data.slug}`;
   const excerpt = description || plainify(data.content || "");
@@ -144,14 +149,14 @@ const FeaturedCaseStudy = ({
 
       <div className="px-5 sm:px-8 lg:px-10 pb-6 sm:pb-8 pt-4 sm:pt-6 grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-5 lg:gap-10">
         {disableLink ? (
-          <h2 className="font-primary font-medium text-text leading-[1.15] text-h3 sm:text-h2 lg:text-h1 transition-colors duration-200">
+          <TitleTag className="font-primary font-medium text-text leading-[1.15] text-h3 sm:text-h2 lg:text-h1 transition-colors duration-200">
             {title}
-          </h2>
+          </TitleTag>
         ) : (
           <a href={caseStudyPath}>
-            <h2 className="font-primary font-medium text-text leading-[1.15] text-h3 sm:text-h2 lg:text-h1 hover:text-primary transition-colors duration-200">
+            <TitleTag className="font-primary font-medium text-text leading-[1.15] text-h3 sm:text-h2 lg:text-h1 hover:text-primary transition-colors duration-200">
               {title}
-            </h2>
+            </TitleTag>
           </a>
         )}
 

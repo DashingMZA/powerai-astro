@@ -173,7 +173,7 @@ export default function PricingTable({ data }: PricingTableProps) {
               </div>
               <div className="relative w-full ">
                 {/* Title */}
-                <h1
+                <h2
                   className="text-center text-text my-10 capitalize font-bold"
                   style={{
                     fontSize: "clamp(28px, 4vw, 48px)",
@@ -182,7 +182,7 @@ export default function PricingTable({ data }: PricingTableProps) {
                   }}
                 >
                   {title}
-                </h1>
+                </h2>
 
                 {/* Card */}
                 <div className="relative overflow-hidden rounded-3xl border border-border/6 p-5 md:p-8 bg-card/70">

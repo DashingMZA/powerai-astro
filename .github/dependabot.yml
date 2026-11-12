@@ -1,4 +1,4 @@
-# Dependabot configuration for Astroplate.
+# Dependabot configuration for PowerAI.
 # Keeps npm/pnpm dependencies and GitHub Actions up to date with weekly PRs.
 # Major version bumps (e.g. Astro 7 -> 8) are NOT grouped: they arrive as
 # their own PRs so breaking changes can be reviewed separately.
