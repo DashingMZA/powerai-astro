@@ -1,0 +1,71 @@
+name: Deploy Astro site to GitHub Pages
+
+# The single Pages deploy path for this repo. Do NOT add a second
+# build/deploy workflow (the old astro.yml duplicate was removed).
+# Deploys are manual-only: run this workflow via workflow_dispatch.
+# Pushes run CI + CodeQL instead — they never deploy.
+# Pull requests are checked by ci.yml instead — they never deploy.
+
+on:
+  workflow_dispatch:
+
+# Least privilege: only the deploy job needs Pages write access.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  BUILD_PATH: "." # default value when not using subfolders
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup pnpm
+        # No `version:` input here: package.json already pins the pnpm
+        # version via `packageManager`, and pnpm/action-setup v6 errors
+        # out when both are set ("Multiple versions of pnpm specified").
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: "pnpm"
+          cache-dependency-path: ${{ env.BUILD_PATH }}/pnpm-lock.yaml
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.BUILD_PATH }}
+      - name: Build with Astro
+        run: pnpm run build
+        working-directory: ${{ env.BUILD_PATH }}
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ${{ env.BUILD_PATH }}/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
