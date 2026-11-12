@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/categories.json",
+  "title": "categories",
+  "description": "Categories. Schema only — no category files exist yet. Blog `category` stays a free-text string until category files exist.",
+  "x-sitepins": {
+    "name": "categories",
+    "file": "src/content/categories/<slug>.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/categories"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

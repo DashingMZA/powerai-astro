@@ -23,19 +23,67 @@ export type Post = {
     title: string;
     meta_title?: string;
     description?: string;
+    excerpt?: string;
+    slug?: string;
     image?: string;
     category: string;
+    categories?: string[];
+    tags?: string[];
     author: {
       name: string;
       avatar: string;
       designation?: string;
+      slug?: string;
     };
+    authors?: string[];
     date?: string;
+    updated?: string;
     draft?: boolean;
     featured?: boolean;
+    related?: string[];
+    canonical?: string;
+    noindex?: boolean;
+    og_image?: string;
+    og_description?: string;
+    twitter_title?: string;
+    twitter_description?: string;
   };
   slug?: string;
   content?: string;
+};
+
+/** Author file shape (`src/content/authors/`). No author files exist yet —
+ *  see `src/content/schemas.ts`. Blog posts still use the inline author
+ *  object on `Post` above. */
+export type Author = {
+  name: string;
+  slug?: string;
+  bio?: string;
+  description?: string;
+  avatar?: string;
+  image?: string;
+  email?: string;
+  website?: string;
+  job_title?: string;
+  designation?: string;
+  organization?: string;
+  socials?: { name: string; icon?: string; link: string }[];
+  draft?: boolean;
+};
+
+export type Category = {
+  name: string;
+  slug?: string;
+  description?: string;
+  image?: string;
+  draft?: boolean;
+};
+
+export type Tag = {
+  name: string;
+  slug?: string;
+  description?: string;
+  draft?: boolean;
 };
 
 export type CaseStudy = {
@@ -49,6 +97,19 @@ export type CaseStudy = {
     draft?: boolean;
     featured?: boolean;
     review_video?: string;
+    /** Restored 2026-11-12: was stripped by the old schema, breaking the
+     *  same-category ordering in `case-studies/[single].astro`. */
+    category?: string;
+    client?: string;
+    company?: string;
+    summary?: string;
+    challenge?: string;
+    solution?: string;
+    results?: string | string[];
+    canonical?: string;
+    noindex?: boolean;
+    og_image?: string;
+    og_description?: string;
   };
   slug?: string;
   content?: string;
@@ -69,6 +130,10 @@ export type Career = {
       department: string;
       deadline?: string;
     };
+    responsibilities?: string[];
+    requirements?: string[];
+    apply_url?: string;
+    active?: boolean;
   };
   slug?: string;
   content?: string;
@@ -143,6 +208,10 @@ export type IntegrationType = {
     draft?: boolean;
     category: string;
     icon: string;
+    logo?: string;
+    website?: string;
+    docs_url?: string;
+    status?: "available" | "beta" | "coming-soon";
     page_header: PageHeaderType;
   };
   slug?: string;

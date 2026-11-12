@@ -1,4 +1,20 @@
 ---
+/**
+ * Typed content accessor for `[single]` pages.
+ *
+ * Returns raw `CollectionEntry`s (with `.data`, `.id`, `.body`, `.render()`).
+ * This is NOT the canonical parser — see `src/lib/contentParser.ts` for
+ * the canonical `{ frontmatter, slug, content }` shape used by list/index
+ * pages and `PostSingle.astro`. This file exists only because the
+ * `[single]` pages (and `[regular].astro`) consume `CollectionEntry`s
+ * directly; do not "unify" it by changing its return shape without
+ * updating all five consumers in the same change.
+ *
+ * Filtering matches the canonical parser: drafts and `-`-prefixed files
+ * are excluded, AND future-dated entries are excluded (previously this
+ * file did not filter by date, so a single page could render a post its
+ * index page hid). Entries without a `date` field are always included.
+ */
 import {
   getCollection,
   getEntry,
@@ -12,15 +28,24 @@ type PageData = {
   description?: string;
   image?: string;
   draft?: boolean;
+  date?: Date | string;
 };
 
 export const getSinglePage = async <C extends CollectionKey>(
   collectionName: C
 ): Promise<CollectionEntry<C>[]> => {
-  const allPages = await getCollection(
-    collectionName,
-    ({ data, id }) => !(data as PageData)?.draft && !id.startsWith("-")
-  );
+  // NOTE: the predicate is inlined here on purpose. A module-level helper
+  // const in this file's frontmatter is dropped by the Astro compiler
+  // (only exports survive into the built chunk), which broke the build
+  // with `isVisible is not defined`. Keep the logic inline.
+  const allPages = await getCollection(collectionName, ({ data, id }) => {
+    const page = data as PageData;
+    return (
+      !page?.draft &&
+      !id.startsWith("-") &&
+      (!page?.date || new Date(page.date) <= new Date())
+    );
+  });
   return allPages;
 };
 

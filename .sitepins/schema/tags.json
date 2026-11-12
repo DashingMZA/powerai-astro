@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/tags.json",
+  "title": "tags",
+  "description": "Tags. Schema only — no tag files exist yet. Blog `tags` stays a string array until tag files exist.",
+  "x-sitepins": {
+    "name": "tags",
+    "file": "src/content/tags/<slug>.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/tags"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

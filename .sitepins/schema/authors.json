@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/authors.json",
+  "title": "authors",
+  "description": "Authors. Schema only — no author files exist yet. Do not invent authors; blog posts keep their inline `author` object until author files are created.",
+  "x-sitepins": {
+    "name": "authors",
+    "file": "src/content/authors/<slug>.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/authors"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "job_title": {
+      "type": "string"
+    },
+    "designation": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "socials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "link"
+        ]
+      }
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

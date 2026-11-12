@@ -1,6 +1,22 @@
-// Content parser utilities for Astro
-// In Astro, we use getCollection/getEntry from astro:content
-// This file provides helper functions that map the old API to the new one
+// Content parser utilities for Astro.
+//
+// CANONICAL PARSER — this file (`@/lib/contentParser`) is the canonical
+// content-access layer for list/index pages and for `PostSingle.astro`.
+// It returns plain `{ frontmatter, slug, content }` objects (the legacy
+// shape `src/types/index.ts` describes) and it:
+//   - drops drafts and `-`-prefixed files,
+//   - hides future-dated entries (an index page must never list a post
+//     its single page would 404 — see `contentParser.astro`),
+//   - swallows lookup errors and returns `{ frontmatter: {}, content: "" }`
+//     (list pages render empty rather than crashing the build).
+// `src/lib/contentParser.astro` is the TYPED variant: it returns raw
+// `CollectionEntry`s for the `[single]` pages (`blog/[single]`,
+// `careers/[single]`, `case-studies/[single]`, `integrations/[single]`,
+// `[regular]`) and now applies the SAME future-date filter, so the two
+// parsers agree on what exists. Do not change one parser's filtering
+// without changing the other's. Do not import one parser expecting the
+// other's return shape — `PostSingle.astro` needs THIS file's shape
+// (`p.frontmatter.category`, `p.slug`).
 
 import { getCollection, getEntry } from "astro:content";
 
