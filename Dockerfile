@@ -1,4 +1,4 @@
-ARG INSTALLER=yarn
+ARG INSTALLER=pnpm
 
 FROM node:24-alpine AS base
 
@@ -15,7 +15,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ "${INSTALLER}" == "yarn" ]; then yarn --frozen-lockfile; \
   elif [ "${INSTALLER}" == "npm" ]; then npm ci; \
-  elif [ "${INSTALLER}" == "pnpm" ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  elif [ "${INSTALLER}" == "pnpm" ]; then corepack enable && corepack prepare pnpm@12.19.0 --activate && pnpm i --frozen-lockfile; \
   else echo "Valid installer not set." && exit 1; \
   fi
 
