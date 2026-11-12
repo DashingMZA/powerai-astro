@@ -18,7 +18,7 @@ interface Props {
 }
 
 // Destructuring Astro.props to get the component's props
-let {
+const {
   src,
   alt,
   width,
@@ -32,31 +32,62 @@ let {
   style,
 } = Astro.props;
 
-src = `/public${src}`;
+// Absolute URLs (e.g. R2 / media.csofts.tech) must render verbatim —
+// never prepend /public or the site domain to them.
+const isAbsolute = /^(?:https?:)?\/\//i.test(src);
+const isSvg = /\.svg(?:[?#]|$)/i.test(src) || format === "svg";
+
+// Local paths live under /public/images; the glob keys are /public/... paths.
+const localPath = isAbsolute
+  ? null
+  : src.startsWith("/public/")
+    ? src
+    : src.startsWith("/")
+      ? `/public${src}`
+      : `/public/${src}`;
 
 // Glob pattern to load images from the /public/images folder
 const images = import.meta.glob("/public/images/**/*.{jpeg,jpg,png,gif,svg}");
 
-// Check if the source path is valid
-const isValidPath = images[src] ? true : false;
+// SVGs and absolute URLs bypass astro:assets entirely: sharp cannot (and
+// must not) process SVG, and remote images have no local file to optimise.
+// A plain <img> renders them unchanged, which also fixes the build
+// blocker (UnsupportedImageFormat for essential-features-2/3/4.svg).
+const isValidPath = isAbsolute ? true : !!(localPath && images[localPath]);
 
-// Log a warning message in red if the image is not found
+// Log a warning message in yellow if the image is not found
 !isValidPath &&
-  console.error(
-    `\x1b[31mImage not found - ${src}.\x1b[0m Make sure the image is in the /public/images folder.`,
+  console.warn(
+    `\x1b[33mImage not found - ${src}.\x1b[0m Make sure the image is in the /public/images folder.`,
   );
 ---
 
 {
-  isValidPath && (
-    <Image
-      src={images[src]() as Promise<{ default: ImageMetadata }>}
+  isValidPath && (isAbsolute || isSvg) && (
+    <img
+      src={isAbsolute ? src : src.replace(/^\/public/, "")}
       alt={alt}
       width={width}
       height={height}
-      loading={loading}
+      loading={loading ?? "lazy"}
+      decoding={decoding ?? "async"}
+      class={className}
+      fetchpriority={fetchpriority}
+      style={style}
+    />
+  )
+}
+
+{
+  isValidPath && !isAbsolute && !isSvg && localPath && (
+    <Image
+      src={images[localPath]() as Promise<{ default: ImageMetadata }>}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading ?? "lazy"}
       fit={fit ? fit : "contain"}
-      decoding={decoding}
+      decoding={decoding ?? "async"}
       class={className}
       format={format || "webp"}
       fetchpriority={fetchpriority}
