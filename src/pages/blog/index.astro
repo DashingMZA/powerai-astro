@@ -6,6 +6,7 @@ import MainContainer from "@/components/MainContainer.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
+import { breadcrumbJsonLd } from "@/lib/seo";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import CallToAction from "@/partials/CallToAction.astro";
 import PageHeader from "@/partials/PageHeader.astro";
@@ -25,9 +26,19 @@ const page_header = {
 };
 const callToAction = await getListPage("sections/call-to-action.md");
 const featuredPost = sortedPosts.filter((post: any) => post.frontmatter.featured)[0];
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Blog" },
+];
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+  jsonLd={breadcrumbJsonLd(breadcrumbs)}
+>
   <PageHeader page_header={page_header}>
     {featuredPost && <FeaturedPost data={featuredPost} />}
   </PageHeader>

@@ -1,9 +1,4 @@
-# *
 User-agent: *
 Allow: /
 
-# Host
-Host: https://example.com
-
-# Sitemaps
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://powerai.csofts.tech/sitemap-index.xml

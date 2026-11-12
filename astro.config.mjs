@@ -57,7 +57,12 @@ export default defineConfig({
   fonts: fontsConfig,
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      // Drafts are never built as routes; exclude pages that must not be
+      // indexed (404 and the dead auth placeholder pages).
+      filter: (page) =>
+        !/\/(404|login|sign-up)\/?$/.test(new URL(page).pathname),
+    }),
     AutoImport({
       imports: [
         "@/shortcodes/Button",

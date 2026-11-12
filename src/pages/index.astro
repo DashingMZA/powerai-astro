@@ -12,6 +12,8 @@ import Testimonials from "@/partials/Testimonials";
 import TrustedClients from "@/partials/TrustedClients";
 import WhyChooseUs from "@/partials/WhyChooseUs.astro";
 import { getListPage } from "@/lib/contentParser";
+import { organizationJsonLd } from "@/lib/seo";
+import { plainify } from "@/lib/utils/textConverter";
 
 const homepage = await getListPage("homepage/-index.md");
 const trusted_clients = await getListPage("sections/trusted-clients.md");
@@ -25,9 +27,14 @@ const faq = await getListPage("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 const statistics = await getListPage("sections/statistics.md");
 const { banner } = homepage.frontmatter;
+const homeTitle = plainify(banner.title.replace(/<br\s*\/?>/gi, " "));
 ---
 
-<Base>
+<Base
+  title={homeTitle}
+  description={banner.content}
+  jsonLd={organizationJsonLd()}
+>
   <Hero data={banner} />
   <TrustedClients data={trusted_clients} client:visible />
   <KeyFeatures data={key_features} />

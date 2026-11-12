@@ -1,7 +1,13 @@
 ---
 import Base from "@/layouts/Base.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  canonicalUrl,
+} from "@/lib/seo";
 
 export async function getStaticPaths() {
   const posts = await getSinglePage("blog");
@@ -15,9 +21,45 @@ const { post } = Astro.props;
 
 if (post.data.draft) return Astro.redirect("/404");
 
-const { title, meta_title, description, image } = post.data;
+const { title, meta_title, description, image, author, category, date } =
+  post.data;
+const canonical = canonicalUrl(`/blog/${post.id}`);
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: title },
+];
+const isoDate = date ? new Date(date).toISOString() : undefined;
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+  canonical={canonical}
+  ogType="article"
+  article={{
+    publishedTime: isoDate,
+    modifiedTime: isoDate,
+    author: author?.name,
+    section: category,
+  }}
+  jsonLd={[
+    articleJsonLd({
+      title,
+      description,
+      image,
+      canonical,
+      datePublished: date,
+      dateModified: date,
+      authorName: author?.name,
+      authorDesignation: author?.designation,
+      category,
+    }),
+    breadcrumbJsonLd(breadcrumbs),
+  ]}
+>
+  <Breadcrumbs items={breadcrumbs} />
   <PostSingle post={post} />
 </Base>

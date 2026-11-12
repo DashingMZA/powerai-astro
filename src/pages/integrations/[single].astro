@@ -1,8 +1,10 @@
 ---
 import Base from "@/layouts/Base.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -19,9 +21,25 @@ if (integration.data.draft) return Astro.redirect("/404");
 
 const { Content } = await render(integration);
 const { title, meta_title, description, image, page_header } = integration.data;
+const canonical = canonicalUrl(`/integrations/${integration.id}`);
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Integrations", href: "/integrations" },
+  { label: title },
+];
+// No SoftwareApplication: these pages describe third-party tools, not a
+// product of this site, so no product markup is emitted.
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+  canonical={canonical}
+  jsonLd={breadcrumbJsonLd(breadcrumbs)}
+>
+  <Breadcrumbs items={breadcrumbs} />
   {page_header && <PageHeader page_header={page_header} />}
   <section>
     <MainContainer>

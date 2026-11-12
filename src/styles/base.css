@@ -59,3 +59,26 @@ code {
 blockquote > p {
   @apply my-0!;
 }
+
+/* Skip link: hidden until keyboard focus, then clearly visible. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Visible keyboard focus (was missing site-wide). */
+:focus-visible {
+  outline: 2px solid #9a4dfe;
+  outline-offset: 2px;
+}

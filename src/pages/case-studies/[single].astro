@@ -1,8 +1,14 @@
 ---
 import Base from "@/layouts/Base.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import FeaturedCaseStudy from "@/components/FeaturedCaseStudy";
 import MainContainer from "@/components/MainContainer.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  canonicalUrl,
+} from "@/lib/seo";
 import { render } from "astro:content";
 import CaseStudyCard from "@/components/CaseStudyCard.astro";
 
@@ -37,7 +43,14 @@ const relatedCaseStudies = [
 if (caseStudy.data.draft) return Astro.redirect("/404");
 
 const { Content } = await render(caseStudy);
-const { title, meta_title, description, image } = caseStudy.data;
+const { title, meta_title, description, image, date } = caseStudy.data;
+const canonical = canonicalUrl(`/case-studies/${caseStudy.id}`);
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: title },
+];
+const isoDate = date ? new Date(date).toISOString() : undefined;
 
 // Shape for React components expecting legacy {frontmatter, slug, content} format
 const caseStudyLegacy = {
@@ -47,7 +60,28 @@ const caseStudyLegacy = {
 };
 ---
 
-<Base title={title} meta_title={meta_title} description={description} image={image}>
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+  canonical={canonical}
+  ogType="article"
+  article={{ publishedTime: isoDate, modifiedTime: isoDate }}
+  jsonLd={[
+    articleJsonLd({
+      type: "Article",
+      title,
+      description,
+      image,
+      canonical,
+      datePublished: date,
+      dateModified: date,
+    }),
+    breadcrumbJsonLd(breadcrumbs),
+  ]}
+>
+  <Breadcrumbs items={breadcrumbs} />
   <section>
     <MainContainer>
       <div class="container-padding-x container-padding-y pb-14">
