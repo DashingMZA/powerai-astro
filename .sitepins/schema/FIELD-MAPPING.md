@@ -138,9 +138,15 @@ names in blog frontmatter (John Doe, Jane Smith, … are template placeholders).
 ## SEO fields (shared)
 Every routable collection carries: `meta_title`, `canonical`, `noindex`
 (default `false`), `og_image`, `og_description`, `twitter_title`,
-`twitter_description`. None of these are wired into `Base.astro` yet by this
-change (layouts belong to the parallel SEO work) — the fields exist so the
-SEO pass and Sitepins have somewhere to write.
+`twitter_description`. These fields **are wired into `Base.astro`** (SEO pass,
+commit `6023637`): canonical is always emitted, `meta_title` falls back to
+`title`, `og_image` falls back to `image`, and `noindex` emits
+`noindex,nofollow`. Two gaps remain: `twitter_title` /
+`twitter_description` are accepted by the schema but **not rendered** by
+`Base.astro` (it emits `twitter:title` / `twitter:description` from the page
+title/description only), and no content file currently sets a `canonical`
+override or `noindex: true` — the only `noindex` pages are the hardcoded
+404 / login / sign-up pages. See `SEO_GUIDE.md`.
 
 ## Image behaviour
 - All image fields are strings holding either a site-relative path
@@ -161,4 +167,7 @@ SEO pass and Sitepins have somewhere to write.
   reserved for future custom routing; setting them today changes nothing.
 - Drafts (`draft: true`) and `-`-prefixed files are excluded from listings;
   single pages redirect drafts to `/404`. Future-dated entries are hidden
-  by both content parsers (see `src/lib/contentParser.ts`).
+  by both content parsers (`src/lib/contentParser.ts` and
+  `src/lib/contentParser.astro` both filter by date), so a future-dated post
+  is hidden from listings and single pages alike. Do not rely on
+  future-dating for scheduling without re-verifying after any parser change.
