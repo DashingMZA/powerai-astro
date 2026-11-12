@@ -1,43 +1,43 @@
-ARG INSTALLER=pnpm
+# PowerAI Astro — static build served by nginx.
+#
+# Build:  docker build -t powerai-astro .
+# Run:    docker run --rm -p 8080:80 powerai-astro
+#
+# Node 24 + pnpm only (see `packageManager` in package.json). The lockfile
+# is installed frozen; there are no yarn/npm branches — this repo is
+# pnpm-only. The build output (`dist/`) is copied into nginx; see
+# config/nginx/nginx.conf for the serving rules (Astro 404 page, hashed
+# `/_astro/` assets cached immutably).
+#
+# NOTE: this Dockerfile is reviewed, not build-tested — no Docker daemon
+# is available in this environment (`docker` is not installed).
 
 FROM node:24-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-ARG INSTALLER
-
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+# See https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
+# for why libc6-compat is needed on Alpine.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ "${INSTALLER}" == "yarn" ]; then yarn --frozen-lockfile; \
-  elif [ "${INSTALLER}" == "npm" ]; then npm ci; \
-  elif [ "${INSTALLER}" == "pnpm" ]; then corepack enable && corepack prepare pnpm@12.19.0 --activate && pnpm i --frozen-lockfile; \
-  else echo "Valid installer not set." && exit 1; \
-  fi
-
+# pnpm is enabled via corepack in each stage that needs it: stages do not
+# share the shims created by `corepack enable` in another stage.
+RUN corepack enable && corepack prepare pnpm@12.19.0 --activate
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@12.19.0 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN pnpm run build
 
-# RUN chmod u+x ./installer && ./installer
-ARG INSTALLER
-RUN \
-  if [ "${INSTALLER}" == "yarn" ]; then yarn build; \
-  elif [ "${INSTALLER}" == "npm" ]; then npm run build; \
-  elif [ "${INSTALLER}" == "pnpm" ]; then pnpm run build; \
-  else echo "Valid installer not set." && exit 1; \
-  fi
-
-# Production image, copy all the files and run nginx
+# Production image, copy the static build and serve it with nginx
 FROM nginx:alpine AS runner
 COPY ./config/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-WORKDIR /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
