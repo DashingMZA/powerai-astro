@@ -157,28 +157,63 @@ export function checkMinSubmitTime(
  * `multipart/form-data` (plain form posts, no-JS fallback). File
  * values are skipped here — routes that accept uploads read
  * `request.formData()` themselves.
+ *
+ * A malformed body (invalid JSON, broken multipart) returns `{}` so
+ * the caller answers a normal 400 field error — it must never throw
+ * and surface a 500 (verified 2026-11-13: uncaught `request.json()`
+ * SyntaxError produced a 500 error page).
  */
 export async function readRequestFields(
   request: Request,
 ): Promise<Record<string, string>> {
   const contentType = request.headers.get("content-type") ?? "";
-  if (contentType.includes("application/json")) {
-    const data: unknown = await request.json();
-    if (data === null || typeof data !== "object" || Array.isArray(data)) {
-      return {};
+  try {
+    if (contentType.includes("application/json")) {
+      const data: unknown = await request.json();
+      if (data === null || typeof data !== "object" || Array.isArray(data)) {
+        return {};
+      }
+      const fields: Record<string, string> = {};
+      for (const [key, value] of Object.entries(data)) {
+        if (typeof value === "string") fields[key] = value;
+      }
+      return fields;
     }
+    const form = await request.formData();
     const fields: Record<string, string> = {};
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key, value] of form.entries()) {
       if (typeof value === "string") fields[key] = value;
     }
     return fields;
+  } catch {
+    return {};
   }
-  const form = await request.formData();
-  const fields: Record<string, string> = {};
-  for (const [key, value] of form.entries()) {
-    if (typeof value === "string") fields[key] = value;
+}
+
+/**
+ * True when a POST carries an `Origin` header for a different host
+ * than this site — i.e. a cross-site form submission. There are no
+ * session cookies here, so classic CSRF session-riding does not
+ * apply; this is defence-in-depth against third-party sites driving
+ * the endpoints to spam the owner's inbox. Missing, unparseable, or
+ * absent-host values are allowed (curl, old browsers, same-origin
+ * navigations) — only a definite mismatch is rejected.
+ */
+export function isCrossOriginPost(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    return false;
   }
-  return fields;
+  const host =
+    request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    request.headers.get("host") ||
+    "";
+  if (!host) return false;
+  return originHost.toLowerCase() !== host.toLowerCase();
 }
 
 // ---------------------------------------------------------------------------

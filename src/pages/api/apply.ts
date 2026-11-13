@@ -21,6 +21,7 @@ import {
   checkMinSubmitTime,
   errorResponse,
   escapeHtml,
+  isCrossOriginPost,
   isHoneypotFilled,
   jsonResponse,
   validateEmailField,
@@ -160,7 +161,18 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     );
   }
 
-  const form = await request.formData();
+  // Defence-in-depth: reject cross-site submissions (see contact.ts).
+  if (isCrossOriginPost(request)) {
+    return errorResponse(
+      403,
+      "This form can only be submitted from this website.",
+    );
+  }
+
+  const form = await request.formData().catch(() => null);
+  if (!form) {
+    return errorResponse(400, "Could not read the submitted form.");
+  }
   const fields: Record<string, string | undefined> = {};
   for (const [key, value] of form.entries()) {
     if (typeof value === "string") fields[key] = value;

@@ -58,3 +58,16 @@ pnpm run build && pnpm run preview
 ```
 
 Do not quote CWV targets as "met" until those runs exist. The honest statement today is: static output, islands-only hydration (24 directives), 77 pages building in ~70–100 s wall (compress with JS off), `dist/` 20,255,062 bytes, and no measured field or lab data.
+
+## Final-audit measurements (2026-11-13, secperf worktree, base `2cfcb8f`)
+
+Sandbox: Node 24.22.1, pnpm 12.19.0, 1.5 shared CPUs — wall times here run slower than the 2026-11-12/13 runs above; treat them as same-machine comparisons only.
+
+- **Tests (all before the fixes in this round):** `pnpm install --frozen-lockfile` exit 0 (8 s); `astro check` 0/0/0 (101 files, 36 s); `eslint .` 0/0 (17 s); `prettier --check ./src` pass (21 s); production build exit 0 in **208 s wall** (Astro 1m14s + server 2m59s — the 2026-11-13 "71 s" run above was a warmer/less-contended machine, not a regression). No unit-test script exists in `package.json` — none was invented.
+- **Output:** `dist/` 21 MB, `.vercel/output/` 46 MB; **78 HTML pages** (was 77 — +1 page since the baseline); sitemap 75 URLs; homepage `dist/client/index.html` 148,290 bytes, byte-identical to the live homepage body.
+- **Live timings** (`curl`, unauthenticated, SFO edge, one sample each — not a benchmark): `/` 200 in 0.97 s, `/blog` 200 in 0.97 s, `/careers` 200 in 0.81 s, `/contact` 200 in 1.28 s, `/features` 200 in 1.12 s, `/about` 200 in 1.44 s, `/privacy-policy` 200 in 1.14 s, `/terms-of-service` 200 in 2.12 s. Note: **`/privacy` and `/terms` answer 404** — those routes do not exist; the real pages are `/privacy-policy` and `/terms-of-service` (via `[regular].astro`). Trailing-slash URLs 308-redirect to the no-slash form (`trailingSlash: "never"`).
+- **Largest bundles (this build):** `elk-*.js` 1,463.8 KB, `chunk-*.js` 614.3 KB, `cytoscape.esm` 431.4 KB, `katex` 252.7 KB — all mermaid/KaTeX chunks, none referenced by the homepage (verified: 0 `elk`/`mermaid` references in `index.html`; mermaid loads only on pages with a mermaid block). Single CSS `Base.*.css` 142.8 KB. 139 JS files in `dist/client`.
+- **Images:** 94 PNG + 7 WebP + 4 JPG in `dist/client`. Largest are still duplicated PNGs (`images/avatar.png` and `_astro/avatar.*.png`, 532.7 KB each; `about-banner.png` 479.9 KB each). Only 7 images go through `ImageMod.astro` optimisation; the rest are served as-is.
+- **Fonts:** 1.3 MB total in `dist/client` (Inter woff2 via Astro `fontProviders.google()`, `display: swap` per config; KaTeX woff/woff2/ttf bundled with `font-display: block` from KaTeX's CSS). No `fonts.googleapis.com` request at runtime — fonts are self-hosted from `_astro/fonts/`.
+- **No Lighthouse / CWV, no device rendering.** No Chromium exists in the sandbox, so there are no Lighthouse scores, no LCP/INP/CLS, no console-error or layout-shift measurements, and no mobile/tablet screenshots. Responsive behaviour was checked by code reading only (Tailwind `sm:`/`md:`/`lg:` classes throughout; no fixed-width overflow found by grep). Do not present any of the numbers above as field performance.
+- **Unused deps removed this round** (grep-verified zero usage, lockfile regenerated): `@astrojs/cloudflare`, `prop-types`, `remark-github-blockquote-alert`. Previously-removed set (`dotenv`, `dotenv-cli`, `@cloudflare/workers-types`) confirmed still gone.

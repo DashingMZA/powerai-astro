@@ -21,6 +21,7 @@ import { Resend } from "resend";
 import {
   checkMinSubmitTime,
   errorResponse,
+  isCrossOriginPost,
   isHoneypotFilled,
   jsonResponse,
   readRequestFields,
@@ -56,6 +57,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           "retry-after": String(limit.retryAfterSeconds),
         },
       },
+    );
+  }
+
+  // Defence-in-depth: reject cross-site submissions (see contact.ts).
+  if (isCrossOriginPost(request)) {
+    return errorResponse(
+      403,
+      "This form can only be submitted from this website.",
     );
   }
 
