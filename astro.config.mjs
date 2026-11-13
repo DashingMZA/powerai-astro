@@ -91,7 +91,14 @@ export default defineConfig({
     // Provides the `virtual:astro-icon` module for <Icon> (src/icons/).
     icon(),
     // Last: compresses the statically generated HTML/CSS/JS/images.
-    compress(),
+    // JavaScript: false — measured 2026-11-12 (see PERFORMANCE.md):
+    // terser re-minified 5.68 MB of already Vite-minified JS (139 files,
+    // incl. the 1.5 MB elk/mermaid bundle) for a 15 KB (0.26%) saving,
+    // at a cost of ~50-90 s per build. Vite already minifies JS, so the
+    // compress JS pass pays ~100x its saving. HTML/Image/SVG/CSS stay on:
+    // they save 2.45 MB images + 339 KB SVG + 283 KB HTML. Do NOT re-enable
+    // JS compression for speed alone — re-measure first.
+    compress({ JavaScript: false }),
   ],
   markdown: {
     // `markdown.remarkPlugins` / `rehypePlugins` are deprecated in Astro 7;
