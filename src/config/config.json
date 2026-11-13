@@ -24,13 +24,13 @@
     "apply_form_action": "#",
     "newsletter_form_action": "#",
     "footer_text": "Own traditional and AI search with a powerful platform",
-    "copyright": "Designed and Developed by [cSofts - a Git-based CMS for Static Sites.](https://csofts)"
+    "copyright": "Designed and Developed by [cSofts - a Git-based CMS for Static Sites.](https://csofts.com)"
   },
 
   "navigation_button": {
     "enable": true,
     "label": "Edit with cSofts",
-    "link": "https://app.csofts.tech/new/clone?name=PoweraiAstro&repository=https://github.com/DashingMZA/powerai-astro&aff=poweraiastro"
+    "link": "https://app.openremark.bond/new/clone?name=PoweraiAstro&repository=https://github.com/DashingMZA/powerai-astro&aff=poweraiastro"
   },
 
   "google_tag_manager": {
@@ -46,6 +46,6 @@
 
   "open-remark-comment": {
     "enable": true,
-    "siteKey": "cmpl2v9m4000104jjmruazes1"
+    "siteKey": "cmwegdlx7000307ldd0k9glgg"
   }
 }
