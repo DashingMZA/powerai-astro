@@ -37,5 +37,5 @@ A clear and concise description of any alternative solutions or features you've 
 ## Additional context
 
 Add any other context or screenshots about the feature request here.
-Please keep the theme generic: Astroplate powers many independent sites,
+Please keep the theme generic: PowerAI is a reusable theme,
 so a feature must work without hardcoding one site's branding or content.

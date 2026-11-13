@@ -39,4 +39,3 @@ theme:
   - changed-files:
       - any-glob-to-any-file: 'src/styles/**'
       - any-glob-to-any-file: 'src/config/theme.json'
-      - any-glob-to-any-file: 'tailwind.config.*'
