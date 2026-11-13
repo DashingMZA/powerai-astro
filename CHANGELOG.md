@@ -2,6 +2,26 @@
 
 All notable changes to PowerAI Astro. Dates are commit dates (2026-11-12). This file was created as part of the documentation pass on 2026-11-12; earlier history is summarized from the git log.
 
+## [Unreleased] — Security + build/perf/a11y + docs round (2026-11-13, worktree at `a7a9c4a`, not committed)
+
+### Added
+
+- **`vercel.json` (new):** security headers on every Vercel response — `Strict-Transport-Security: max-age=63072000; includeSubDomains` (no `preload`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()`, `X-Frame-Options: SAMEORIGIN`. No CSP shipped — it would break the site's inline scripts; the recommended CSP is documented in [SECURITY.md](./SECURITY.md). Headers apply to Vercel only.
+- **`pnpm audit` baseline** (see [SECURITY.md](./SECURITY.md)): 11 vulnerabilities (6 high, 4 moderate, 1 low), all transitive. None fixed — every fix needs a major-version jump or a lockfile regen that is out of scope for this worktree.
+- **API-route security requirements** (see [SECURITY.md](./SECURITY.md)): no `src/pages/api/*` routes exist in this tree; the requirements the forms worker's routes must satisfy are documented (env-only secrets, no permissive CORS, server-side validation + upload size/type checks by content, rate limiting, generic error responses, no invented auth).
+
+### Changed
+
+- **Removed eight zero-usage dependencies from `package.json`** (verified by grep over `src/`, `config/`, `scripts/`, `astro.config.mjs` — each appeared only in `package.json` / `pnpm-lock.yaml` / docs): `astro-swiper`, `disqus-react`, `i18n`, `@supercharge/promise-pool`, `turndown`, `glob`, `node-html-parser`, `tailwind-bootstrap-grid`. **⚠️ `pnpm-lock.yaml` was NOT regenerated** — run `pnpm install` and commit the lockfile before pushing, or `pnpm install --frozen-lockfile` (and CI) will fail. Kept deliberately: `@astrojs/vercel` (forms worker may need it for API routes) and `@astrojs/cloudflare` (Cloudflare deploy-path option).
+- **Live production is https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). Docs updated throughout; **open item: `src/config/config.json` `site.base_url` is still `https://powerai.csofts.tech`** — builds from this tree still emit `csofts.tech` canonicals/sitemap/RSS.
+- **Docs corrected:** `Dockerfile` is no longer broken (`config/nginx/nginx.conf` exists since `ec8d817`; still never built — no Docker in the sandbox); ESLint is configured and runs (`eslint.config.js`, CI runs it); `astro check` is 0/0/0 (95 files, no hint); heading order verified fixed (1 `<h1>` per sampled page); author (7) + category (5) archives exist (only tag archives are missing); `blog.slug` dual-routing is wired; the R2 upload script (`scripts/upload-to-r2.mjs`) exists — the old "no S3 code" claims were wrong; GTM is rendered by the `@digi4care/astro-google-tagmanager` package, not a hand-rolled snippet; `.nvmrc` pins 24.22.1; `contentParser.astro` is deleted (single parser `contentParser.ts`).
+
+### Verified (no code change, 2026-11-13)
+
+- `astro build` exits 0 — 77 pages, 71 s wall / 1m1s Astro time, `dist/` 20,255,062 bytes (second run 100 s wall under contention, byte-identical `dist/`); compress totals unchanged (HTML 283.2 KB, Image 2.45 MB, SVG 338.97 KB). `astro check` 0/0/0; `eslint .` 0/0; Prettier check passes.
+- Hydration inventory corrected: **24** `client:*` directives (5 `client:load`, 19 `client:visible`), not 29. Largest bundles: `elk-*.js` 1.5 MB, `chunk-*.js` 629 KB, `cytoscape.esm` 442 KB.
+- Accessibility (code-reading + built `dist/`, no axe/Lighthouse — no Chromium): skip link + `:focus-visible` + hero `fetchpriority="high"` + `width`/`height` on images verified; gaps confirmed — desktop dropdowns hover-only, no site-authored `prefers-reduced-motion`, placeholder-only form labels, newsletter input missing `name`, agree control is a `<button>` not a checkbox, no `aria-live` error messaging, mobile menu has no Escape/focus handling, contrast unmeasured. See [ACCESSIBILITY.md](./ACCESSIBILITY.md) and [PERFORMANCE.md](./PERFORMANCE.md).
+
 ## [Unreleased] — ESLint cleanup + build performance audit (2026-11-12)
 
 ### Fixed
@@ -62,13 +82,14 @@ All notable changes to PowerAI Astro. Dates are commit dates (2026-11-12). This 
 
 ## Known issues carried forward (not fixed by this upgrade)
 
-- **Dockerfile broken**: `runner` stage copies `config/nginx/nginx.conf`, which does not exist in the repo. Docker is not a deployable target until that file is added.
-- **`.nvmrc` still pins Node `22.12.0`**, contradicting `engines >= 24`.
-- **Two content parsers exist** (`src/lib/contentParser.ts` vs `.astro`) with different return shapes (plain `{frontmatter, slug, content}` objects vs raw `CollectionEntry`s). Both now filter future-dated entries, but the dual-parser seam is still the most fragile part of the codebase — see the baseline audit (`~/workspace/powerai-upgrade/AUDIT.md` §5.1, outside this repo).
+- **Dockerfile fixed but untested**: `config/nginx/nginx.conf` now exists (commit `ec8d817`) — the old "missing nginx.conf" blocker is gone — but the image has never been built (no Docker daemon in the sandbox). Do not call Docker deployable until someone builds and runs it. The nginx config sets no security headers.
 - **Duplicate featured post** on `/blog`, `/blog/page/2`, `/blog/page/3`.
 - **Dead `client:*` directives** on `.astro` components in `src/pages/case-studies/page/[page].astro` (`client:load` on `PageHeader`, `client:visible` on `CaseStudyCard`).
-- **Desktop dropdown menus are hover-only** (keyboard users cannot open them); no `prefers-reduced-motion` guard; form fields lack associated labels.
-- **No security headers** on any deployment target.
+- **Desktop dropdown menus are hover-only** (keyboard users cannot open them); no site-authored `prefers-reduced-motion` guard; form fields lack associated labels; mobile menu has no Escape/focus handling.
+- **No CSP shipped** — headers now exist on Vercel via `vercel.json`, but no `Content-Security-Policy` (it would break the site's inline scripts; the recommended CSP is documented in [SECURITY.md](./SECURITY.md)). Cloudflare/Netlify/Docker paths still have no headers at all.
+- **`pnpm audit`: 11 vulnerabilities (6 high, 4 moderate, 1 low)**, all transitive — see [SECURITY.md](./SECURITY.md). Fixes need overrides + a lockfile regen.
+- **Lockfile out of sync (2026-11-13):** eight packages were removed from `package.json` without regenerating `pnpm-lock.yaml`. Run `pnpm install` before pushing.
 - **No Lighthouse / CWV measurement** (no Chromium in the sandbox).
 - **`wrangler.jsonc` comments still say `npm run …`** (scripts are pnpm).
 - **Stale demo content**: blog posts 2022–2023, all 8 careers past deadline (May–June 2025), changelog has two `1.0.2` entries, `/images/image-placeholder.png` referenced but missing.
+- **`base_url` still `https://powerai.csofts.tech`** while live production is `https://powerai.jadoo.bond` — canonicals, sitemap, and RSS emit the old domain until it is changed (see [DEPLOYMENT.md](./DEPLOYMENT.md)).

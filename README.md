@@ -2,7 +2,7 @@
 
 PowerAI Astro is a free, dark-themed AI SaaS website template built with Astro, Tailwind CSS, TypeScript, and React. It is designed for AI product teams, SaaS founders, and agencies who need a complete, launch-ready web presence: homepage, features, pricing, blog, case studies, careers, integrations, changelog, and contact — all pre-built and driven by content files and JSON config.
 
-> **Status (2026-11-12, `main` @ `1e470dc`):** upgraded to **Astro 7.4.11**, **pnpm 12.19.0**, **Node ≥ 24**. The production build was verified in the sandbox on 2026-11-12: `astro build` exits 0 (65 pages) and `astro check` reports 0 errors / 0 warnings / 1 hint. **Not deployed** — no deployment has been performed as part of this upgrade. See [DEPLOYMENT.md](./DEPLOYMENT.md) and [CHANGELOG.md](./CHANGELOG.md).
+> **Status (2026-11-13, worktree at `a7a9c4a`):** upgraded to **Astro 7.4.11**, **pnpm 12.19.0**, **Node ≥ 24**. **Live production: https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). Verified in the sandbox on 2026-11-13: `astro build` exits 0 (77 pages, 71 s wall / 1m1s Astro time, `dist/` 20,255,062 bytes), `astro check` 0 errors / 0 warnings / 0 hints (95 files), `eslint .` 0 errors / 0 warnings, Prettier check passes. **Open item: `src/config/config.json` `site.base_url` is still `https://powerai.csofts.tech`** — canonicals, sitemap, and RSS from this tree still emit `csofts.tech`; change it to `jadoo.bond` before release. See [DEPLOYMENT.md](./DEPLOYMENT.md) and [CHANGELOG.md](./CHANGELOG.md).
 
 ## Key features
 
@@ -41,7 +41,7 @@ Full install steps, including the Node/pnpm version notes and troubleshooting, a
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Cloudflare Workers, Vercel, Netlify, Docker (incl. known blockers) |
 | [ACCESSIBILITY.md](./ACCESSIBILITY.md) | What is accessible today, known gaps, how to verify |
 | [PERFORMANCE.md](./PERFORMANCE.md) | Static output, hydration inventory, image/font costs, no Lighthouse yet |
-| [SECURITY.md](./SECURITY.md) | Headers (none yet), third-party scripts, dead auth pages, secrets |
+| [SECURITY.md](./SECURITY.md) | Headers (`vercel.json` on Vercel; CSP documented, not shipped), third-party scripts, dead auth pages, `pnpm audit` results, API-route requirements |
 | [SITEPINS_INTEGRATION.md](./SITEPINS_INTEGRATION.md) | Sitepins/Sketivo schema mirror, field mapping, future integration |
 | [CHANGELOG.md](./CHANGELOG.md) | What changed in the 2026-11-12 upgrade |
 
@@ -64,7 +64,7 @@ public/           images, robots.txt (sitemap is generated at build time)
 
 ## Pages
 
-Homepage, About, Features, Pricing, Contact, Changelog, Blog (20 demo posts, paginated 9/page), Case Studies (4, paginated), Careers (8 listings), Integrations (15), Elements / Privacy Policy / Terms of Service, plus Login, Sign-up, and 404 pages. The build produces **65 pages** (verified 2026-11-12).
+Homepage, About, Features, Pricing, Contact, Changelog, Blog (20 demo posts, paginated 9/page), Case Studies (4, paginated), Careers (8 listings), Integrations (15), Elements / Privacy Policy / Terms of Service, plus Login, Sign-up, and 404 pages. The build produces **77 pages** (65 + 7 author + 5 category archives, verified 2026-11-13).
 
 ## Known limitations — read before launch
 
@@ -73,10 +73,10 @@ These are real, verified limitations of the current state. They are documented h
 - **All forms are dead.** Contact, job-application, and newsletter forms post to `"#"` (`src/config/config.json` params). Login / sign-up have no backend at all. The contact form claims reCAPTCHA protection; **no reCAPTCHA is implemented**.
 - **Placeholder contact details.** `john@example.com`, `(+1) 123-346-7890`, and a broken copyright link (`https://csofts`, no TLD) are still in `config.json`.
 - **Demo content is stale.** All 20 blog posts are dated 2022-04-04 → 2023-11-05. All 8 careers have deadlines in May–June 2025 and are past deadline (no deadline filtering exists, so they still list). The changelog has two entries both versioned `1.0.2`.
-- **No security headers** (no CSP/HSTS/etc.) on any deployment target yet.
-- **Dockerfile is broken as committed** — it copies `config/nginx/nginx.conf`, which does not exist in the repo. See [DEPLOYMENT.md](./DEPLOYMENT.md).
+- **Security headers ship on Vercel only** (`vercel.json`: HSTS, `nosniff`, Referrer-Policy, Permissions-Policy, `X-Frame-Options`). No CSP is shipped — it would break the site's inline scripts; the recommended CSP is documented in [SECURITY.md](./SECURITY.md). Other hosts (Cloudflare, Netlify, Docker) still have no headers configured.
+- **Dockerfile is no longer broken** — `config/nginx/nginx.conf` now exists (commit `ec8d817`) — but the image has **never been built** (no Docker in the sandbox), so Docker is still not a verified deploy target. See [DEPLOYMENT.md](./DEPLOYMENT.md).
 - **No Lighthouse / Core Web Vitals measurement yet** — no Chromium was available in the sandbox, so no CWV claims are made. See [PERFORMANCE.md](./PERFORMANCE.md).
-- **Several installed dependencies are now wired** (KaTeX/math, Mermaid, astro-icon, `@playform/compress`, S3/exif upload helper, GTM package, opt-in bundle visualizer). Still intentionally unwired: Disqus (OpenRemark is the comments system), i18n (single-language site), `@astrojs/cloudflare`/`@astrojs/vercel` adapters (output stays static), `astro-swiper` (no real carousel surface), `turndown`/`glob`/`node-html-parser`/`@supercharge/promise-pool` (no script needs them). Each is listed with its status in [INSTALLATION.md](./INSTALLATION.md).
+- **Eight installed-but-unused dependencies were removed 2026-11-13** (`astro-swiper`, `disqus-react`, `i18n`, `@supercharge/promise-pool`, `turndown`, `glob`, `node-html-parser`, `tailwind-bootstrap-grid`) — zero imports anywhere, verified by grep. **`pnpm-lock.yaml` was not regenerated** (no `pnpm install` in that worktree); run `pnpm install` and commit the lockfile before pushing. Still intentionally unwired: `@astrojs/cloudflare`/`@astrojs/vercel` adapters (output stays static; `@astrojs/vercel` is kept pending the forms worker's API-route decision). Each is listed with its status in [INSTALLATION.md](./INSTALLATION.md).
 
 ## Contributing / license
 

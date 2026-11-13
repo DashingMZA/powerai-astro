@@ -63,6 +63,7 @@ All site configuration lives in JSON files under `src/config/` plus one typed Ty
 ### Rules and gotchas
 
 - **`base_url` is the single source of truth for the domain.** `astro.config.mjs` reads it for the build-time `site` value, `src/lib/seo.ts` reads it for canonicals/OG URLs, and `public/robots.txt` must match it by hand (it currently does: `Sitemap: https://powerai.csofts.tech/sitemap-index.xml`). Change it in `config.json` and check all three.
+- **⚠️ Production domain is `https://powerai.jadoo.bond`, but `base_url` in this tree is still `https://powerai.csofts.tech`.** Every build from this tree emits `csofts.tech` canonicals, sitemap URLs, and RSS links. Change `base_url` to `https://powerai.jadoo.bond` (and the `robots.txt` `Sitemap:` line) before release — see [DEPLOYMENT.md](./DEPLOYMENT.md).
 - **`trailing_slash: false`** — Astro is configured with `trailingSlash: "never"`. Do not flip this without checking that the sitemap, canonicals, and any external links still agree.
 - **Placeholder values that must change before launch:** `params.mail` (`john@example.com`), `params.phone` (`(+1) 123-346-7890`), and the `copyright` link `https://csofts` (no TLD — not a valid URL). These are template placeholders, verified present on 2026-11-12.
 - **`metadata.meta_description`** still says "47 components" — a stale count carried over from the old README. Update the copy when you update the description; the layouts tree is not 47 files.
@@ -80,11 +81,11 @@ To make a form live: point the action at a real endpoint (form service, serverle
 
 ## Google Tag Manager
 
-GTM is **disabled** (`google_tag_manager.enable: false`) with a placeholder ID `GTM-XXXXXX`. `Base.astro` renders an inline GTM snippet (head + noscript) only when enabled. To enable: set `enable: true` and a real `gtm_id` in `config.json`. Note the installed `@digi4care/astro-google-tagmanager` package is **not** what renders GTM — the inline snippet in `Base.astro` is. Do not enable both. A live GTM ID executes arbitrary tags with no Content Security Policy in place (see [SECURITY.md](./SECURITY.md)).
+GTM is **disabled** (`google_tag_manager.enable: false`) with a placeholder ID `GTM-XXXXXX`. `Base.astro` renders it via the installed `@digi4care/astro-google-tagmanager` package (`<GoogleTagmanager>` + `<GoogleTagmanagerNoscript>`); there is no hand-rolled GTM snippet. To enable: set `enable: true` and a real `gtm_id` in `config.json`. A live GTM ID executes arbitrary tags with no Content Security Policy in place (see [SECURITY.md](./SECURITY.md)) — enable it only together with the CSP documented there.
 
 ## Comments — OpenRemark (live), not Disqus
 
-Comments are rendered by `src/layouts/components/OpenRemarkComment.astro`, which loads `https://open-remark.zeon.studio/embed.js` and re-mounts on Astro page transitions. It is gated by `open-remark-comment.enable` in `config.json` and uses the public client `siteKey` there (`cmpl2v9m4000104jjmruazes1` — a public client key by design, not a secret). `disqus-react` is installed but **not wired**; Disqus is not the comments system.
+Comments are rendered by `src/layouts/components/OpenRemarkComment.astro`, which loads `https://open-remark.zeon.studio/embed.js` and re-mounts on Astro page transitions. It is gated by `open-remark-comment.enable` in `config.json` and uses the public client `siteKey` there (`cmpl2v9m4000104jjmruazes1` — a public client key by design, not a secret). `disqus-react` was **removed from `package.json` 2026-11-13** (installed, never wired); Disqus is not the comments system.
 
 ## `menu.json`
 
@@ -121,4 +122,4 @@ To re-theme: edit `theme.json` only — never hand-edit `generated-theme.css` (i
 
 **Verified 2026-11-12: nothing imports `site.ts`.** `Base.astro` imports `config.json`/`theme.json` directly, `src/lib/seo.ts` imports `config.json` directly, and `astro.config.mjs` imports the JSON files directly. Importing `site.ts` has no side effects, but it currently changes nothing. The follow-up is to migrate `Base.astro`, `seo.ts`, and page components to import from `@/config/site` (one mechanical refactor, then delete the direct JSON imports) — or to delete `site.ts` if that direction is rejected. Until then, **edit the JSON files, not `site.ts`**, when changing a value.
 
-Also note: `site.ts` documents `language = "en"` / `locale = "en-US"` as template defaults — no locale is declared in any config JSON, and there is no i18n setup. The `i18n` package is installed but not wired (see [INSTALLATION.md](./INSTALLATION.md)).
+Also note: `site.ts` documents `language = "en"` / `locale = "en-US"` as template defaults — no locale is declared in any config JSON, and there is no i18n setup. The `i18n` package was **removed from `package.json` 2026-11-13** (installed, never wired — see [INSTALLATION.md](./INSTALLATION.md)).

@@ -30,6 +30,7 @@ All commands are defined in `package.json` (`scripts`).
 | `pnpm run build` | `node scripts/themeGenerator.js && node scripts/jsonGenerator.js && astro build` | Production site in `dist/` |
 | `pnpm run preview` | `astro preview` | Serves `dist/` locally for a pre-deploy check |
 | `pnpm run check` | `astro check` | Typecheck (Astro + TypeScript) |
+| `pnpm run lint` | `eslint .` | Lint (flat config `eslint.config.js`; 0 errors / 0 warnings, verified 2026-11-13; CI runs it) |
 | `pnpm run format` | `prettier -w ./src` | Formats `src/` with Prettier |
 | `pnpm run deploy:cf-workers` | `pnpm run build && wrangler deploy` | Cloudflare Workers static-assets deploy (see [DEPLOYMENT.md](./DEPLOYMENT.md)) |
 | `pnpm run preview:cf-workers` | `pnpm run build && wrangler dev` | Local Cloudflare Workers preview |
@@ -38,23 +39,29 @@ All commands are defined in `package.json` (`scripts`).
 
 1. **`scripts/themeGenerator.js`** reads `src/config/theme.json` and writes `src/styles/generated-theme.css` (CSS variables for colors/fonts). It throws if `theme.json` is missing. With `--watch` (dev only) it regenerates on change.
 2. **`scripts/jsonGenerator.js`** reads the blog collection and writes `.json/posts.json` and `.json/search.json` (gitignored build artifacts). Note: nothing in `src/` currently reads these files — they are generated but unused by the site. See [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md).
-3. **`astro build`** renders the static site into `dist/` (65 pages, verified 2026-11-12 in ~10 s), optimizes the 7 images that go through `astro:assets`, and generates `dist/sitemap-index.xml` + `dist/sitemap-0.xml` via `@astrojs/sitemap`.
+3. **`astro build`** renders the static site into `dist/` (77 pages, verified 2026-11-13: 71 s wall / 1m1s Astro time, `dist/` 20,255,062 bytes — a second run under contention took 100 s wall with a byte-identical `dist/`), optimizes the 7 images that go through `astro:assets`, and generates `dist/sitemap-index.xml` + `dist/sitemap-0.xml` via `@astrojs/sitemap`. Build time is dominated by `@playform/compress` (HTML/Image/SVG passes; the JS pass is disabled — see [PERFORMANCE.md](./PERFORMANCE.md)).
 
-### Verification (2026-11-12, sandbox)
+### Verification (2026-11-13, sandbox, worktree at `a7a9c4a`)
 
 ```text
 $ node scripts/themeGenerator.js && node scripts/jsonGenerator.js && astro build
-[build] 65 page(s) built in 9.58s
+[build] 77 page(s) built in 1m 1s
 [build] Complete!
 
 $ astro check
-Result (93 files):
+Result (95 files):
 - 0 errors
 - 0 warnings
-- 1 hint
+- 0 hints
+
+$ eslint .
+(no output — 0 errors, 0 warnings)
+
+$ npx prettier --check ./src
+All matched files use Prettier code style!
 ```
 
-Note: the sandbox had no `pnpm` binary on `PATH`, so the three build steps were run directly (`node scripts/…` + `./node_modules/.bin/astro build`) — the same commands `pnpm run build` runs. `pnpm` itself was not re-verified end-to-end in this pass; the lockfile and `packageManager` pin are as committed.
+Note: the sandbox had no `pnpm` binary on `PATH`, so the build steps were run directly (`node scripts/…` + `./node_modules/.bin/astro build`) — the same commands `pnpm run build` runs. `pnpm` itself was not re-verified end-to-end in this pass; the lockfile and `packageManager` pin are as committed. **Lockfile warning:** eight zero-usage packages were removed from `package.json` on 2026-11-13 without regenerating `pnpm-lock.yaml` (no `pnpm install` in that worktree). Until the coordinator runs `pnpm install` and commits the updated lockfile, `pnpm install --frozen-lockfile` (and CI) will fail. Do not push the `package.json` change without it.
 
 ## Installed but not yet wired — dependency status
 
@@ -70,17 +77,17 @@ The upgrade added several dependencies that are **installed but not imported or 
 | `katex` `^0.19.1`, `remark-math` `^6.0.0`, `rehype-katex` `^7.0.1` | **Wired** — `remark-math` + `rehype-katex` via `unified({...})` in `astro.config.mjs` (also fixes the `markdown.remarkPlugins` deprecation); KaTeX CSS imported in `src/styles/main.css` | — |
 | `mermaid` `^12.3.0` | **Wired** — client-side renderer in `src/layouts/Base.astro`: dynamically imports `mermaid` only on pages with a ` ```mermaid ` block and renders it (dark theme); the code block stays as-is on failure | — |
 | `@aws-sdk/client-s3` `^3.1167.0`, `exif-be-gone` `^1.5.1` | **Wired** — `scripts/upload-to-r2.mjs` (`pnpm upload:r2`), env-only credentials, EXIF stripped before upload; see [IMAGE_STORAGE.md](./IMAGE_STORAGE.md) | — |
-| `disqus-react` `^1.1.7` | Installed, not wired — **Disqus is NOT the comments system** | The live comments system is **OpenRemark** (`src/layouts/components/OpenRemarkComment.astro`, gated by `config.json` `open-remark-comment`). Do not claim Disqus is wired; remove `disqus-react` or wire it deliberately (it cannot coexist with OpenRemark on the same post without a decision) |
-| `@digi4care/astro-google-tagmanager` `^2.1.0` | **Wired** — `<GoogleTagmanager>` + `<GoogleTagmanagerNoscript>` in `src/layouts/Base.astro`, replacing the hand-rolled snippet (still gated by `config.json` `google_tag_manager`); the inline snippet is gone, only the package runs | — |
-| `astro-swiper` `^2.11.0` | Installed, **not wired** — no real carousel surface: Testimonials already auto-rotates via `motion/react`, TrustedClients is a CSS/JS logo marquee, Gallery is a static grid; swapping any of them for Swiper would change behaviour for no gain | Remove, or revisit if a genuine swipeable carousel is designed |
-| `@supercharge/promise-pool` `^3.3.0`, `turndown` `^7.2.5`, `glob` `^14.0.6`, `node-html-parser` `^9.0.7` | Installed, **not wired** — no script needs them: `scripts/jsonGenerator.js` reads blog Markdown with `fs` + `gray-matter` and needs no concurrency, globbing, HTML parsing, or HTML→Markdown conversion | Remove, or wire if a script (e.g. CMS import / sitemap verification) genuinely needs them |
-| `i18n` `^0.15.4` | Installed, not wired — no locale config, no `i18n` import; site language is hardcoded `en` (`Base.astro` `lang="en"`) | A real i18n setup (routing, dictionaries, locale config) is a separate project; do not claim the site is translated |
+| `disqus-react` `^1.1.7` | **Removed 2026-11-13** — was installed, never wired | The live comments system is **OpenRemark** (`src/layouts/components/OpenRemarkComment.astro`, gated by `config.json` `open-remark-comment`). Disqus was never the comments system |
+| `@digi4care/astro-google-tagmanager` `^2.1.0` | **Wired** — `<GoogleTagmanager>` + `<GoogleTagmanagerNoscript>` in `src/layouts/Base.astro` (gated by `config.json` `google_tag_manager`); the package renders GTM, there is no hand-rolled snippet | — |
+| `astro-swiper` `^2.11.0` | **Removed 2026-11-13** — was installed, never wired: no real carousel surface (Testimonials auto-rotates via `motion/react`, TrustedClients is a CSS/JS logo marquee, Gallery is a static grid) | Revisit only if a genuine swipeable carousel is designed |
+| `@supercharge/promise-pool` `^3.3.0`, `turndown` `^7.2.5`, `glob` `^14.0.6`, `node-html-parser` `^9.0.7` | **Removed 2026-11-13** — were installed, never wired: no script needs them (`scripts/jsonGenerator.js` reads blog Markdown with `fs` + `gray-matter`; the `glob` in `src/content.config.ts` is Astro's own `astro/loaders` glob, not the npm package) | Wire if a script (e.g. CMS import / sitemap verification) genuinely needs them |
+| `i18n` `^0.15.4` | **Removed 2026-11-13** — was installed, never wired: no locale config, no `i18n` import; site language is hardcoded `en` (`Base.astro` `lang="en"`) | A real i18n setup (routing, dictionaries, locale config) is a separate project; do not claim the site is translated |
 
 | `rollup-plugin-visualizer` `^7.1.3` | **Wired (opt-in)** — in `vite.plugins` only when `ANALYZE=true`; writes `stats.html` at the repo root, normal builds unaffected | Run `ANALYZE=true pnpm run build` to generate the report |
-| `@astrojs/cloudflare` `14.4.7`, `@astrojs/vercel` `^11.0.21` | Installed, **not wired — no `adapter()` call in `astro.config.mjs`**; output is static | Cloudflare deploy currently uses Wrangler static assets (`wrangler.jsonc`), not the adapter. To use SSR/edge features, add the adapter deliberately — it changes the output mode; see [DEPLOYMENT.md](./DEPLOYMENT.md) |
-| `eslint` `^10.14.0`, `@eslint/js`, `eslint-plugin-astro` `^3.2.1` | Installed, **no config file exists** (`eslint.config.*` / `.eslintrc*` absent) — `eslint` cannot run meaningfully | Add an `eslint.config.mjs` (flat config) and a `lint` script, or remove the packages |
+| `@astrojs/cloudflare` `14.4.7`, `@astrojs/vercel` `^11.0.21` | Installed, **not wired — no `adapter()` call in `astro.config.mjs`**; output is static | Cloudflare deploy currently uses Wrangler static assets (`wrangler.jsonc`), not the adapter. `@astrojs/vercel` is deliberately kept — the forms worker may need it as the adapter for API routes (decision pending). To use SSR/edge features, add the adapter deliberately — it changes the output mode; see [DEPLOYMENT.md](./DEPLOYMENT.md) |
+| `eslint` `^10.14.0`, `@eslint/js`, `eslint-plugin-astro` `^3.2.1` | **Wired** — `eslint.config.js` (flat config) exists, `pnpm run lint` (`eslint .`) reports 0 errors / 0 warnings, and CI runs it (`.github/workflows/ci.yml`: check → lint → format → build) | — |
 | Prettier plugins `@ianvs/prettier-plugin-sort-imports`, `prettier-plugin-tailwindcss` | Installed, **not enabled** — `.prettierrc` lists only `prettier-plugin-astro` | Add them to `.prettierrc` `plugins` (and reformat) or remove them |
-| `tailwind-bootstrap-grid` `^7.0.0` | Installed, unused — zero references in `src/`, styles, or config | Remove |
+| `tailwind-bootstrap-grid` `^7.0.0` | **Removed 2026-11-13** — was installed, unused (zero references in `src/`, styles, or config) | — |
 | `motion` `^14.13.0` | **Wired** — `motion/react` in React components, vanilla `motion` in Astro inline scripts | — (note: this is the `motion` package, not `framer-motion`) |
 
 TypeScript stays at `^6.0.3` deliberately: `@astrojs/check` 0.9.12 does not support TypeScript 7. Do not upgrade TypeScript until `@astrojs/check` supports it.
@@ -93,6 +100,6 @@ TypeScript stays at `^6.0.3` deliberately: `@astrojs/check` 0.9.12 does not supp
 | `node: --experimental-strip-types` / type-stripping errors running `scripts/generate-sitepins-schema.mjs` | That script imports a `.ts` file and needs Node ≥ 22.6 type stripping (Node 24 is fine). Do not run it with Node 20/22.12. |
 | `astro build` fails with `UnsupportedImageFormat` on an SVG | SVGs must go through the `ImageMod.astro` bypass (fixed 2026-11-12, commit `6c70fd0`). If you added a new `<Image>` usage with an SVG, use `ImageMod` instead. |
 | Build fails in `themeGenerator.js`: `Could not find theme.json` | `src/config/theme.json` is missing or renamed. Restore it — the build cannot run without it. |
-| `astro check` reports a hint about an unused variable | The 2026-11-12 check reported 0 errors, 0 warnings, 1 hint. Hints are non-blocking; fix them opportunistically, not as a release gate. |
+| `astro check` reports a hint about an unused variable | The 2026-11-13 check reported 0 errors, 0 warnings, **0 hints** (95 files). Hints are non-blocking; fix them opportunistically, not as a release gate. |
 | `pnpm install --frozen-lockfile` fails in CI | The lockfile is out of sync with `package.json`. Regenerate locally with `pnpm install` and commit the updated `pnpm-lock.yaml`. Never commit a `package.json` change without its lockfile update. |
 | Dev server shows stale theme colors | The theme watcher only runs under `pnpm run dev`. If you ran `astro dev` directly, restart with `pnpm run dev` or run `node scripts/themeGenerator.js` once. |

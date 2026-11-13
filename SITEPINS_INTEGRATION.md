@@ -4,7 +4,7 @@ Sitepins is the Git-based CMS this theme is built to work with (the live product
 
 ## Current state: schema mirror only — no live integration
 
-As of 2026-11-12, the Sitepins integration is **a generated schema mirror, not a live connection**. There is no Sitepins API client, no webhook, no preview route, and no admin UI in this repo. What exists:
+As of 2026-11-13 (re-verified; no live integration added since 2026-11-12), the Sitepins integration is **a generated schema mirror, not a live connection**. There is no Sitepins API client, no webhook, no preview route, and no admin UI in this repo. What exists:
 
 | Piece | Location | Status |
 |---|---|---|
@@ -59,8 +59,8 @@ For a live Sitepins/Sketivo integration (not built yet), the theme needs, at min
 
 1. **Content write-back**: the CMS writes Markdown + frontmatter into `src/content/**` (via git, per `.sitepins/config.json` `custom-commit: false`) and media into `public/images/`. The schema mirror is the validation contract for those writes.
 2. **Config editing**: `src/config/*.json` are listed under `configs` — the CMS must edit them as JSON and must re-run `themeGenerator.js` (or a build) after `theme.json` changes, since `generated-theme.css` is build output.
-3. **Slug routing** (if custom slugs are ever promised): wire `blog.slug` into routing first — today it is reserved and ignored.
-4. **Author/category/tag pages** (if the CMS exposes them): author archive, category, and tag listing pages do not exist; they must be built (`src/pages/…`) before the CMS links to them.
-5. **Media upload**: either keep the file-based flow (upload → `public/images/` → git) or build an R2 upload path (no S3 code exists today; `@aws-sdk/client-s3` is installed but unused — see [IMAGE_STORAGE.md](./IMAGE_STORAGE.md)). Absolute media URLs already render correctly everywhere.
+3. **Slug routing** is wired since 2026-11-12 (see [CONTENT_SCHEMA.md](./CONTENT_SCHEMA.md) "Routing"): a frontmatter `slug` differing from the filename serves both `/blog/<slug>` (canonical) and `/blog/<filename>` (alias). No post sets `slug` today.
+4. **Author/category/tag pages:** author archives (7) and category archives (5) exist; **tag listing pages do not** (no post sets `tags`). A CMS must not link to tag archives until they are built.
+5. **Media upload**: either keep the file-based flow (upload → `public/images/` → git) or use the R2 upload path — `scripts/upload-to-r2.mjs` uses `@aws-sdk/client-s3` with env-only credentials (see [IMAGE_STORAGE.md](./IMAGE_STORAGE.md)). Absolute media URLs already render correctly everywhere.
 6. **Preview**: a live-preview route does not exist. The Astroplate precedent (restore via `git checkout <commit> -- app/src/app/api/sandbox/` on the Sitepins side) is a Sitepins-side concern, not something this repo provides.
 7. **Forms/auth**: the theme has no backend. A CMS that promises working contact/apply/newsletter forms or login must supply that backend — the theme's forms currently post to `"#"` (see [CONFIGURATION.md](./CONFIGURATION.md)).

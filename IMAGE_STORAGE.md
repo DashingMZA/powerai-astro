@@ -3,7 +3,7 @@
 ## Where images live
 
 - **Local images:** `public/images/` (16 entries at the top level plus subfolders, e.g. `public/images/blog/`, `public/images/avatars/`, `public/images/integrations/`). They are served at `/images/…` and are the CMS media root (`.sitepins/config.json`: `"media": "public/images"`).
-- **Remote images:** any absolute `https://…` URL, typically an R2 bucket served from `https://media.csofts.tech/…`. There is **no upload code, no S3 client call, and no media-related environment variable anywhere in the repo** — remote images are just URLs written into frontmatter. See "R2 workflow" below.
+- **Remote images:** any absolute `https://…` URL, typically an R2 bucket served from `https://media.csofts.tech/…`. Remote images are just URLs written into frontmatter — but there **is** upload code in the repo: `scripts/upload-to-r2.mjs` (manual, operator-run; `@aws-sdk/client-s3` + `exif-be-gone`, env-only credentials — see "R2 workflow" below). Nothing in the site uploads automatically at build or runtime.
 
 ## `ImageMod.astro` — the only optimized image path
 

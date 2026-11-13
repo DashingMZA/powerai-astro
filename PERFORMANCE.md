@@ -2,12 +2,13 @@
 
 > **No Lighthouse / Core Web Vitals measurement exists.** No Chromium was available in the sandbox, so no CWV numbers, bundle-size numbers, or Lighthouse scores are claimed anywhere in this documentation. Everything below is structural (what the build produces and what hydrates), verified from the code and the 2026-11-12 build output. Run Lighthouse on the deployed site before making any performance claim.
 
-## Baseline (verified 2026-11-12)
+## Baseline (verified 2026-11-13, worktree at `a7a9c4a`)
 
-- **Output is fully static**: `astro build` produced **77 pages** (65 + 7 author + 5 category archives), `dist/` only. No server, no per-request rendering.
-- **`astro check`: 0 errors / 0 warnings / 0 hints** (95 files). **`eslint .`: 0 errors / 0 warnings** (CI runs it — see `.github/workflows/ci.yml`).
+- **Output is fully static**: `astro build` produced **77 pages** (65 + 7 author + 5 category archives), `dist/` only — 20,255,062 bytes (two runs, byte-identical). No server, no per-request rendering.
+- **`astro check`: 0 errors / 0 warnings / 0 hints** (95 files). **`eslint .`: 0 errors / 0 warnings**. Prettier check passes. CI runs check → lint → format → build (see `.github/workflows/ci.yml`).
 - **7 images optimized** per build via `astro:assets` (WebP, `quality="mid"`) — only the images routed through `ImageMod.astro`.
-- **Fonts**: Google Fonts via Astro's `Font` component with `preload` (`Base.astro`), families from `theme.json`. Font loading behavior (FOUT/FOIT) was not measured.
+- **Fonts**: Google Fonts via Astro's `Font` component with `preload` (`Base.astro`) and `display: "swap"` (`astro.config.mjs`), families from `theme.json`. Font loading behavior (FOUT/FOIT) was not measured.
+- **Largest bundles in `dist/` (2026-11-13 build):** `elk-*.js` 1,498,941 bytes (mermaid layout engine — only loaded on pages with a mermaid block), `chunk-*.js` 629,040 bytes, `cytoscape.esm` 441,717 bytes, `katex` 258,780 bytes, `client.*.js` 209,144 bytes, `react.*.js` 132,618 bytes. Single CSS file: `Base.*.css` 145,682 bytes. 139 JS files total (5.68 MB pre-compress, per the audit). Largest images are duplicated PNGs (`images/avatar.png` and `_astro/avatar.*.png`, 545,486 bytes each — see the audit's duplicate-PNG note).
 
 ## Build time audit (measured 2026-11-12, full record: `~/workspace/powerai-upgrade/PERF-AUDIT.md`)
 
@@ -16,7 +17,7 @@ Environment: shared sandbox VM, 1.5 CPUs — absolute wall times vary ±50% run 
 | Configuration | Wall time | Compress hook | `dist/` size |
 |---|---|---|---|
 | `compress()` (all types on) | 162–170 s (one contended run: 254 s) | ~115–130 s | 20,239,679 bytes |
-| `compress({ JavaScript: false })` (**current**) | 109–116 s | 33–66 s | ~21 MB |
+| `compress({ JavaScript: false })` (**current**) | 109–116 s (2026-11-12); **71 s wall / 1m1s Astro time on 2026-11-13** (second run 100 s wall under contention with a parallel `eslint` run, byte-identical `dist/`) | 33–66 s | 20,255,062 bytes |
 | compress disabled (control) | 31–60 s | — | 23,461,634 bytes |
 
 **Root cause: `@playform/compress` was the cost, and inside it the JavaScript (terser) pass dominated** — ~50–90 s re-minifying 5.68 MB of already Vite-minified JS (139 files, incl. the 1.5 MB elk/mermaid bundle) to save 15 KB (0.26%). The other compress passes are cheap for what they save: Images (sharp) ~32–39 s for 2.45 MB, HTML ~7–15 s for 283 KB, SVG ~2–6 s for 339 KB, CSS/JSON ~0 s. Cold vs warm builds differ negligibly (162 s cold vs 165 s warm) — the cost is paid on every build, not just cold ones. The non-compress build is 23–46 s of Astro time, so the pre-compress build itself is not the problem.
@@ -27,12 +28,12 @@ Environment: shared sandbox VM, 1.5 CPUs — absolute wall times vary ±50% run 
 
 ## Hydration inventory — where JavaScript comes from
 
-The site uses Astro islands: most of the page is static HTML, and React components hydrate only where a `client:*` directive is set. **29 `client:*` directives** exist in `src/` (verified by grep):
+The site uses Astro islands: most of the page is static HTML, and React components hydrate only where a `client:*` directive is set. **24 `client:*` directives** exist in `src/` (verified by grep 2026-11-13 — the earlier "29" count was wrong): **5 `client:load`, 19 `client:visible`**, no `client:only`/`client:idle`/`client:media`.
 
 - **Homepage hydrates 6 React islands**, all `client:visible`: `TrustedClients`, `Statistics`, `Integration`, `Pricing`, `Testimonials`, `FAQ` (`src/pages/index.astro`). Each pulls in React 19 + `motion/react` (+ `react-icons` where used). These are the biggest JS cost on the site; several (Testimonials, TrustedClients, FAQ) are candidates for Astro-native rewrites if JS weight becomes a problem.
 - **`client:load` (eager)** is used on `TrustedClients` (about/features/pricing pages), `IntegrationList` (integrations index), and the elements-page shortcodes (`Tabs`, `Accordion`, `Youtube`). Eager hydration where `client:visible` would usually suffice — review if first-load JS matters.
 - **19 `.astro` files each ship an inline `<script>` importing `motion`** (`animateMini`/`inView`) for small fade-ins, so the `motion` runtime is bundled into the JS of nearly every page. The `Badge.astro` pattern (`id="badge-${Math.random()…}"` + `querySelectorAll('[id^="badge-"]')`) re-scans the DOM per instance.
-- **Two directives are dead**: `client:load` on `<PageHeader>` and `client:visible` on `<CaseStudyCard>` in `src/pages/case-studies/page/[page].astro` — both are `.astro` components and cannot hydrate; the directives are silently ignored.
+- **Two directives are dead** (unchanged 2026-11-13): `client:load` on `<PageHeader>` and `client:visible` on `<CaseStudyCard>` in `src/pages/case-studies/page/[page].astro` — both are `.astro` components and cannot hydrate; the directives are silently ignored.
 - **View transitions are on** (`ClientRouter` in `Base.astro`), but **no link prefetching is configured**.
 
 ## Images — the biggest structural cost
@@ -56,4 +57,4 @@ pnpm run build && pnpm run preview
 # Images: list dist/ _astro assets by size; compare against public/images sources
 ```
 
-Do not quote CWV targets as "met" until those runs exist. The honest statement today is: static output, islands-only hydration, 77 pages building in ~110 s (compress with JS off), and no measured field or lab data.
+Do not quote CWV targets as "met" until those runs exist. The honest statement today is: static output, islands-only hydration (24 directives), 77 pages building in ~70–100 s wall (compress with JS off), `dist/` 20,255,062 bytes, and no measured field or lab data.

@@ -51,7 +51,7 @@ One extra guard in `Base.astro`: a **local** `og:image` path that does not exist
 
 ## Sitemap
 
-Generated at build time by `@astrojs/sitemap` (`sitemap()` in `astro.config.mjs`, `site` taken from `config.json` `base_url`). Output: `dist/sitemap-index.xml` → `dist/sitemap-0.xml`, all URLs on `https://powerai.csofts.tech`.
+Generated at build time by `@astrojs/sitemap` (`sitemap()` in `astro.config.mjs`, `site` taken from `config.json` `base_url`). Output: `dist/sitemap-index.xml` → `dist/sitemap-0.xml`, all URLs on `https://powerai.csofts.tech` **in builds from this tree** — because `base_url` is still `csofts.tech`. Production is `https://powerai.jadoo.bond`; the sitemap regenerates on `jadoo.bond` as soon as `base_url` is changed (see [DEPLOYMENT.md](./DEPLOYMENT.md)).
 
 The sitemap **excludes** `/404`, `/login`, and `/sign-up` via the `filter` in `astro.config.mjs`:
 
@@ -80,13 +80,13 @@ Allow: /
 Sitemap: https://powerai.csofts.tech/sitemap-index.xml
 ```
 
-It points at the real domain and the generated sitemap index. If `base_url` changes, update this file by hand — nothing generates it.
+It points at the real domain and the generated sitemap index. If `base_url` changes, update this file by hand — nothing generates it. **It still points at `csofts.tech` in this tree** (`Sitemap: https://powerai.csofts.tech/sitemap-index.xml`); change it to `https://powerai.jadoo.bond/sitemap-index.xml` together with `base_url` before release.
 
 ## What is NOT done (SEO gaps)
 
 - **Stale demo content**: newest blog post is 2023-11-05; all careers are past deadline. Search engines will see old dates and expired jobs.
-- **No author/category/tag archive pages** — thin topical structure; `category`/`tags` are free text with no listing pages.
+- **No tag archive pages** — `tags` are free text with no listing pages. Author archives (7) and category archives (5) **do** exist since the 2026-11-12 gaps-fix round (77 pages = 65 + 7 author + 5 category); the old "no author/category/tag archives" gap is now only about tags.
 - **Featured post is duplicated** across `/blog`, `/blog/page/2`, `/blog/page/3` (both `blog/index.astro` and `blog/page/[page].astro` render the same featured post at the top).
 - **Draft single pages redirect to `/404`** (`Astro.redirect("/404")`) rather than returning a real 404 status; status behavior on the deployed host is unverified.
 - **No `twitter:site`, no `og:locale` alternates, no hreflang** (single-language site, `lang="en"`).
-- **No verification of the live site**: the deployed `https://powerai.csofts.tech` was not fetched in this pass; whether the live site matches this commit is unverified. After deploying, re-check the live sitemap, RSS, and a sample page's rendered `<head>` (view-source) and run the result through Google's Rich Results Test / a social debugger.
+- **Live site not re-verified from this worktree**: live production is `https://powerai.jadoo.bond`, but no fetch of it was done in this pass, and builds from this tree still emit `csofts.tech` URLs (see the `base_url` note above). After the `base_url` change and redeploy, re-check the live sitemap, RSS, and a sample page's rendered `<head>` (view-source) and run the result through Google's Rich Results Test / a social debugger. Also verify the live response headers (`vercel.json` — see [DEPLOYMENT.md](./DEPLOYMENT.md)).
