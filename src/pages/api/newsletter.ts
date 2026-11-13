@@ -11,14 +11,17 @@
 // error) for an address that is already a contact. That is treated as
 // a success with `alreadySubscribed: true` — the visitor is already
 // on the list, so there is nothing to fix and no error to show.
+// NOTE: this 409 branch is effectively dead — Resend upserts, so a
+// duplicate subscription returns a plain 200 instead. The branch is
+// kept as a harmless fallback.
 // No welcome email is sent (NEWSLETTER_FROM_EMAIL is reserved for
 // one, if it is ever added — see .env.example).
 //
-// Live delivery currently FAILS on a config error: credentials are
-// set in Vercel Production (since 2026-11-13), but the configured
-// RESEND_API_KEY is sending-only (Resend 401 `restricted_api_key` on
-// contacts.create) — the newsletter needs a key with Contacts
-// permission. See docs.
+// Live delivery CONFIRMED 2026-11-13: the newsletter form was
+// retested live (200) after the Resend config fix in Vercel and the
+// owner confirmed inbox delivery. (The earlier sending-only API key
+// 401 `restricted_api_key` failure no longer applies — the key in
+// Vercel now has Contacts permission.)
 
 import type { APIRoute } from "astro";
 import { Resend } from "resend";

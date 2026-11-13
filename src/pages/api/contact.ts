@@ -6,8 +6,11 @@
 // id. Credentials are configured in Vercel Production (since
 // 2026-11-13); without RESEND_API_KEY / CONTACT_EMAIL /
 // CONTACT_FROM_EMAIL this answers 503 and sends nothing. Live
-// delivery currently FAILS on a config error: CONTACT_FROM_EMAIL is
-// malformed (Resend 422 "Invalid `from` field") — see docs.
+// delivery CONFIRMED 2026-11-13: the owner fixed the malformed
+// CONTACT_FROM_EMAIL value in Vercel (it had been missing `>`,
+// Resend 422 "Invalid `from` field"), production redeployed, and
+// the contact form was retested live (200) with owner-confirmed
+// inbox delivery.
 
 import type { APIRoute } from "astro";
 import {

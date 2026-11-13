@@ -155,9 +155,8 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
                       alt="Feature"
                       width={570}
                       height={360}
-                      class="rounded-3xl object-cover relative z-1"
+                      class="kf-feature-img rounded-3xl object-cover relative z-1"
                       loading="lazy"
-                      onerror="this.style.display='none'"
                     />
                     <svg
                       class="absolute bottom-0 left-0"
@@ -229,6 +228,20 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
   import { animateMini as animate, inView } from "motion";
 
   function initKeyFeatures() {
+    // --- Hide feature images that fail to load (replaces the old
+    // inline onerror handler — CSP-readiness: no inline handlers). ---
+    document
+      .querySelectorAll<HTMLImageElement>(".kf-feature-img")
+      .forEach((img) => {
+        img.addEventListener("error", () => {
+          img.style.display = "none";
+        });
+        // Already failed before this script ran (e.g. cached 404).
+        if (img.complete && img.naturalWidth === 0) {
+          img.style.display = "none";
+        }
+      });
+
     // --- Scroll-reveal for left panel (fadeInUp) ---
     const leftPanel = document.querySelector<HTMLElement>('[id^="kf-left-"]');
     if (leftPanel) {
