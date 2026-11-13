@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/sections.json",
+  "title": "sections",
+  "description": "Homepage building blocks (CTA, features, FAQ, pricing, stats, testimonials, …). One file per section in src/content/sections/. Each file carries only the fields its component reads.",
+  "x-sitepins": {
+    "name": "sections",
+    "file": "src/content/sections/call-to-action.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/sections"
+  },
+  "type": "object",
+  "properties": {
+    "enable": {
+      "type": "boolean"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string"
+    },
+    "button": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "link"
+      ]
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "track": {
+            "type": "string"
+          },
+          "bullet_points": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "feature_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "track": {
+            "type": "string"
+          },
+          "bullet_points": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "faq_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ]
+      }
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "track": {
+      "type": "object",
+      "properties": {
+        "top_note": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "bottom_note": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "stats_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "prefix": {
+                "type": "string"
+              },
+              "number": {
+                "type": "number"
+              },
+              "suffix": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "number"
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      }
+    },
+    "testimonials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "company": {
+            "type": "object",
+            "properties": {
+              "logo": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "logo"
+        ]
+      }
+    },
+    "pricing_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "highlighted": {
+            "type": "boolean"
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "monthly": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number"
+                  },
+                  "prefix": {
+                    "type": "string"
+                  },
+                  "suffix": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "number"
+                ]
+              },
+              "yearly": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number"
+                  },
+                  "prefix": {
+                    "type": "string"
+                  },
+                  "suffix": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "number"
+                ]
+              }
+            },
+            "required": [
+              "monthly",
+              "yearly"
+            ]
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "include": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "value"
+              ]
+            }
+          },
+          "button": {
+            "type": "object",
+            "properties": {
+              "enable": {
+                "type": "boolean"
+              },
+              "label": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "link"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "offer_yearly": {
+      "type": "string"
+    }
+  }
+}

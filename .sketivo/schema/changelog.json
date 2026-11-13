@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/changelog.json",
+  "title": "changelog",
+  "description": "Changelog entries. Single file: src/content/changelog/-index.md.",
+  "x-sitepins": {
+    "name": "changelog",
+    "file": "src/content/changelog/-index.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/changelog"
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "string"
+    },
+    "noindex": {
+      "default": false,
+      "type": "boolean"
+    },
+    "og_image": {
+      "type": "string"
+    },
+    "og_description": {
+      "type": "string"
+    },
+    "twitter_title": {
+      "type": "string"
+    },
+    "twitter_description": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "page_header": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "button_dark": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_primary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_secondary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "changelog_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "icon": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "icon",
+                      "text"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "version",
+          "date",
+          "title"
+        ]
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

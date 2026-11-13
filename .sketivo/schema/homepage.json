@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/homepage.json",
+  "title": "homepage",
+  "description": "Homepage banner. Single file: src/content/homepage/-index.md.",
+  "x-sitepins": {
+    "name": "homepage",
+    "file": "src/content/homepage/-index.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/homepage"
+  },
+  "type": "object",
+  "properties": {
+    "banner": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "badge": {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "type": "boolean"
+            },
+            "label": {
+              "type": "string"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "image": {
+          "type": "string"
+        },
+        "button_dark": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_primary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/case-studies.json",
+  "title": "case-studies",
+  "description": "Case studies. One file per study in src/content/case-studies/ plus -index.md. Narrative lives in the Markdown body; frontmatter `challenge`/`solution`/`results` are optional structured fields only.",
+  "x-sitepins": {
+    "name": "case-studies",
+    "file": "src/content/case-studies/case-study-1.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/case-studies"
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "string"
+    },
+    "noindex": {
+      "default": false,
+      "type": "boolean"
+    },
+    "og_image": {
+      "type": "string"
+    },
+    "og_description": {
+      "type": "string"
+    },
+    "twitter_title": {
+      "type": "string"
+    },
+    "twitter_description": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "featured": {
+      "default": false,
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string"
+    },
+    "client": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "challenge": {
+      "type": "string"
+    },
+    "solution": {
+      "type": "string"
+    },
+    "results": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "review_video": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

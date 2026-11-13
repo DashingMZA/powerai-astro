@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/about.json",
+  "title": "about",
+  "description": "About page blocks (page header, who-we-are, goals, team). Single file: src/content/about/-index.md.",
+  "x-sitepins": {
+    "name": "about",
+    "file": "src/content/about/-index.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/about"
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "string"
+    },
+    "noindex": {
+      "default": false,
+      "type": "boolean"
+    },
+    "og_image": {
+      "type": "string"
+    },
+    "og_description": {
+      "type": "string"
+    },
+    "twitter_title": {
+      "type": "string"
+    },
+    "twitter_description": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "page_header": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "button_dark": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_primary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_secondary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "who_we_are": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "badge": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "what_our_goals": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "mission": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
+          }
+        },
+        "vision": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "our_team": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "team_list": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "position": {
+                "type": "string"
+              },
+              "image": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

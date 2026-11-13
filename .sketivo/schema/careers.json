@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://powerai.csofts.tech/.sitepins/schema/careers.json",
+  "title": "careers",
+  "description": "Job listings. One file per role in src/content/careers/ plus -index.md. Live shape is `job_info`; see src/content/schemas.ts for the field mapping.",
+  "x-sitepins": {
+    "name": "careers",
+    "file": "src/content/careers/backend-developer.md",
+    "fileType": "md",
+    "fmType": "yaml",
+    "contentPath": "src/content/careers"
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "string"
+    },
+    "noindex": {
+      "default": false,
+      "type": "boolean"
+    },
+    "og_image": {
+      "type": "string"
+    },
+    "og_description": {
+      "type": "string"
+    },
+    "twitter_title": {
+      "type": "string"
+    },
+    "twitter_description": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "draft": {
+      "default": false,
+      "type": "boolean"
+    },
+    "job_info": {
+      "type": "object",
+      "properties": {
+        "employ_type": {
+          "type": "string"
+        },
+        "experience": {
+          "type": "string"
+        },
+        "salary_range": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "department": {
+          "type": "string"
+        },
+        "deadline": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "employ_type",
+        "location",
+        "department"
+      ]
+    },
+    "responsibilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "apply_url": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "page_header": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "button_dark": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_primary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button_secondary": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "link"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    },
+    "open_positions": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        },
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "gallery": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        },
+        "badge": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}
