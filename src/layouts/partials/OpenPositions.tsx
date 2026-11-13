@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 
 import type { Career } from "@/types/index";
 import { AnimatePresence, motion } from "motion/react";
+import { useHydrated } from "@/lib/animations";
 
 type OpenPositionsProps = {
   badge: string;
@@ -11,6 +12,9 @@ type OpenPositionsProps = {
 
 const OpenPositions = ({ badge, title, careers }: OpenPositionsProps) => {
   const [activeFilter, setActiveFilter] = useState("All roles");
+  // No-JS safe: SSR ships the roles visible; entrance fades only
+  // engage once JS is running (see src/lib/animations.ts).
+  const hydrated = useHydrated();
 
   const listTransition = {
     type: "spring",
@@ -70,7 +74,7 @@ const OpenPositions = ({ badge, title, careers }: OpenPositionsProps) => {
 
               {/* Category Filters */}
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                initial={hydrated ? { opacity: 0, y: 16 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -122,7 +126,7 @@ const OpenPositions = ({ badge, title, careers }: OpenPositionsProps) => {
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={activeFilter}
-                initial={{ opacity: 0, y: 14 }}
+                initial={hydrated ? { opacity: 0, y: 14 } : false}
                 animate={{
                   opacity: 1,
                   y: 0,
@@ -138,7 +142,9 @@ const OpenPositions = ({ badge, title, careers }: OpenPositionsProps) => {
                 {filteredCareers.map((career) => (
                   <motion.div
                     key={career.slug}
-                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                    initial={
+                      hydrated ? { opacity: 0, y: 20, scale: 0.98 } : false
+                    }
                     animate={{
                       opacity: 1,
                       y: 0,

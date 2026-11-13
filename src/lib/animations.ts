@@ -4,6 +4,29 @@
  */
 
 import type { Transition, Variants } from "motion/react";
+import { useEffect, useState } from "react";
+
+// ============================================
+// HYDRATION GATE (accessibility)
+// ============================================
+
+/**
+ * True only after client hydration. Entrance animations hide their
+ * element in the SSR HTML (`initial="hidden"` renders inline
+ * `opacity:0`), which leaves content invisible when JS is disabled
+ * or hydration fails. Gate the hidden initial state behind this hook
+ * — `initial={hydrated ? "hidden" : false}` — so the server ships
+ * visible content and the animation only engages once JS is running.
+ * Either way the element ends up visible; the only cost when the
+ * gate skips the animation is a missing fade-in.
+ */
+export function useHydrated(): boolean {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+  return hydrated;
+}
 
 // ============================================
 // TRANSITION CONFIGURATIONS

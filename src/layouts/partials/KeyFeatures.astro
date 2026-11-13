@@ -21,7 +21,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
       <div class="container-padding-y container-padding-x">
         <div class="grid md:grid-cols-2 gap-x-4 gap-y-8">
           <!-- Left: Sticky heading + feature track list -->
-          <div id={`kf-left-${uid}`} style="opacity:0">
+          <div id={`kf-left-${uid}`}>
             <div class="md:sticky md:top-30 xl:w-2/3">
               {badge && <Badge>{badge}</Badge>}
               <h2 class="mb-6 font-medium">{title}</h2>
@@ -33,7 +33,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
                   >
                     <span
                       class="kf-arrow inline-flex overflow-hidden"
-                      style="width:0;opacity:0;margin-right:0"
+                      style="width:0;margin-right:0"
                     >
                       <svg
                         width="12"
@@ -71,7 +71,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
           </div>
 
           <!-- Right: Feature cards -->
-          <div id={`kf-right-${uid}`} style="opacity:0">
+          <div id={`kf-right-${uid}`}>
             {features.map((feature, index: number) => (
               <>
                 <!-- Intersection sentinel -->
@@ -82,7 +82,6 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
                 />
                 <div
                   class="kf-card border border-border/6 bg-card rounded-4xl p-2.5 md:sticky md:top-30 mb-2.5"
-                  style="opacity:0"
                   data-kf-index={index}
                 >
                   <div class="p-7.5 pb-12.5 lg:w-2/3">

@@ -11,11 +11,7 @@ const { plan } = Astro.props;
 const uid = `pricingcard-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<div
-  id={uid}
-  style="opacity:0"
-  class="bg-card/70 border border-border/6 rounded-3xl p-2.5"
->
+<div id={uid} class="bg-card/70 border border-border/6 rounded-3xl p-2.5">
   <div class="bg-card border border-border/6 rounded-3xl p-7.5">
     <div class="size-14 bg-gradient-dark border border-border/6 rounded-2xl flex justify-center items-center relative overflow-hidden mb-3">
       <svg

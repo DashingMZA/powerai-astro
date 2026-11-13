@@ -6,6 +6,7 @@ import {
   fadeInUpVariants,
   staggerContainerVariants,
   staggerItemVariants,
+  useHydrated,
 } from "@/lib/animations";
 
 export interface PricingPageData {
@@ -31,6 +32,9 @@ const Pricing = ({
   const { title, enable, badge, pricing_plans, offer_yearly } =
     data.frontmatter;
   const [isYearly, setIsYearly] = useState(false);
+  // No-JS safe: SSR ships the section visible; entrance fades only
+  // engage once JS is running (see src/lib/animations.ts).
+  const hydrated = useHydrated();
   const toggleRef = useRef<HTMLDivElement | null>(null);
   const sliderRef = useRef<HTMLSpanElement | null>(null);
 
@@ -134,7 +138,7 @@ const Pricing = ({
 
                 <div className="flex flex-col gap-y-14">
                   <motion.div
-                    initial="hidden"
+                    initial={hydrated ? "hidden" : false}
                     whileInView="visible"
                     viewport={{ once: true, margin: "0px", amount: 0.05 }}
                     variants={fadeInUpVariants}
@@ -179,7 +183,7 @@ const Pricing = ({
                   </motion.div>
 
                   <motion.div
-                    initial="hidden"
+                    initial={hydrated ? "hidden" : false}
                     whileInView="visible"
                     viewport={{ once: true, margin: "0px", amount: 0.05 }}
                     variants={staggerContainerVariants}
@@ -188,7 +192,7 @@ const Pricing = ({
                     {pricing_plans.map((plan, index) => (
                       <motion.div key={index} variants={staggerItemVariants}>
                         <motion.div
-                          initial="initial"
+                          initial={hydrated ? "initial" : false}
                           whileInView="visible"
                           viewport={{ once: true, margin: "0px", amount: 0.05 }}
                           whileHover="hover"
@@ -303,7 +307,7 @@ const Pricing = ({
                             </h3>
                             <p className="text-gray mb-3">{plan.content}</p>
                             <div className="flex items-baseline relative">
-                              <h3
+                              <p
                                 className="text-h2 price-tag active font-normal text-text"
                                 data-price-tag-monthly
                               >
@@ -314,11 +318,10 @@ const Pricing = ({
                                 <span className="text-base text-text-light">
                                   {plan.price?.monthly?.suffix}
                                 </span>
-                              </h3>
-                              <h3
+                              </p>
+                              <p
                                 className="text-h2 price-tag inactive font-normal text-text"
                                 data-price-tag-yearly
-                                style={{ opacity: 0 }}
                               >
                                 <span className="text-text-light">
                                   {plan.price?.yearly?.prefix}
@@ -327,7 +330,7 @@ const Pricing = ({
                                 <span className="text-base text-text-light">
                                   {plan.price?.yearly?.suffix}
                                 </span>
-                              </h3>
+                              </p>
                             </div>
                           </div>
                           <div className="p-7.5">
@@ -361,7 +364,7 @@ const Pricing = ({
         ) : (
           <div className="flex flex-col gap-y-14">
             <motion.div
-              initial="hidden"
+              initial={hydrated ? "hidden" : false}
               whileInView="visible"
               viewport={{ once: true, margin: "0px", amount: 0.05 }}
               variants={fadeInUpVariants}
@@ -404,7 +407,7 @@ const Pricing = ({
             </motion.div>
 
             <motion.div
-              initial="hidden"
+              initial={hydrated ? "hidden" : false}
               whileInView="visible"
               viewport={{ once: true, margin: "0px", amount: 0.05 }}
               variants={staggerContainerVariants}
@@ -413,7 +416,7 @@ const Pricing = ({
               {pricing_plans.map((plan, index) => (
                 <motion.div key={index} variants={staggerItemVariants}>
                   <motion.div
-                    initial="initial"
+                    initial={hydrated ? "initial" : false}
                     whileInView="visible"
                     viewport={{ once: true, margin: "0px", amount: 0.05 }}
                     whileHover="hover"
@@ -525,7 +528,7 @@ const Pricing = ({
                       </h3>
                       <p className="text-gray mb-3">{plan.content}</p>
                       <div className="flex items-baseline relative">
-                        <h3
+                        <p
                           className="text-h2 price-tag active font-normal text-text"
                           data-price-tag-monthly
                         >
@@ -536,11 +539,10 @@ const Pricing = ({
                           <span className="text-base text-text-light">
                             {plan.price?.monthly?.suffix}
                           </span>
-                        </h3>
-                        <h3
+                        </p>
+                        <p
                           className="text-h2 price-tag inactive font-normal text-text"
                           data-price-tag-yearly
-                          style={{ opacity: 0 }}
                         >
                           <span className="text-text-light">
                             {plan.price?.yearly?.prefix}
@@ -549,7 +551,7 @@ const Pricing = ({
                           <span className="text-base text-text-light">
                             {plan.price?.yearly?.suffix}
                           </span>
-                        </h3>
+                        </p>
                       </div>
                     </div>
                     <div className="p-7.5">

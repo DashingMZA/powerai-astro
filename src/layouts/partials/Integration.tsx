@@ -2,7 +2,7 @@ import ImageFallback from "@/helpers/ImageFallback";
 import type { Button } from "@/types/index";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { sectionHeaderVariants } from "@/lib/animations";
+import { sectionHeaderVariants, useHydrated } from "@/lib/animations";
 
 export interface IntegrationPageData {
   notFound?: boolean;
@@ -18,6 +18,9 @@ export interface IntegrationPageData {
 const Integration = ({ data }: { data: IntegrationPageData }) => {
   const { badge, title, list, button } = data.frontmatter;
   const [introStarted, setIntroStarted] = useState(false);
+  // No-JS safe: SSR ships the orbit visible; the fade-in only engages
+  // once JS is running (see src/lib/animations.ts).
+  const hydrated = useHydrated();
   const [spinStarted, setSpinStarted] = useState(false);
 
   // Use all items (duplicated to reduce gap)
@@ -43,7 +46,7 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
         <div className="container">
           <div className="pt-30 pb-10 container-padding-x relative overflow-hidden">
             <motion.div
-              initial="hidden"
+              initial={hydrated ? "hidden" : false}
               whileInView="visible"
               viewport={{ once: true, margin: "0px", amount: 0.05 }}
               variants={sectionHeaderVariants}
@@ -99,7 +102,7 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
                         {/* Icon */}
                         <motion.div
                           className={`absolute rounded-full flex justify-center items-center transition-transform hover:scale-110 duration-300 bg-gradient-dark border border-border/4 w-[60px] h-[60px] md:w-[90px] md:h-[90px]`}
-                          initial={{ opacity: 0 }}
+                          initial={hydrated ? { opacity: 0 } : false}
                           animate={{ opacity: introStarted ? 1 : 0 }}
                           transition={{
                             duration: fadeDuration,
@@ -126,7 +129,7 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
                           >
                             <ImageFallback
                               src={item}
-                              alt={`Integration ${index + 1}`}
+                              alt=""
                               width={40}
                               height={40}
                               className={`w-8 h-8 md:w-10 md:h-10 object-contain`}
@@ -137,7 +140,7 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
                         {/* Dot */}
                         <motion.div
                           className="absolute rounded-full bg-white/20"
-                          initial={{ opacity: 0 }}
+                          initial={hydrated ? { opacity: 0 } : false}
                           animate={{ opacity: introStarted ? 1 : 0 }}
                           transition={{
                             duration: fadeDuration,
@@ -178,7 +181,7 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
               </div>
               {/* CTA Button */}
               <motion.div
-                initial="hidden"
+                initial={hydrated ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true, margin: "0px", amount: 0.05 }}
                 variants={sectionHeaderVariants}

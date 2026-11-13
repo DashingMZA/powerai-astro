@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ImageFallback from "@/helpers/ImageFallback";
 import { markdownify } from "@/lib/utils/textConverter";
 import { AnimatePresence, motion } from "motion/react";
-import { fadeInUpVariants } from "@/lib/animations";
+import { fadeInUpVariants, useHydrated } from "@/lib/animations";
 
 type TestimonialItem = {
   name: string;
@@ -41,6 +41,9 @@ const Testimonials = ({ data }: { data: PageData }) => {
   // a 4 s rotation with no pause control fails WCAG 2.2.2 (Pause, Stop,
   // Hide) and yanks content away from keyboard/screen-reader users.
   const [paused, setPaused] = useState(false);
+  // No-JS safe: SSR ships the section visible; the fade-in only
+  // engages once JS is running (see src/lib/animations.ts).
+  const hydrated = useHydrated();
 
   const legacyItem: TestimonialItem | null =
     data.frontmatter.name &&
@@ -110,7 +113,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
           <div className="main-container">
             <div className="container">
               <motion.div
-                initial="hidden"
+                initial={hydrated ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true, margin: "0px", amount: 0.05 }}
                 variants={fadeInUpVariants}

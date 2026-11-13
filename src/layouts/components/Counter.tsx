@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { motion } from "motion/react";
-import { fadeInUpVariants } from "@/lib/animations";
+import { motion, useReducedMotion } from "motion/react";
+import { fadeInUpVariants, useHydrated } from "@/lib/animations";
 
 export interface CounterProps {
   target: number;
@@ -20,8 +20,13 @@ const Counter: React.FC<CounterProps> = ({
   startDelay = 0,
 }) => {
   const spanRef = useRef<HTMLSpanElement>(null);
+  const hydrated = useHydrated();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    // Reduced motion: leave the SSR final value in place — counting
+    // up is decoration, not content.
+    if (reduceMotion) return;
     let frame: number;
     let startTime: number | null = null;
     let observer: IntersectionObserver | null = null;
@@ -82,12 +87,15 @@ const Counter: React.FC<CounterProps> = ({
       if (frame) cancelAnimationFrame(frame);
       observer?.disconnect();
     };
-  }, [target, duration, prefix, suffix, startDelay]);
+  }, [target, duration, prefix, suffix, startDelay, reduceMotion]);
 
   return (
     <motion.span
       ref={spanRef}
-      initial="hidden"
+      // No-JS/hydration-failure safe: the SSR HTML ships the final
+      // value visible (initial={false}); the fade-in only engages
+      // once JS is running.
+      initial={hydrated && !reduceMotion ? "hidden" : false}
       whileInView="visible"
       viewport={{ once: true, margin: "0px", amount: 0.05 }}
       variants={fadeInUpVariants}
@@ -98,7 +106,9 @@ const Counter: React.FC<CounterProps> = ({
       data-suffix={suffix}
       data-delay={startDelay}
     >
-      {prefix}0{suffix}
+      {prefix}
+      {target}
+      {suffix}
     </motion.span>
   );
 };

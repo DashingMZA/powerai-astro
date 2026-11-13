@@ -192,6 +192,26 @@ const ogImage = toAbsoluteUrl(
     {jsonLd && (
       <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />
     )}
+    <!-- No-JS fallback (a11y C2/C4): entrance animations are applied
+         from JS only, so content is visible without it — but as a
+         belt-and-braces, force any stray inline opacity:0 visible and
+         unhide the mobile nav (which JS otherwise reveals) when JS
+         is disabled. -->
+    <noscript>
+      <style>
+        [style*="opacity:0"] {
+          opacity: 1 !important;
+        }
+        @media (max-width: 1279.5px) {
+          #nav-menu {
+            display: block !important;
+          }
+          [data-submenu] {
+            display: block !important;
+          }
+        }
+      </style>
+    </noscript>
     <ClientRouter />
   </head>
   <body>

@@ -2,7 +2,7 @@ import ImageFallback from "@/helpers/ImageFallback";
 import { plainify } from "@/lib/utils/textConverter";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { cardVariants } from "@/lib/animations";
+import { cardVariants, useHydrated } from "@/lib/animations";
 import VideoModal from "./VideoModal";
 
 const FeaturedCaseStudy = ({
@@ -38,13 +38,16 @@ const FeaturedCaseStudy = ({
   if (!data) return null;
 
   const TitleTag = headingTag;
+  // No-JS safe: SSR ships the card visible; the entrance fade only
+  // engages once JS is running (see src/lib/animations.ts).
+  const hydrated = useHydrated();
   const { title, image, logo, description, review_video } = data.frontmatter;
   const caseStudyPath = `/case-studies/${data.slug}`;
   const excerpt = description || plainify(data.content || "");
 
   return (
     <motion.div
-      initial="initial"
+      initial={hydrated ? "initial" : false}
       whileInView="visible"
       viewport={{ once: true, margin: "0px 0px -100px 0px", amount: 0.05 }}
 

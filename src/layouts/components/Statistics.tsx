@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import {
   staggerContainerVariants,
   staggerItemVariants,
+  useHydrated,
 } from "@/lib/animations";
 
 export interface StatisticsPageData {
@@ -26,6 +27,7 @@ export interface StatisticsPageData {
 const Statistics = ({ data }: { data: StatisticsPageData }) => {
   const primaryColor = theme?.colors?.default?.theme_color?.primary;
   const secondaryColor = theme?.colors?.default?.theme_color?.secondary;
+  const hydrated = useHydrated();
 
   return (
     data.frontmatter.enable && (
@@ -33,7 +35,9 @@ const Statistics = ({ data }: { data: StatisticsPageData }) => {
         <div className="main-container">
           <div className="container">
             <motion.div
-              initial="hidden"
+              // No-JS safe: SSR ships the grid visible; the stagger
+              // fade-in only engages once JS is running.
+              initial={hydrated ? "hidden" : false}
               whileInView="visible"
               viewport={{ once: true, margin: "-100px", amount: 0.1 }}
               variants={staggerContainerVariants}
@@ -46,13 +50,13 @@ const Statistics = ({ data }: { data: StatisticsPageData }) => {
                   className="border border-border/6 py-10 px-12 rounded-2xl text-center bg-card relative overflow-hidden"
                 >
                   <div className="relative z-1">
-                    <h3 className="text-[60px] font-light">
+                    <p className="text-[60px] font-light">
                       <Counter
                         target={item.value.number}
                         prefix={item.value.prefix}
                         suffix={item.value.suffix}
                       />
-                    </h3>
+                    </p>
                     <p className="text-text">{item.label}</p>
                   </div>
 

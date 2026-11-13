@@ -16,7 +16,6 @@ const { enable, badge, title, images } = data;
         <div class="container-padding-y container-padding-x">
           <div
             id={`gallery-header-${Math.random().toString(36).slice(2, 8)}`}
-            style="opacity:0"
             class="text-center mb-14"
           >
             {badge && <Badge>{badge}</Badge>}
@@ -28,7 +27,6 @@ const { enable, badge, title, images } = data;
               return (
                 <div
                   id={uid}
-                  style="opacity:0"
                   class={`${index % 2 === 0 ? "md:row-span-2" : "md:row-span-3"} ${index === 4 ? "lg:row-span-3!" : ""}`}
                 >
                   <ImageMod
