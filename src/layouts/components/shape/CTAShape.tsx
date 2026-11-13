@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useId, useMemo } from "react";
 import theme from "@/config/theme.json";
 
 /* ─── seeded deterministic RNG so particles are stable across renders ─── */
@@ -11,6 +11,9 @@ function seededRand(seed: number) {
 }
 
 const CTAShape = () => {
+  // Suffix every SVG def id: PageHeader and CallToAction both render
+  // this shape, so bare ids appeared twice per page in built HTML.
+  const uid = useId().replace(/:/g, "");
   const primaryColor =
     theme?.colors?.default?.theme_color?.primary ?? "#9A4DFE";
   const secondaryColor =
@@ -64,7 +67,7 @@ const CTAShape = () => {
     >
       <defs>
         <filter
-          id="filter0_f_35_6567"
+          id={`filter0_f_35_6567-${uid}`}
           x="0"
           y="130"
           width="1516.75"
@@ -85,7 +88,7 @@ const CTAShape = () => {
           />
         </filter>
         <filter
-          id="filter1_f_35_6567"
+          id={`filter1_f_35_6567-${uid}`}
           x="178.445"
           y="0"
           width="1160"
@@ -106,7 +109,7 @@ const CTAShape = () => {
           />
         </filter>
         <linearGradient
-          id="paint0_linear_35_6567"
+          id={`paint0_linear_35_6567-${uid}`}
           x1="133.445"
           y1="523.5"
           x2="1383.44"
@@ -167,7 +170,7 @@ const CTAShape = () => {
           </stop>
         </linearGradient>
         <linearGradient
-          id="paint1_linear_35_6567"
+          id={`paint1_linear_35_6567-${uid}`}
           x1="298.445"
           y1="636"
           x2="1218.44"
@@ -229,10 +232,10 @@ const CTAShape = () => {
         </linearGradient>
 
         {/* ── ADDED: extra defs for the animation overlays only ── */}
-        <clipPath id="_oa_clip">
+        <clipPath id={`_oa_clip-${uid}`}>
           <rect x="0" y="0" width="1517" height="302" />
         </clipPath>
-        <linearGradient id="_oa_shim" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id={`_oa_shim-${uid}`} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="white" stopOpacity="0" />
           <stop offset="40%" stopColor="white" stopOpacity="0.06" />
           <stop offset="50%" stopColor="white" stopOpacity="0.22" />
@@ -240,7 +243,7 @@ const CTAShape = () => {
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </linearGradient>
         <linearGradient
-          id="_oa_tr1"
+          id={`_oa_tr1-${uid}`}
           x1="0"
           y1="0"
           x2="1517"
@@ -253,7 +256,7 @@ const CTAShape = () => {
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </linearGradient>
         <linearGradient
-          id="_oa_tr2"
+          id={`_oa_tr2-${uid}`}
           x1="1517"
           y1="0"
           x2="0"
@@ -279,16 +282,16 @@ const CTAShape = () => {
       {/* ══════════════════════════════════════════════════════════════════
           YOUR ORIGINAL SHAPES — 100% unchanged
       ══════════════════════════════════════════════════════════════════ */}
-      <g filter="url(#filter0_f_35_6567)">
+      <g filter={`url(#filter0_f_35_6567-${uid})`}>
         <path
           d="M120.588 285.861C116.892 267.303 131.088 250 150.01 250H1366.74C1385.7 250 1399.91 267.385 1396.13 285.974L1307.33 722.974C1304.49 736.954 1292.19 747 1277.93 747H237.058C222.749 747 210.432 736.894 207.636 722.861L120.588 285.861Z"
-          fill="url(#paint0_linear_35_6567)"
+          fill={`url(#paint0_linear_35_6567-${uid})`}
         />
       </g>
-      <g filter="url(#filter1_f_35_6567)">
+      <g filter={`url(#filter1_f_35_6567-${uid})`}>
         <path
           d="M1218.44 636C1218.44 568.238 1206.55 501.139 1183.43 438.535C1160.31 375.931 1126.43 319.048 1083.71 271.133C1041 223.218 990.289 185.21 934.479 159.278C878.669 133.347 818.853 120 758.445 120C698.037 120 638.22 133.347 582.41 159.278C526.601 185.21 475.891 223.218 433.176 271.133C390.461 319.048 356.577 375.931 333.46 438.535C310.343 501.139 298.445 568.238 298.445 636L1218.44 636Z"
-          fill="url(#paint1_linear_35_6567)"
+          fill={`url(#paint1_linear_35_6567-${uid})`}
           fillOpacity="0.3"
         >
           <animate
@@ -308,7 +311,7 @@ const CTAShape = () => {
       ══════════════════════════════════════════════════════════════════ */}
 
       {/* 1 ── Twinkling star field */}
-      <g clipPath="url(#_oa_clip)">
+      <g clipPath={`url(#_oa_clip-${uid})`}>
         {stars.map(({ id, cx, cy, rad, dur, del, lo, hi }) => (
           <circle
             key={id}
@@ -330,7 +333,7 @@ const CTAShape = () => {
       </g>
 
       {/* 2 ── Rising ember particles */}
-      <g clipPath="url(#_oa_clip)">
+      <g clipPath={`url(#_oa_clip-${uid})`}>
         {embers.map(({ id, cx, cy, rad, dur, del, op, rise, color }) => (
           <g
             key={id}
@@ -350,7 +353,7 @@ const CTAShape = () => {
       </g>
 
       {/* 3 ── Expanding pulse rings */}
-      <g clipPath="url(#_oa_clip)">
+      <g clipPath={`url(#_oa_clip-${uid})`}>
         {[
           {
             cx: 758,

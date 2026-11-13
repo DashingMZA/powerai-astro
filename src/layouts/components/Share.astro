@@ -8,13 +8,23 @@ interface Props {
 }
 const { title, description, slug, className } = Astro.props;
 const { base_url } = config.site;
+// Share targets must be percent-encoded: a raw `&` in a title would split
+// the query string, and a literal `&amp;` inside an Astro attribute
+// expression is escaped again to `&amp;amp;` in the built HTML (verified
+// in dist: the Twitter `url` param was dropped). Raw `&` separators in
+// the expression are escaped exactly once by Astro (`&amp;`), which is
+// the correct HTML encoding for an href.
+const pageUrl = `${base_url}/${slug}`;
+const encodedUrl = encodeURIComponent(pageUrl);
+const encodedTitle = encodeURIComponent(title);
+const encodedDescription = description ? encodeURIComponent(description) : "";
 ---
 
 <ul class={className}>
   <li class="inline-block">
     <a
       aria-label="facebook share button"
-      href={`https://facebook.com/sharer/sharer.php?u=${base_url}/${slug}`}
+      href={`https://facebook.com/sharer/sharer.php?u=${encodedUrl}`}
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -32,7 +42,7 @@ const { base_url } = config.site;
   <li class="inline-block">
     <a
       aria-label="twitter share button"
-      href={`https://twitter.com/intent/tweet/?text=${title}&amp;url=${base_url}/${slug}`}
+      href={`https://twitter.com/intent/tweet/?text=${encodedTitle}&url=${encodedUrl}`}
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -50,7 +60,7 @@ const { base_url } = config.site;
   <li class="inline-block">
     <a
       aria-label="linkedin share button"
-      href={`https://www.linkedin.com/shareArticle?mini=true&url=${base_url}/${slug}&title=${title}&summary=${description}&source=${base_url}`}
+      href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}&source=${base_url}`}
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -69,7 +79,7 @@ const { base_url } = config.site;
   <li class="inline-block">
     <a
       aria-label="pinterest share button"
-      href={`https://pinterest.com/pin/create/button/?url=${base_url}/${slug}&media=&description=${description}`}
+      href={`https://pinterest.com/pin/create/button/?url=${encodedUrl}&media=&description=${encodedDescription}`}
       target="_blank"
       rel="noreferrer noopener"
     >

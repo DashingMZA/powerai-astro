@@ -32,18 +32,18 @@ const containerUid = `ef-container-${Math.random().toString(36).slice(2, 8)}`;
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <g filter="url(#filter0_f_ef)">
+                  <g filter={`url(#filter0_f_ef-${index})`}>
                     <circle
                       cx="210"
                       cy="210"
                       r="110"
-                      fill="url(#paint0_ef)"
+                      fill={`url(#paint0_ef-${index})`}
                       fill-opacity="0.8"
                     />
                   </g>
                   <defs>
                     <filter
-                      id="filter0_f_ef"
+                      id={`filter0_f_ef-${index}`}
                       x="0"
                       y="0"
                       width="420"
@@ -64,7 +64,7 @@ const containerUid = `ef-container-${Math.random().toString(36).slice(2, 8)}`;
                       />
                     </filter>
                     <linearGradient
-                      id="paint0_ef"
+                      id={`paint0_ef-${index}`}
                       x1="100"
                       y1="320"
                       x2="320"

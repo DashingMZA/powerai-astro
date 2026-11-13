@@ -64,18 +64,18 @@ const Statistics = ({ data }: { data: StatisticsPageData }) => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g filter="url(#filter0_f_35_7008)">
+                    <g filter={`url(#filter0_f_35_7008-${index})`}>
                       <circle
                         cx="144"
                         cy="210"
                         r="110"
-                        fill="url(#paint0_linear_35_7008)"
+                        fill={`url(#paint0_linear_35_7008-${index})`}
                         fillOpacity="0.2"
                       />
                     </g>
                     <defs>
                       <filter
-                        id="filter0_f_35_7008"
+                        id={`filter0_f_35_7008-${index}`}
                         x="-66"
                         y="0"
                         width="420"
@@ -96,7 +96,7 @@ const Statistics = ({ data }: { data: StatisticsPageData }) => {
                         />
                       </filter>
                       <linearGradient
-                        id="paint0_linear_35_7008"
+                        id={`paint0_linear_35_7008-${index}`}
                         x1="34"
                         y1="320"
                         x2="254"
