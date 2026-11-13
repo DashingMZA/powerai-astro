@@ -23,7 +23,7 @@ const encodedDescription = description ? encodeURIComponent(description) : "";
 <ul class={className}>
   <li class="inline-block">
     <a
-      aria-label="facebook share button"
+      aria-label="Facebook share button (opens in new tab)"
       href={`https://facebook.com/sharer/sharer.php?u=${encodedUrl}`}
       target="_blank"
       rel="noreferrer noopener"
@@ -41,7 +41,7 @@ const encodedDescription = description ? encodeURIComponent(description) : "";
   </li>
   <li class="inline-block">
     <a
-      aria-label="twitter share button"
+      aria-label="Twitter share button (opens in new tab)"
       href={`https://twitter.com/intent/tweet/?text=${encodedTitle}&url=${encodedUrl}`}
       target="_blank"
       rel="noreferrer noopener"
@@ -59,7 +59,7 @@ const encodedDescription = description ? encodeURIComponent(description) : "";
   </li>
   <li class="inline-block">
     <a
-      aria-label="linkedin share button"
+      aria-label="LinkedIn share button (opens in new tab)"
       href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}&source=${base_url}`}
       target="_blank"
       rel="noreferrer noopener"
@@ -78,8 +78,8 @@ const encodedDescription = description ? encodeURIComponent(description) : "";
   </li>
   <li class="inline-block">
     <a
-      aria-label="pinterest share button"
-      href={`https://pinterest.com/pin/create/button/?url=${encodedUrl}&media=&description=${encodedDescription}`}
+      aria-label="Pinterest share button (opens in new tab)"
+      href={`https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedDescription}`}
       target="_blank"
       rel="noreferrer noopener"
     >

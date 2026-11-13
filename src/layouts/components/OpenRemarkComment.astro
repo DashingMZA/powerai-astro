@@ -3,7 +3,13 @@
 const { siteKey } = Astro.props;
 ---
 
-<div data-open-remark data-site-key={siteKey}></div>
+<div data-open-remark data-site-key={siteKey}>
+  <noscript>
+    <p>
+      Comments require JavaScript. Enable JavaScript to view and post comments.
+    </p>
+  </noscript>
+</div>
 
 <script is:inline>
   function loadOpenRemark() {

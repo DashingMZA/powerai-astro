@@ -229,25 +229,37 @@ const jobInfoCards = [
                       Apply for the position
                     </p>
                     <div class="flex flex-col gap-5">
+                      <label class="sr-only" for="apply-name">
+                        Name
+                      </label>
                       <input
+                        id="apply-name"
                         type="text"
                         name="name"
                         placeholder="Name"
                         required
-                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:border-primary/50"
                       />
+                      <label class="sr-only" for="apply-email">
+                        Email
+                      </label>
                       <input
+                        id="apply-email"
                         type="email"
                         name="email"
                         placeholder="Email"
                         required
-                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:border-primary/50"
                       />
+                      <label class="sr-only" for="apply-phone">
+                        Phone
+                      </label>
                       <input
+                        id="apply-phone"
                         type="tel"
                         name="phone"
                         placeholder="Phone"
-                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:border-primary/50"
                       />
                       <label
                         for="cv-upload"
@@ -273,12 +285,16 @@ const jobInfoCards = [
                         required
                         class="hidden"
                       />
+                      <label class="sr-only" for="apply-message">
+                        Why are you applying?
+                      </label>
                       <textarea
+                        id="apply-message"
                         name="message"
                         placeholder="Why are you applying?"
                         rows="4"
                         required
-                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-2xl px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50 resize-none"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-2xl px-7 py-3 text-gray placeholder:text-gray focus:border-primary/50 resize-none"
                       />
                       <!-- Position slug (validated server-side against the
                       careers collection); the visible title is not
@@ -339,6 +355,10 @@ const jobInfoCards = [
     // Timestamp for the server's minimum-time-to-submit check.
     applyTs.value = String(Date.now());
 
+    applyForm.addEventListener("input", (event) => {
+      (event.target as HTMLElement | null)?.removeAttribute("aria-invalid");
+    });
+
     cvInput.addEventListener("change", () => {
       cvFileName.textContent = cvInput.files?.[0]?.name ?? "";
     });
@@ -358,11 +378,23 @@ const jobInfoCards = [
         const result = (await response.json()) as {
           ok: boolean;
           message: string;
+          field?: string;
         };
         applyStatus.textContent = result.message;
         if (response.ok && result.ok) {
           applyForm.reset();
           cvFileName.textContent = "";
+        } else if (result.field) {
+          // Point the error at its field (H6): mark it invalid,
+          // associate the live status message, and move focus to it.
+          const field = applyForm.elements.namedItem(
+            result.field,
+          ) as HTMLElement | null;
+          if (field) {
+            field.setAttribute("aria-invalid", "true");
+            field.setAttribute("aria-describedby", "apply-status");
+            field.focus();
+          }
         }
       } catch {
         applyStatus.textContent =

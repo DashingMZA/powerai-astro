@@ -29,13 +29,12 @@ const iconMap: Record<string, string> = {
   {source.map((social) => (
     <li class="inline-block" data-social-item>
       <a
-        aria-label={social.name}
         href={social.link}
         target="_blank"
         rel="noopener noreferrer nofollow"
         class="inline-block hover:scale-110 transition-transform duration-200"
       >
-        <span class="sr-only">{social.name}</span>
+        <span class="sr-only">{social.name} (opens in new tab)</span>
         {iconMap[social.icon] ? (
           <Icon name={iconMap[social.icon]} width={20} height={20} />
         ) : (

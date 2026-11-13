@@ -168,23 +168,29 @@ const svgPaths = {
         <!-- Row 1: Name + Email -->
         <div class="flex gap-4 items-stretch flex-col sm:flex-row">
           <div class="relative flex-1 min-w-0 rounded-full bg-white/6 backdrop-blur-[22px] border border-border/6 transition-all focus-within:border-border/20 focus-within:bg-white/9">
+            <label class="sr-only" for="contact-name">
+              Name
+            </label>
             <input
               type="text"
+              id="contact-name"
               name="name"
-              aria-label="Name"
               placeholder="Name"
               required
-              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray outline-none font-normal border-none rounded-full"
+              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray font-normal border-none rounded-full"
             />
           </div>
           <div class="relative flex-1 min-w-0 rounded-full bg-white/6 backdrop-blur-[22px] border border-border/6 transition-all focus-within:border-border/20 focus-within:bg-white/9">
+            <label class="sr-only" for="contact-email">
+              Email
+            </label>
             <input
               type="email"
+              id="contact-email"
               name="email"
-              aria-label="Email"
               placeholder="Email"
               required
-              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray outline-none font-normal border-none rounded-full"
+              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray font-normal border-none rounded-full"
             />
           </div>
         </div>
@@ -192,55 +198,70 @@ const svgPaths = {
         <!-- Row 2: Phone + Subject -->
         <div class="flex gap-4 items-stretch flex-col sm:flex-row">
           <div class="relative flex-1 min-w-0 rounded-full bg-white/6 backdrop-blur-[22px] border border-border/6 transition-all focus-within:border-border/20 focus-within:bg-white/9">
+            <label class="sr-only" for="contact-phone">
+              Phone
+            </label>
             <input
               type="tel"
+              id="contact-phone"
               name="phone"
-              aria-label="Phone"
               placeholder="Phone"
-              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray outline-none font-normal border-none rounded-full"
+              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray font-normal border-none rounded-full"
             />
           </div>
           <div class="relative flex-1 min-w-0 rounded-full bg-white/6 backdrop-blur-[22px] border border-border/6 transition-all focus-within:border-border/20 focus-within:bg-white/9">
+            <label class="sr-only" for="contact-subject">
+              Subject
+            </label>
             <input
               type="text"
+              id="contact-subject"
               name="subject"
-              aria-label="Subject"
               placeholder="Subject"
-              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray outline-none font-normal border-none rounded-full"
+              class="w-full bg-transparent px-8 py-4 text-base leading-6 text-text placeholder:text-gray font-normal border-none rounded-full"
             />
           </div>
         </div>
 
         <!-- Message -->
         <div class="relative w-full rounded-3xl bg-light/6 backdrop-blur-[22px] border border-border/6 transition-all focus-within:border-border/20 flex-1 min-h-35">
+          <label class="sr-only" for="contact-message">
+            Message
+          </label>
           <textarea
+            id="contact-message"
             name="message"
-            aria-label="Message"
             placeholder="Write your message..."
             required
-            class="w-full h-full bg-transparent px-8 py-5 text-base leading-6 text-text placeholder:text-gray outline-none resize-none font-normal border-none rounded-3xl"
+            class="w-full h-full bg-transparent px-8 py-5 text-base leading-6 text-text placeholder:text-gray resize-none font-normal border-none rounded-3xl"
           ></textarea>
         </div>
       </div>
 
       <!-- Bottom section -->
       <div class="flex flex-col gap-6">
-        <!-- Checkbox -->
-        <label class="flex gap-2 items-start">
-          <button
-            id="agree-btn"
-            type="button"
-            class="shrink-0 mt-0.5 w-6 h-6 rounded-md border border-border/6 bg-card flex items-center justify-center transition-colors hover:border-border/20"
-            aria-label="I agree to the terms"
-            aria-pressed="false"
-          >
+        <!-- Consent: a real checkbox, not a toggle button (C1/M12).
+             It works with no JS (required: the browser blocks submit
+             until it is checked) and the server enforces it too.
+             The input is sr-only; the box below is its visual face,
+             driven by the sibling selectors in the <style> below. -->
+        <label class="flex gap-2 items-start cursor-pointer" for="agree">
+          <input
+            type="checkbox"
+            id="agree"
+            name="agree"
+            value="yes"
+            required
+            class="agree-input sr-only"
+          />
+          <span class="agree-box shrink-0 mt-0.5 w-6 h-6 rounded-md border border-border/6 bg-card flex items-center justify-center transition-colors hover:border-border/20">
             <svg
-              id="agree-check"
-              class="hidden"
+              class="agree-check hidden"
               width="14"
               height="14"
               viewBox="0 0 14 14"
               fill="none"
+              aria-hidden="true"
             >
               <path
                 d="M2 7L5.5 10.5L12 3.5"
@@ -250,10 +271,10 @@ const svgPaths = {
                 stroke-linejoin="round"
               />
             </svg>
-          </button>
-          <p class="text-gray text-base leading-6 font-normal flex-1">
+          </span>
+          <span class="text-gray text-base leading-6 font-normal flex-1">
             I agree to be contacted about my message.
-          </p>
+          </span>
         </label>
 
         <!-- Send button -->
@@ -267,7 +288,6 @@ const svgPaths = {
           id="submit-btn"
           type="submit"
           class="btn btn-primary px-6 py-3.5 text-base leading-6 font-medium disabled:opacity-50 cursor-pointer"
-          disabled
         >
           Send Message
         </button>
@@ -275,6 +295,18 @@ const svgPaths = {
     </form>
   </div>
 </div>
+
+<style>
+  /* Custom checkbox face: show the check when the real input is
+     checked, and a visible focus ring when it is keyboard-focused. */
+  #agree:checked + .agree-box .agree-check {
+    display: block;
+  }
+  #agree:focus-visible + .agree-box {
+    outline: 2px solid #9a4dfe;
+    outline-offset: 2px;
+  }
+</style>
 
 <script>
   const contactForm = document.getElementById(
@@ -284,21 +316,27 @@ const svgPaths = {
   const contactStatus = document.getElementById(
     "contact-status",
   ) as HTMLElement;
-  const agreeBtn = document.getElementById("agree-btn") as HTMLButtonElement;
-  const agreeCheck = document.getElementById("agree-check") as HTMLElement;
   const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
-  let agreed = false;
   let sending = false;
 
   // Timestamp for the server's minimum-time-to-submit check.
   contactTs.value = String(Date.now());
 
-  agreeBtn.addEventListener("click", () => {
-    agreed = !agreed;
-    agreeBtn.setAttribute("aria-pressed", String(agreed));
-    agreeCheck.classList.toggle("hidden", !agreed);
-    submitBtn.disabled = !agreed || sending;
+  // Server errors carry the failing field: point at it (aria-invalid
+  // + aria-describedby to the live status) and move focus to it (H6).
+  const flagFieldError = (fieldName: string) => {
+    const field = contactForm.elements.namedItem(
+      fieldName,
+    ) as HTMLElement | null;
+    if (!field) return;
+    field.setAttribute("aria-invalid", "true");
+    field.setAttribute("aria-describedby", "contact-status");
+    field.focus();
+  };
+
+  contactForm.addEventListener("input", (event) => {
+    (event.target as HTMLElement | null)?.removeAttribute("aria-invalid");
   });
 
   contactForm.addEventListener("submit", async (event) => {
@@ -321,6 +359,10 @@ const svgPaths = {
         message: (
           contactForm.elements.namedItem("message") as HTMLTextAreaElement
         ).value,
+        agree: (contactForm.elements.namedItem("agree") as HTMLInputElement)
+          .checked
+          ? "yes"
+          : "",
         company: (contactForm.elements.namedItem("company") as HTMLInputElement)
           .value,
         _ts: contactTs.value,
@@ -333,20 +375,23 @@ const svgPaths = {
       const result = (await response.json()) as {
         ok: boolean;
         message: string;
+        field?: string;
       };
       contactStatus.textContent = result.message;
       if (response.ok && result.ok) {
         contactForm.reset();
-        agreed = false;
-        agreeBtn.setAttribute("aria-pressed", "false");
-        agreeCheck.classList.add("hidden");
+        contactForm
+          .querySelectorAll("[aria-invalid]")
+          .forEach((el) => el.removeAttribute("aria-invalid"));
+      } else if (result.field) {
+        flagFieldError(result.field);
       }
     } catch {
       contactStatus.textContent =
         "Something went wrong. Please try again later.";
     } finally {
       sending = false;
-      submitBtn.disabled = !agreed;
+      submitBtn.disabled = false;
       submitBtn.textContent = "Send Message";
     }
   });

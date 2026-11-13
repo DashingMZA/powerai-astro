@@ -23,6 +23,9 @@ const Button = ({
       }`}
     >
       {label}
+      {link.startsWith("http") && (
+        <span className="sr-only"> (opens in new tab)</span>
+      )}
     </a>
   );
 };

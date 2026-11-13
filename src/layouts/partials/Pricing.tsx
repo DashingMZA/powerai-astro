@@ -202,6 +202,7 @@ const Pricing = ({
                           <div className="bg-card border border-border/6 rounded-3xl p-7.5">
                             <div className="size-14 bg-gradient-dark border border-border/6 rounded-2xl flex justify-center items-center relative overflow-hidden mb-3">
                               <svg
+                                aria-hidden="true"
                                 width="24"
                                 height="24"
                                 viewBox="0 0 24 24"
@@ -245,6 +246,7 @@ const Pricing = ({
                                 />
                               </svg>
                               <svg
+                                aria-hidden="true"
                                 className="absolute bottom-0 left-1/2 -translate-x-1/2"
                                 width="56"
                                 height="38"
@@ -426,6 +428,7 @@ const Pricing = ({
                     <div className="bg-card border border-border/6 rounded-3xl p-7.5">
                       <div className="size-14 bg-gradient-dark border border-border/6 rounded-2xl flex justify-center items-center relative overflow-hidden mb-3">
                         <svg
+                          aria-hidden="true"
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
@@ -469,6 +472,7 @@ const Pricing = ({
                           />
                         </svg>
                         <svg
+                          aria-hidden="true"
                           className="absolute bottom-0 left-1/2 -translate-x-1/2"
                           width="56"
                           height="38"

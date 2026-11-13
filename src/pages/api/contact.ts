@@ -80,6 +80,18 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const tooFast = checkMinSubmitTime(fields._ts);
   if (tooFast) return errorResponse(400, tooFast, "_ts");
 
+  // Consent to be contacted is required by the form (a required
+  // checkbox) — enforce it server-side too. Before this check the
+  // UI claimed agreement was required while the server never looked
+  // at it, so a crafted POST could skip consent entirely.
+  if (fields.agree !== "yes") {
+    return errorResponse(
+      400,
+      "Please agree to be contacted about your message.",
+      "agree",
+    );
+  }
+
   const name = validateTextField(fields.name, {
     label: "Name",
     field: "name",

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import ImageFallback from "@/helpers/ImageFallback";
 import { markdownify } from "@/lib/utils/textConverter";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { fadeInUpVariants, useHydrated } from "@/lib/animations";
 
 type TestimonialItem = {
@@ -41,6 +41,10 @@ const Testimonials = ({ data }: { data: PageData }) => {
   // a 4 s rotation with no pause control fails WCAG 2.2.2 (Pause, Stop,
   // Hide) and yanks content away from keyboard/screen-reader users.
   const [paused, setPaused] = useState(false);
+  // Explicit pause control (H7): hover/focus pausing is temporary and
+  // invisible, so a button owns the durable paused state.
+  const [manualPaused, setManualPaused] = useState(false);
+  const reduceMotion = useReducedMotion();
   // No-JS safe: SSR ships the section visible; the fade-in only
   // engages once JS is running (see src/lib/animations.ts).
   const hydrated = useHydrated();
@@ -66,7 +70,10 @@ const Testimonials = ({ data }: { data: PageData }) => {
         : [];
 
   useEffect(() => {
-    if (testimonials.length <= 1 || paused) return;
+    // No auto-rotation when there is nothing to rotate to, while the
+    // user hovers/focuses or paused it, or under reduced-motion.
+    if (testimonials.length <= 1 || paused || manualPaused || reduceMotion)
+      return;
 
     const intervalId = window.setInterval(() => {
       setDirection(1);
@@ -74,7 +81,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
     }, 4000);
 
     return () => window.clearInterval(intervalId);
-  }, [testimonials.length, paused]);
+  }, [testimonials.length, paused, manualPaused, reduceMotion]);
 
   if (!data.frontmatter.enable || testimonials.length === 0) {
     return null;
@@ -112,6 +119,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
         >
           <div className="main-container">
             <div className="container">
+              <h2 className="sr-only">Testimonials</h2>
               <motion.div
                 initial={hydrated ? "hidden" : false}
                 whileInView="visible"
@@ -173,6 +181,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
                           viewBox="0 0 131 84"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="true"
                         >
                           <path
                             d="M50 1C52.799 1 55.0503 1.65384 56.4668 3.21289C58.026 4.6293 58.6796 6.88063 58.6797 9.67969V18.2129C58.6797 21.0509 58.0094 23.351 56.4668 24.8936C55.0484 26.312 52.7976 26.8936 50 26.8936H35.2803C33.6499 26.8936 32.5297 27.3856 31.7656 28.2588L31.7441 28.2832L31.7207 28.3066C30.966 29.0613 30.5196 30.1965 30.5195 31.8662V34.0664H52.7734C55.5721 34.0664 57.8228 34.7207 59.2393 36.2793C60.799 37.6957 61.4531 39.9475 61.4531 42.7471V74.3203C61.4531 77.1581 60.7827 79.4575 59.2402 81C57.8218 82.4184 55.571 83 52.7734 83H9.67969C6.86738 83 4.58539 82.4129 3.04199 81.041L2.99805 81.002L2.95898 80.958C1.58707 79.4146 1.00004 77.1326 1 74.3203V34.2129C1.00008 23.2391 3.89006 14.8897 9.85352 9.37305C15.905 3.7644 23.8453 1.00002 33.5732 1H50ZM118.267 1C121.066 1 123.317 1.65386 124.733 3.21289C126.293 4.6293 126.946 6.88061 126.946 9.67969V18.2129C126.946 21.0509 126.276 23.351 124.733 24.8936C123.315 26.3119 121.064 26.8936 118.267 26.8936H103.547C101.916 26.8936 100.796 27.3856 100.032 28.2588L100.011 28.2832L99.9873 28.3066C99.2326 29.0613 98.7872 30.1965 98.7871 31.8662V34.0664H121.04C123.839 34.0664 126.09 34.7203 127.507 36.2793C129.066 37.6958 129.72 39.9478 129.72 42.7471V74.3203C129.72 77.1582 129.049 79.4574 127.507 81C126.088 82.4184 123.838 83 121.04 83H77.9463C75.134 82.9999 72.852 82.4129 71.3086 81.041L71.2646 81.002L71.2256 80.958C69.8537 79.4146 69.2666 77.1326 69.2666 74.3203V34.2129C69.2667 23.2391 72.1567 14.8897 78.1201 9.37305C84.1716 3.76439 92.1119 1.00003 101.84 1H118.267Z"
@@ -208,6 +217,9 @@ const Testimonials = ({ data }: { data: PageData }) => {
                             </div>
 
                             <div className="flex items-center gap-px mt-2">
+                              <span className="sr-only">
+                                Rated 5 out of 5 stars
+                              </span>
                               {Array.from({ length: 5 }).map((_, index) => (
                                 <svg
                                   key={index}
@@ -216,6 +228,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
                                   viewBox="0 0 18 17"
                                   fill="none"
                                   xmlns="http://www.w3.org/2000/svg"
+                                  aria-hidden="true"
                                 >
                                   <path
                                     d="M8.29981 0.276289C8.41955 -0.0922356 8.94092 -0.0922353 9.06066 0.276289L10.8356 5.73891C10.8891 5.90372 11.0427 6.0153 11.216 6.0153H16.9597C17.3472 6.0153 17.5083 6.51115 17.1948 6.73891L12.5481 10.115C12.4079 10.2168 12.3492 10.3974 12.4028 10.5622L14.1777 16.0248C14.2974 16.3933 13.8756 16.6998 13.5621 16.472L8.91535 13.0959C8.77516 12.9941 8.58532 12.9941 8.44512 13.0959L3.79834 16.472C3.48486 16.6998 3.06307 16.3933 3.18281 16.0248L4.95772 10.5622C5.01127 10.3974 4.9526 10.2168 4.81241 10.115L0.165631 6.73891C-0.147855 6.51114 0.013256 6.0153 0.400745 6.0153H6.14448C6.31777 6.0153 6.47135 5.90371 6.5249 5.73891L8.29981 0.276289Z"
@@ -224,12 +237,27 @@ const Testimonials = ({ data }: { data: PageData }) => {
                                 </svg>
                               ))}
                             </div>
+                            <span className="sr-only"> (opens in new tab)</span>
                           </a>
                         </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
                 </div>
+                {testimonials.length > 1 && !reduceMotion && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setManualPaused((p) => !p)}
+                      aria-pressed={manualPaused}
+                      className="btn btn-dark cursor-pointer"
+                    >
+                      {manualPaused
+                        ? "Play testimonials"
+                        : "Pause testimonials"}
+                    </button>
+                  </div>
+                )}
               </motion.div>
             </div>
           </div>

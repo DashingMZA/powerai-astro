@@ -9,10 +9,14 @@ function Notice({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`notice ${type}`}>
+    <div
+      className={`notice ${type}`}
+      role={type === "warning" ? "alert" : "status"}
+    >
       <div className="notice-head">
         {type === "tip" ? (
           <svg
+            aria-hidden="true"
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -28,6 +32,7 @@ function Notice({
           </svg>
         ) : type === "info" ? (
           <svg
+            aria-hidden="true"
             width="20"
             height="20"
             viewBox="0 0 18 20"
@@ -45,6 +50,7 @@ function Notice({
           </svg>
         ) : type === "warning" ? (
           <svg
+            aria-hidden="true"
             width="20"
             height="20"
             viewBox="0 0 20 20"
@@ -60,6 +66,7 @@ function Notice({
           </svg>
         ) : (
           <svg
+            aria-hidden="true"
             width="20"
             height="20"
             viewBox="0 0 20 20"

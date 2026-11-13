@@ -15,6 +15,8 @@ function Video({
 }) {
   return (
     <video
+      aria-label={title}
+      title={title}
       className="overflow-hidden rounded-lg"
       width={width}
       height={height}

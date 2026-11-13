@@ -41,7 +41,7 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
                   placeholder={`Search ${items.length} integrations...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-transparent py-4 pl-14 pr-6 text-lg text-text placeholder:text-gray focus:outline-none border-none ring-0"
+                  className="w-full bg-transparent py-4 pl-14 pr-6 text-lg text-text placeholder:text-gray border-none ring-0"
                 />
               </div>
 
@@ -50,7 +50,7 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
                   aria-label="Filter by category"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="cursor-pointer appearance-none bg-transparent py-4 pl-4 pr-10 text-lg text-text focus:outline-none border-none ring-0  w-full"
+                  className="cursor-pointer appearance-none bg-transparent py-4 pl-4 pr-10 text-lg text-text border-none ring-0  w-full"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                     backgroundPosition: `right 0.5rem center`,
@@ -70,6 +70,12 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
                 </select>
               </div>
             </div>
+
+            {/* Result count, announced when search/filter changes (M7) */}
+            <p aria-live="polite" className="sr-only">
+              {filteredList.length}{" "}
+              {filteredList.length === 1 ? "integration" : "integrations"} found
+            </p>
 
             {/* Cards Grid */}
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -109,7 +115,10 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
             </div>
 
             {filteredList.length === 0 && (
-              <div className="py-20 text-center text-lg text-gray">
+              <div
+                className="py-20 text-center text-lg text-gray"
+                role="status"
+              >
                 No integrations found matching &quot;{searchTerm}&quot;
               </div>
             )}
