@@ -6,6 +6,7 @@ import MainContainer from "@/components/MainContainer.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
+import type { CaseStudy } from "@/types/index";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import CallToAction from "@/partials/CallToAction.astro";
 import PageHeader from "@/partials/PageHeader.astro";
@@ -14,7 +15,7 @@ const { case_studies_folder, pagination } = config.settings;
 
 const caseStudyIndex = await getListPage(`${case_studies_folder}/-index.md`);
 const { title, meta_title, description, image } = caseStudyIndex.frontmatter;
-const caseStudies = await getSinglePage(case_studies_folder);
+const caseStudies = await getSinglePage<CaseStudy>(case_studies_folder);
 const sortedCaseStudies = sortByDate(caseStudies);
 const totalPages = Math.ceil(caseStudies.length / pagination);
 const currentCaseStudies = sortedCaseStudies.slice(0, pagination);

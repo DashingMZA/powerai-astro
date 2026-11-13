@@ -1,3 +1,5 @@
+import type { PricingTableData } from "@/components/PricingTable";
+
 export type RegularPage = {
   frontmatter: {
     title: string;
@@ -239,4 +241,162 @@ export type GalleryType = {
   badge: string;
   title: string;
   images: string[];
+};
+
+// ---------------------------------------------------------------------------
+// Legacy `{ frontmatter, slug, content }` shape (canonical parser)
+// ---------------------------------------------------------------------------
+//
+// `src/lib/contentParser.ts` returns this shape for list/index pages and
+// for `PostSingle.astro`. The frontmatter is the Zod-validated collection
+// data reshaped: every field a template actually reads is declared here,
+// so components can take a real type instead of `any`. Fields are
+// optional unless the templates read them unguarded (e.g. `title`, which
+// every `-index.md` file carries and every page destructures).
+
+/** One item of a section `features` / `feature_list` array. */
+export type SectionFeature = {
+  title: string;
+  content?: string;
+  image?: string;
+  icon?: string;
+  track?: string;
+  bullet_points?: string[];
+};
+
+/** Homepage banner (`homepage/-index.md`), consumed by `Hero.astro`. */
+export type HeroData = {
+  title: string;
+  content?: string;
+  image: string;
+  badge?: {
+    enable?: boolean;
+    label?: string;
+    images: string[];
+  };
+  button_dark?: Button | null;
+  button_primary?: Button | null;
+};
+
+/** `what_our_goals` block on the About page. */
+export type WhatOurGoalsData = {
+  badge?: string;
+  title: string;
+  image?: string;
+  mission: { title: string; content: string; icon: string };
+  vision: { title: string; content: string; icon: string };
+};
+
+/** `our_team` block on the About page. */
+export type OurTeamData = {
+  badge?: string;
+  title: string;
+  team_list: { name: string; position?: string; image?: string }[];
+};
+
+/** Page-header shape as the `PageHeader` partial consumes it. `badge` is
+ *  optional here (unlike `PageHeaderType`): `about/-index.md` has no
+ *  badge, and the partial already guards it. */
+export type PageHeaderProps = {
+  title: string;
+  badge?: string;
+  subtitle?: string;
+  button_primary?: Button;
+  button_dark?: Button;
+};
+
+/** Frontmatter of a legacy parser entry. */
+export type LegacyFrontmatter = {
+  title: string;
+  meta_title?: string;
+  description?: string;
+  excerpt?: string;
+  image?: string;
+  slug?: string;
+  url?: string;
+  date?: string | Date;
+  updated?: string | Date;
+  draft?: boolean;
+  featured?: boolean;
+  category?: string;
+  categories?: string[];
+  tags?: string[];
+  author?: Post["frontmatter"]["author"];
+  authors?: string[];
+  related?: string[];
+  canonical?: string;
+  noindex?: boolean;
+  og_image?: string;
+  og_description?: string;
+  twitter_title?: string;
+  twitter_description?: string;
+  enable?: boolean;
+  badge?: string;
+  subtitle?: string;
+  button?: Button;
+  features?: SectionFeature[];
+  feature_list?: SectionFeature[];
+  faq_list?: FAQType[];
+  pricing_plans?: PricingType[];
+  offer_yearly?: string;
+  banner?: HeroData;
+  page_header?: PageHeaderProps;
+  gallery?: GalleryType;
+  open_positions?: { enable?: boolean; badge: string; title: string };
+  changelog_list?: ChangelogItemType[];
+  who_we_are?: {
+    title?: string;
+    badge?: string;
+    subtitle?: string;
+    image?: string;
+  };
+  what_our_goals?: WhatOurGoalsData;
+  our_team?: OurTeamData;
+  job_info?: Career["frontmatter"]["job_info"];
+  responsibilities?: string[];
+  requirements?: string[];
+  apply_url?: string;
+  active?: boolean;
+  logo?: string;
+  icon?: string;
+  website?: string;
+  docs_url?: string;
+  status?: "available" | "beta" | "coming-soon";
+  summary?: string;
+  challenge?: string;
+  solution?: string;
+  results?: string | string[];
+  review_video?: string;
+  pricing_table?: PricingTableData;
+  contact_info?: {
+    title?: string;
+    subtitle?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+  };
+};
+
+/** One legacy parser entry: `{ frontmatter, slug, content }`. */
+export type LegacyPage = {
+  frontmatter: LegacyFrontmatter;
+  slug?: string;
+  content?: string;
+};
+
+/** Frontmatter of a `-index.md` list page: a header is always present. */
+export type IndexFrontmatter = LegacyFrontmatter & {
+  page_header: PageHeaderProps;
+};
+
+/** Frontmatter of `homepage/-index.md`: a banner is always present. */
+export type HomepageFrontmatter = LegacyFrontmatter & {
+  banner: HeroData;
+};
+
+/** Frontmatter of `about/-index.md`. */
+export type AboutFrontmatter = LegacyFrontmatter & {
+  page_header: PageHeaderProps;
+  what_our_goals: WhatOurGoalsData;
+  our_team: OurTeamData;
 };

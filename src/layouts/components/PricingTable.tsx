@@ -9,7 +9,7 @@ const svgPaths = {
 
 type CellValue = "check" | "minus" | string;
 
-interface PricingTableData {
+export interface PricingTableData {
   title: string;
   features: {
     name: string;

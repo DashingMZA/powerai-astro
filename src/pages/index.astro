@@ -12,20 +12,33 @@ import Testimonials from "@/partials/Testimonials";
 import TrustedClients from "@/partials/TrustedClients";
 import WhyChooseUs from "@/partials/WhyChooseUs.astro";
 import { getListPage } from "@/lib/contentParser";
+import type { StatisticsPageData } from "@/components/Statistics";
+import type { FAQPageData } from "@/partials/FAQ";
+import type { IntegrationPageData } from "@/partials/Integration";
+import type { PricingPageData } from "@/partials/Pricing";
+import type { HomepageFrontmatter, LogoMarqueeType } from "@/types/index";
 import { organizationJsonLd } from "@/lib/seo";
 import { plainify } from "@/lib/utils/textConverter";
 
-const homepage = await getListPage("homepage/-index.md");
-const trusted_clients = await getListPage("sections/trusted-clients.md");
+const homepage = await getListPage<HomepageFrontmatter>("homepage/-index.md");
+const trusted_clients = await getListPage<LogoMarqueeType>(
+  "sections/trusted-clients.md",
+);
 const key_features = await getListPage("sections/key-features.md");
 const essential_features = await getListPage("sections/essential-features.md");
 const whyChooseUs = await getListPage("sections/why-choose-us.md");
-const integration = await getListPage("sections/integration.md");
-const pricing = await getListPage("sections/pricing.md");
+const integration = await getListPage<IntegrationPageData["frontmatter"]>(
+  "sections/integration.md",
+);
+const pricing = await getListPage<PricingPageData["frontmatter"]>(
+  "sections/pricing.md",
+);
 const testimonial = await getListPage("sections/testimonial.md");
-const faq = await getListPage("sections/faq.md");
+const faq = await getListPage<FAQPageData["frontmatter"]>("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
-const statistics = await getListPage("sections/statistics.md");
+const statistics = await getListPage<StatisticsPageData["frontmatter"]>(
+  "sections/statistics.md",
+);
 const { banner } = homepage.frontmatter;
 const homeTitle = plainify(banner.title.replace(/<br\s*\/?>/gi, " "));
 ---

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { sectionHeaderVariants } from "@/lib/animations";
 
-interface PageData {
+export interface IntegrationPageData {
   notFound?: boolean;
   content?: string;
   frontmatter: {
@@ -15,7 +15,7 @@ interface PageData {
   };
 }
 
-const Integration = ({ data }: { data: PageData }) => {
+const Integration = ({ data }: { data: IntegrationPageData }) => {
   const { badge, title, list, button } = data.frontmatter;
   const [introStarted, setIntroStarted] = useState(false);
   const [spinStarted, setSpinStarted] = useState(false);

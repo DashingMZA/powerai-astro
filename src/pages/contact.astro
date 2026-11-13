@@ -5,11 +5,13 @@ import CallToAction from "@/partials/CallToAction.astro";
 import FAQ from "@/partials/FAQ";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getListPage } from "@/lib/contentParser";
+import type { FAQPageData } from "@/partials/FAQ";
+import type { IndexFrontmatter } from "@/types/index";
 
-const data = await getListPage("contact/-index.md");
+const data = await getListPage<IndexFrontmatter>("contact/-index.md");
 const { title, description, meta_title, image, page_header, contact_info } =
   data.frontmatter;
-const faq = await getListPage("sections/faq.md");
+const faq = await getListPage<FAQPageData["frontmatter"]>("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---
 

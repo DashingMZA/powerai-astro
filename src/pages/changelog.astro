@@ -6,8 +6,9 @@ import MainContainer from "@/components/MainContainer.astro";
 import Badge from "@/components/Badge.astro";
 import theme from "@/config/theme.json";
 import { getListPage } from "@/lib/contentParser";
+import type { IndexFrontmatter } from "@/types/index";
 
-const data = await getListPage("changelog/-index.md");
+const data = await getListPage<IndexFrontmatter>("changelog/-index.md");
 const { title, description, meta_title, image, page_header, changelog_list } =
   data.frontmatter;
 const callToAction = await getListPage("sections/call-to-action.md");

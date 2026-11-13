@@ -7,7 +7,7 @@ import {
   staggerItemVariants,
 } from "@/lib/animations";
 
-interface PageData {
+export interface StatisticsPageData {
   notFound?: boolean;
   content?: string;
   frontmatter: {
@@ -23,7 +23,7 @@ interface PageData {
   };
 }
 
-const Statistics = ({ data }: { data: PageData }) => {
+const Statistics = ({ data }: { data: StatisticsPageData }) => {
   const primaryColor = theme?.colors?.default?.theme_color?.primary;
   const secondaryColor = theme?.colors?.default?.theme_color?.secondary;
 

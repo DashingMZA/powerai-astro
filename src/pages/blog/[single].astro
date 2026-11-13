@@ -2,12 +2,12 @@
 import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSingleEntry } from "@/lib/contentParser";
 import { postFilename, postSlug, postUrl } from "@/lib/blogUrls";
 import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export async function getStaticPaths() {
-  const posts = await getSinglePage("blog");
+  const posts = await getSingleEntry("blog");
   // Dual routing: every post serves at its canonical URL (the
   // frontmatter `slug` when set, else the filename — that is also what
   // the content layer uses as the entry `id`) AND, when a `slug` is set

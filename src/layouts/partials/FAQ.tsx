@@ -4,7 +4,7 @@ import { markdownify } from "@/lib/utils/textConverter";
 import type { Button as ButtonType, FAQType } from "@/types/index";
 import { useState } from "react";
 
-interface PageData {
+export interface FAQPageData {
   notFound?: boolean;
   content?: string;
   frontmatter: {
@@ -16,7 +16,7 @@ interface PageData {
     faq_list: Array<FAQType>;
   };
 }
-const FAQ = ({ data }: { data: PageData }) => {
+const FAQ = ({ data }: { data: FAQPageData }) => {
   const { enable, badge, title, subtitle, faq_list } = data.frontmatter;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 

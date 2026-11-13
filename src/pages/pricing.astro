@@ -7,13 +7,20 @@ import TrustedClients from "@/partials/TrustedClients";
 import PricingSection from "@/partials/Pricing";
 import PricingTable from "@/components/PricingTable";
 import { getListPage } from "@/lib/contentParser";
+import type { FAQPageData } from "@/partials/FAQ";
+import type { PricingPageData } from "@/partials/Pricing";
+import type { IndexFrontmatter, LogoMarqueeType } from "@/types/index";
 
-const data = await getListPage("pricing/-index.md");
+const data = await getListPage<IndexFrontmatter>("pricing/-index.md");
 const { title, description, meta_title, image, page_header, pricing_table } =
   data.frontmatter;
-const trusted_clients = await getListPage("sections/trusted-clients.md");
-const pricing = await getListPage("sections/pricing.md");
-const faq = await getListPage("sections/faq.md");
+const trusted_clients = await getListPage<LogoMarqueeType>(
+  "sections/trusted-clients.md",
+);
+const pricing = await getListPage<PricingPageData["frontmatter"]>(
+  "sections/pricing.md",
+);
+const faq = await getListPage<FAQPageData["frontmatter"]>("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---
 

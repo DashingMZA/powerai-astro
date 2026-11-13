@@ -3,13 +3,13 @@ import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import FeaturedCaseStudy from "@/components/FeaturedCaseStudy";
 import MainContainer from "@/components/MainContainer.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSingleEntry } from "@/lib/contentParser";
 import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { render } from "astro:content";
 import CaseStudyCard from "@/components/CaseStudyCard.astro";
 
 export async function getStaticPaths() {
-  const caseStudies = await getSinglePage("case-studies");
+  const caseStudies = await getSingleEntry("case-studies");
   return caseStudies.map((study: any) => ({
     params: { single: study.id },
     props: { caseStudy: study },
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const { caseStudy } = Astro.props;
 
-const allCaseStudies = await getSinglePage("case-studies");
+const allCaseStudies = await getSingleEntry("case-studies");
 const otherCaseStudies = allCaseStudies.filter(
   (s: any) => s.id !== caseStudy.id,
 );

@@ -6,11 +6,14 @@ import KeyFeatures from "@/partials/KeyFeatures.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import TrustedClients from "@/partials/TrustedClients";
 import { getListPage } from "@/lib/contentParser";
+import type { IndexFrontmatter, LogoMarqueeType } from "@/types/index";
 
-const data = await getListPage("features/-index.md");
+const data = await getListPage<IndexFrontmatter>("features/-index.md");
 const { title, description, meta_title, image, page_header } = data.frontmatter;
 const essential_features = await getListPage("sections/essential-features.md");
-const trusted_clients = await getListPage("sections/trusted-clients.md");
+const trusted_clients = await getListPage<LogoMarqueeType>(
+  "sections/trusted-clients.md",
+);
 const key_features = await getListPage("sections/key-features.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---

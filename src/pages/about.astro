@@ -12,8 +12,10 @@ import CardShape from "@/components/shape/CardShape";
 import Badge from "@/components/Badge.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getListPage } from "@/lib/contentParser";
+import type { StatisticsPageData } from "@/components/Statistics";
+import type { AboutFrontmatter, LogoMarqueeType } from "@/types/index";
 
-const data = await getListPage("about/-index.md");
+const data = await getListPage<AboutFrontmatter>("about/-index.md");
 const {
   title,
   description,
@@ -24,9 +26,13 @@ const {
   what_our_goals,
   our_team,
 } = data.frontmatter;
-const trusted_clients = await getListPage("sections/trusted-clients.md");
+const trusted_clients = await getListPage<LogoMarqueeType>(
+  "sections/trusted-clients.md",
+);
 const whyChooseUs = await getListPage("sections/why-choose-us.md");
-const statistics = await getListPage("sections/statistics.md");
+const statistics = await getListPage<StatisticsPageData["frontmatter"]>(
+  "sections/statistics.md",
+);
 const testimonial = await getListPage("sections/testimonial.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---

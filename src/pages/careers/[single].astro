@@ -3,14 +3,14 @@ import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import config from "@/config/config.json";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSingleEntry } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl, jobPostingJsonLd } from "@/lib/seo";
 import { render } from "astro:content";
 
 const { apply_form_action } = config.params;
 
 export async function getStaticPaths() {
-  const careers = await getSinglePage("careers");
+  const careers = await getSingleEntry("careers");
   return careers.map((career: any) => ({
     params: { single: career.id },
     props: { career },

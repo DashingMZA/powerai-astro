@@ -5,6 +5,7 @@ import Share from "@/components/Share.astro";
 import config from "@/config/config.json";
 import { authorUrl, categoryUrl, postSlug, postUrl } from "@/lib/blogUrls";
 import { getSinglePage } from "@/lib/contentParser";
+import type { Post } from "@/types/index";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime";
 import { slug } from "github-slugger";
@@ -18,7 +19,7 @@ if (post.data.draft) return Astro.redirect("/404");
 const { Content, headings } = await render(post);
 const { title, description, image, author, category, date } = post.data;
 
-const allPosts = await getSinglePage("blog");
+const allPosts = await getSinglePage<Post>("blog");
 // Exclude this post by its canonical slug (frontmatter `slug` when set,
 // else the filename id) — `p.slug` from contentParser.ts is slug-aware,
 // so comparing against `post.id` alone would list this post as its own

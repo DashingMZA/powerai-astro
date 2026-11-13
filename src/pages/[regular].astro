@@ -2,11 +2,11 @@
 import Base from "@/layouts/Base.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import PageHeader from "@/partials/PageHeader.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSingleEntry } from "@/lib/contentParser";
 import { render } from "astro:content";
 
 export async function getStaticPaths() {
-  const pages = await getSinglePage("pages");
+  const pages = await getSingleEntry("pages");
   return pages.map((page: any) => ({
     params: { regular: page.id },
     props: { page },

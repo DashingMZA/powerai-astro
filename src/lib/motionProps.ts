@@ -26,9 +26,11 @@ const verySlow = {
   ease: "easeInOut" as const,
 };
 
+import type { AnimationOptions, DOMKeyframesDefinition } from "motion";
+
 export type VariantEntry = {
-  keyframes: Record<string, any[]>;
-  options: Record<string, any>;
+  keyframes: DOMKeyframesDefinition;
+  options: AnimationOptions;
 };
 
 export const variants: Record<string, VariantEntry> = {
@@ -166,9 +168,13 @@ export async function animateOnScroll(
   if (!v) return;
 
   inView(selector, (element) => {
+    // `delay` can be a number or a per-target function in motion's types;
+    // our variants only ever use a plain number (or none), so a
+    // non-number delay falls back to 0 — same result for every variant.
+    const baseDelay = typeof v.options.delay === "number" ? v.options.delay : 0;
     animate(element, v.keyframes, {
       ...v.options,
-      delay: (v.options.delay || 0) + delayOffset,
+      delay: baseDelay + delayOffset,
     });
   });
 }

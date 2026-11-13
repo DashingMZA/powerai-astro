@@ -3,12 +3,12 @@ import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import PageHeader from "@/partials/PageHeader.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { getSingleEntry } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { render } from "astro:content";
 
 export async function getStaticPaths() {
-  const integrations = await getSinglePage("integrations");
+  const integrations = await getSingleEntry("integrations");
   return integrations.map((integration: any) => ({
     params: { single: integration.id },
     props: { integration },

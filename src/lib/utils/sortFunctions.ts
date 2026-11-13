@@ -2,27 +2,25 @@ import type { Post, CaseStudy } from "@/types/index";
 
 // sort by date
 export const sortByDate = <T extends Post | CaseStudy>(array: T[]): T[] => {
+  // `?? 0` (epoch) for a dateless entry, matching `sortEntriesByDate`
+  // below: the old `date && date` produced `new Date(undefined)` —
+  // Invalid Date, NaN, and therefore unspecified sort order — for the
+  // same entries. Every blog / case-study entry in the repo has a date,
+  // so this only affects dateless entries, which now sort last.
   const sortedArray = array.sort(
-    (a: any, b: any) =>
-      new Date(b.frontmatter.date && b.frontmatter.date).valueOf() -
-      new Date(a.frontmatter.date && a.frontmatter.date).valueOf(),
+    (a, b) =>
+      new Date(b.frontmatter.date ?? 0).valueOf() -
+      new Date(a.frontmatter.date ?? 0).valueOf(),
   );
   return sortedArray;
 };
 
 // sort product by weight
-export const sortByWeight = (array: any[]) => {
-  const withWeight = array.filter(
-    (item: { frontmatter: { weight: any } }) => item.frontmatter.weight,
-  );
-  const withoutWeight = array.filter(
-    (item: { frontmatter: { weight: any } }) => !item.frontmatter.weight,
-  );
+export const sortByWeight = (array: { frontmatter: { weight?: number } }[]) => {
+  const withWeight = array.filter((item) => item.frontmatter.weight);
+  const withoutWeight = array.filter((item) => !item.frontmatter.weight);
   const sortedWeightedArray = withWeight.sort(
-    (
-      a: { frontmatter: { weight: number } },
-      b: { frontmatter: { weight: number } },
-    ) => a.frontmatter.weight - b.frontmatter.weight,
+    (a, b) => (a.frontmatter.weight ?? 0) - (b.frontmatter.weight ?? 0),
   );
   const sortedArray = [...new Set([...sortedWeightedArray, ...withoutWeight])];
   return sortedArray;

@@ -8,7 +8,7 @@ import {
   staggerItemVariants,
 } from "@/lib/animations";
 
-interface PageData {
+export interface PricingPageData {
   notFound?: boolean;
   content?: string;
   frontmatter: {
@@ -25,7 +25,7 @@ const Pricing = ({
   data,
   isHome = true,
 }: {
-  data: PageData;
+  data: PricingPageData;
   isHome?: boolean;
 }) => {
   const { title, enable, badge, pricing_plans, offer_yearly } =

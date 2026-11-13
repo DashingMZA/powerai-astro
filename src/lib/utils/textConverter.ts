@@ -8,9 +8,11 @@ export const slugify = (content: string) => {
 
 // markdownify
 export const markdownify = (content: string, div?: boolean) => {
-  const markdownContent: any = div
-    ? marked.parse(content)
-    : marked.parseInline(content);
+  // marked.parse is synchronous by default (async: false), so the result
+  // is a string, not a Promise — the cast records that.
+  const markdownContent = (
+    div ? marked.parse(content) : marked.parseInline(content)
+  ) as string;
   return { __html: markdownContent };
 };
 
@@ -35,7 +37,8 @@ export const titleify = (content: string) => {
 
 // plainify
 export const plainify = (content: string) => {
-  const parseMarkdown: any = marked.parse(content);
+  // See markdownify: synchronous parse, so the result is a string.
+  const parseMarkdown = marked.parse(content) as string;
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
   const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");
   const stripHTML = htmlEntityDecoder(filterSpaces);
