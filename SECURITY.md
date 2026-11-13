@@ -68,20 +68,14 @@ No credentials are stored in the repo: there is no `.env` file (`.env` / `.env.p
 
 ### Dependency vulnerabilities — `pnpm audit` (re-audited 2026-11-13, this worktree)
 
-`pnpm audit` reports **10 vulnerabilities: 5 high, 4 moderate, 1 low** (down from 11 on 2026-11-13 — the `zod` / `tailwind-bootstrap-grid` advisory is gone with that package's removal; re-audit confirms no `zod` advisory remains). All 10 are in **transitive** dependencies — no direct dependency is flagged. The remaining fixes belong in `pnpm-workspace.yaml` `overrides` + a lockfile regen, verified by a rebuild — not in a blind version bump. An overrides attempt is tracked separately (see the audit report for this round); if it lands, this table must be re-audited, not assumed clean.
+`pnpm audit` reports **4 vulnerabilities: 1 high, 2 moderate, 1 low** — down from 10 before this round's overrides (and 11 on the previous audit — the `zod` / `tailwind-bootstrap-grid` advisory is gone with that package's removal). All 4 remaining are in **transitive** dependencies — no direct dependency is flagged. Fixed in this round via `pnpm-workspace.yaml` `overrides` (patch/minor only, verified by a rebuild whose `dist/` output is byte-identical to the pre-override build — same 443 files, 20,560,449 bytes): `sharp` 0.35.3→0.35.5 (2 high: libheif, librsvg CVE-2026-96889), `svgo` 4.0.2→4.1.0 (1 high + 1 moderate), `path-to-regexp` 6.1.0→6.3.0 (1 high), `postcss-selector-parser` 6.0.10→6.1.5 (1 moderate).
 
-| Advisory | Package (path) | Severity | Why not fixed here |
+| Advisory | Package (path) | Severity | Status |
 |---|---|---|---|
-| GHSA-9wv6-86v2-598j | `path-to-regexp` 6.1.0 via `@astrojs/vercel > @vercel/routing-utils` | high | Patch is ≥6.3.0 (minor bump, but only reachable via override — `@vercel/routing-utils` pins the range); needs override + rebuild verification |
-| GHSA-ggr8-5vv4-36mx | `deepmerge-ts` 7.1.5 via `@playform/compress` | high | Patch is ≥8.0.0 — major jump from installed 7.1.5; override not attempted (major) |
-| GHSA-rgj7-g3m4-5g8c | `sharp` 0.35.3 via `@playform/compress` (libheif) | high | Direct `sharp` is already 0.35.5 — needs an override to force the nested copy up, not a direct bump |
-| GHSA-wq5f-xc86-pv6w | `sharp` 0.35.3 via `@playform/compress` (librsvg, CVE-2026-96889) | high | Same as above |
-| GHSA-w27v-7q3p-w38r | `svgo` 4.0.2 via `@playform/compress` | high | Patch is ≥4.1.0; installed nested copy is 4.0.2 (a second, patched 4.1.0 copy exists via `astro-icon`) |
-| GHSA-4vpr-x523-8j87 | `svgo` 4.0.2 via `@playform/compress` | moderate | Same as above |
-| GHSA-rj75-hqrm-r3gf | `postcss-selector-parser` 6.0.10 via `@tailwindcss/typography` | moderate | Patch is ≥6.1.5 |
-| GHSA-3g3m-2fjr-6pw4 | `glob` 13.0.7 via `@astrojs/vercel > @vercel/nft` | moderate | Patch is ≥14.0.2 — major jump; override not attempted (major) |
-| GHSA-g3hv-75wg-m249 | `minimatch` 10.2.6 via `@vercel/nft > glob` (+ eslint toolchains, ~70 paths) | moderate | Patch is ≥11.0.1 — major jump; override not attempted (major) |
-| GHSA-238p-pmpm-9mq7 | `katex` 0.16.47 via `rehype-katex` / `remark-math` | low | Patch is ≥0.18.2; the flagged path is the nested 0.16.47 copy (direct `katex` is already 0.19.1, used only for its CSS) |
+| GHSA-ggr8-5vv4-36mx | `deepmerge-ts` 7.1.5 via `@playform/compress` | high | **Open** — patch is ≥8.0.0, a major jump; override not attempted. Build-time only (compress config merging, not attacker-controlled input). |
+| GHSA-3g3m-2fjr-6pw4 | `glob` 13.0.7 via `@astrojs/vercel > @vercel/nft` | moderate | **Open** — patch is ≥14.0.2, a major jump; override not attempted. Build-time file tracing only. |
+| GHSA-g3hv-75wg-m249 | `minimatch` 10.2.6 via `@vercel/nft > glob` (+ eslint toolchains, ~70 paths) | moderate | **Open** — patch is ≥11.0.1, a major jump; override not attempted. Dev/build tooling only. |
+| GHSA-238p-pmpm-9mq7 | `katex` 0.16.47 via `rehype-katex` / `remark-math` | low | **Open** — patch is ≥0.18.2, but `rehype-katex` 7 declares `katex ^0.16.0`; forcing 0.18.x risks math rendering and was not attempted. Input is author-controlled Markdown only. |
 
 Exposure note: these are build-time / dev-server packages (`@playform/compress`, `@astrojs/vercel`, typography, KaTeX). None of them runs in the shipped static site except the code they emit at build time, so none of them is directly reachable by a site visitor. That lowers the urgency but does not remove it — a compromised build dependency can poison output. Re-audit after the lockfile regen; the `zod`/`tailwind-bootstrap-grid` entry should disappear with the removal.
 

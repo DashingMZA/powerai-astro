@@ -1,6 +1,16 @@
 allowBuilds:
   esbuild: true
   workerd: true
+# 2026-11-13 secperf audit: force patched copies of transitive deps
+# flagged by `pnpm audit` (all patch/minor bumps, verified by rebuild).
+# Deliberately NOT overridden (major jumps): deepmerge-ts 7->8,
+# glob 13->14, minimatch 10->11, katex 0.16->0.18 (rehype-katex 7
+# declares katex ^0.16.0 — forcing 0.18.x risks math rendering).
+overrides:
+  sharp: 0.35.5
+  svgo: 4.1.0
+  path-to-regexp: 6.3.0
+  postcss-selector-parser: 6.1.5
 minimumReleaseAgeExclude:
   - framer-motion@14.13.0
   - glob@14.0.6
