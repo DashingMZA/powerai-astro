@@ -1,5 +1,6 @@
 ---
 import Badge from "@/components/Badge.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import type { GalleryType } from "@/types/index";
 interface Props {
   data: GalleryType;
@@ -30,11 +31,11 @@ const { enable, badge, title, images } = data;
                   style="opacity:0"
                   class={`${index % 2 === 0 ? "md:row-span-2" : "md:row-span-3"} ${index === 4 ? "lg:row-span-3!" : ""}`}
                 >
-                  <img
+                  <ImageMod
                     src={image}
                     alt={`Gallery image ${index + 1}`}
-                    width="400"
-                    height="400"
+                    width={400}
+                    height={400}
                     loading="lazy"
                     decoding="async"
                     class="w-full h-full object-cover rounded-xl"

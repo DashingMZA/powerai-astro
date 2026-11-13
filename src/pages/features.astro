@@ -34,7 +34,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
 >
   <PageHeader page_header={page_header} />
   <EssentialFeatures data={essential_features} />
-  <TrustedClients data={trusted_clients} client:load />
+  <TrustedClients data={trusted_clients} client:visible />
   <KeyFeatures data={key_features} />
   <CallToAction data={callToAction} />
 </Base>

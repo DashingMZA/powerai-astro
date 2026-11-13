@@ -1,6 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import CallToAction from "@/partials/CallToAction.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import FAQ from "@/partials/FAQ";
 import Gallery from "@/partials/Gallery.astro";
 import PageHeader from "@/partials/PageHeader.astro";
@@ -55,13 +56,16 @@ const pageJsonLd = [
   <PageHeader page_header={page_header}>
     <div class="border border-border/6 bg-card/60 rounded-4xl p-2.5">
       <CardShape>
-        <img
-          src={image}
-          alt="Feature"
-          width="1230"
-          height="800"
-          class="rounded-3xl object-cover object-top relative z-1 w-full sm:h-140"
-        />
+        {image && (
+          <ImageMod
+            src={image}
+            alt="Feature"
+            width={1230}
+            height={800}
+            loading="eager"
+            class="rounded-3xl object-cover object-top relative z-1 w-full sm:h-140"
+          />
+        )}
       </CardShape>
     </div>
   </PageHeader>

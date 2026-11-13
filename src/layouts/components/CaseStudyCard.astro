@@ -1,4 +1,5 @@
 ---
+import ImageMod from "./ImageMod.astro";
 // Only what the card reads: the legacy `CaseStudy` shape and the
 // `{ frontmatter, slug }` objects built in `case-studies/[single].astro`
 // both satisfy this. (The full `CaseStudy` type is not used here:
@@ -25,11 +26,11 @@ const uid = `cscard-${Math.random().toString(36).slice(2, 8)}`;
     <a href={`/case-studies/${data.slug}`}>
       <div class="rounded-3xl overflow-hidden bg-dark/10 w-full aspect-1150/600 relative">
         {image ? (
-          <img
+          <ImageMod
             src={image}
             alt={title}
-            width="1150"
-            height="600"
+            width={1150}
+            height={600}
             loading="lazy"
             decoding="async"
             class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"

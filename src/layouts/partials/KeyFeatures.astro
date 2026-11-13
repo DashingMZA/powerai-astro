@@ -1,5 +1,6 @@
 ---
 import Badge from "@/components/Badge.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import theme from "@/config/theme.json";
 
 import type { LegacyPage } from "@/types/index";
@@ -150,14 +151,16 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
                         </linearGradient>
                       </defs>
                     </svg>
-                    <img
-                      src={feature.image}
-                      alt="Feature"
-                      width={570}
-                      height={360}
-                      class="kf-feature-img rounded-3xl object-cover relative z-1"
-                      loading="lazy"
-                    />
+                    {feature.image && (
+                      <ImageMod
+                        src={feature.image}
+                        alt="Feature"
+                        width={570}
+                        height={360}
+                        class="kf-feature-img rounded-3xl object-cover relative z-1"
+                        loading="lazy"
+                      />
+                    )}
                     <svg
                       class="absolute bottom-0 left-0"
                       width="301"

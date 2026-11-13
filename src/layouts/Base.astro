@@ -24,6 +24,17 @@ import Header from "./partials/Header.astro";
 const gtmEnabled = config.google_tag_manager?.enable;
 const gtmId = config.google_tag_manager?.gtm_id;
 
+// Diagrams/math re-entry (2026-11-13 perf): mermaid + KaTeX were
+// removed — no content used them (0 ```mermaid fences, 0 $...$ /
+// $$...$$ math in src/content). To re-add for a future post:
+// `pnpm add mermaid` + restore a `pre code.language-mermaid` dynamic
+// import in the body below gated on block presence, and/or
+// `pnpm add katex rehype-katex remark-math` + the remark/rehype plugins
+// in astro.config.mjs with the KaTeX CSS imported in PostSingle.astro
+// (post pages only), never the global stylesheet. (Kept here in the
+// frontmatter, not as an HTML comment, so the words never ship to the
+// browser in any page.)
+
 // font families
 const fontEntries = Object.entries(theme.fonts.font_family).filter(
   ([key]) => !key.includes("_type"),
@@ -184,14 +195,6 @@ const ogImage = toAbsoluteUrl(
     <ClientRouter />
   </head>
   <body>
-    <!-- Diagrams/math re-entry (2026-11-13 perf): mermaid + KaTeX were
-         removed — no content used them (0 ```mermaid fences, 0 $...$ /
-         $$...$$ math in src/content). To re-add for a future post:
-         `pnpm add mermaid` + restore a `pre code.language-mermaid`
-         dynamic import here gated on block presence, and/or
-         `pnpm add katex rehype-katex remark-math` + the remark/rehype
-         plugins in astro.config.mjs with the KaTeX CSS imported in
-         PostSingle.astro (post pages only), never the global stylesheet. -->
     <!-- Google Tag Manager (noscript) -->
     {gtmEnabled && <GoogleTagmanagerNoscript id={gtmId} />}
     <a href="#main-content" class="skip-link">

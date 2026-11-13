@@ -1,5 +1,6 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import Share from "@/components/Share.astro";
 import config from "@/config/config.json";
@@ -96,11 +97,12 @@ if (headings) {
           </div>
         </div>
         {image && (
-          <img
+          <ImageMod
             src={image}
             alt={title}
-            width="640"
-            height="640"
+            width={640}
+            height={640}
+            loading="eager"
             class="w-full h-auto sm:h-100 object-cover rounded-2xl"
           />
         )}

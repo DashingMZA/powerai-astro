@@ -41,7 +41,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
   <PageHeader page_header={page_header}>
     <PricingSection data={pricing} isHome={false} client:visible />
   </PageHeader>
-  <TrustedClients data={trusted_clients} client:load />
+  <TrustedClients data={trusted_clients} client:visible />
   <PricingTable data={pricing_table} client:visible />
   <FAQ data={faq} client:visible />
   <CallToAction data={callToAction} />

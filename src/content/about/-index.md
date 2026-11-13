@@ -47,11 +47,11 @@ our_team:
   team_list:
     - name: "John Doe"
       position: "Founder & CEO"
-      image: "/images/teams/avatar-3.png"
+      image: "/images/avatars/avatar-3.png"
     - name: "John Doe"
       position: "Founder & CEO"
-      image: "/images/teams/john-doe.jpg"
+      image: "/images/avatars/avatar-1.jpg"
     - name: "Mike Johnson"
       position: "Design Director"
-      image: "/images/teams/mike-johnson.jpg"
+      image: "/images/avatars/avatar-2.jpg"
 ---

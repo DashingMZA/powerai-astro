@@ -1,4 +1,5 @@
 ---
+import ImageMod from "./ImageMod.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import type { BlogCardData } from "@/types/index";
 interface Props {
@@ -75,11 +76,12 @@ const uid = `featpost-${Math.random().toString(36).slice(2, 8)}`;
     <a href={`/blog/${data.slug}`}>
       <div class="rounded-3xl overflow-hidden bg-dark/10 w-full aspect-1150/600 relative">
         {image ? (
-          <img
+          <ImageMod
             src={image}
             alt={title}
-            width="1150"
-            height="600"
+            width={1150}
+            height={600}
+            loading="eager"
             class="object-cover w-full h-full"
           />
         ) : (
@@ -109,11 +111,12 @@ const uid = `featpost-${Math.random().toString(36).slice(2, 8)}`;
       <div class="flex items-center gap-3">
         {author?.avatar && (
           <div class="shrink-0 size-10 sm:size-12 rounded-full overflow-hidden">
-            <img
+            <ImageMod
               src={author.avatar}
               alt={author.name}
-              width="48"
-              height="48"
+              width={48}
+              height={48}
+              loading="eager"
               class="object-cover size-full"
             />
           </div>

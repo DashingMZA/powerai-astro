@@ -1,4 +1,5 @@
 ---
+import ImageMod from "./ImageMod.astro";
 import dateFormat from "@/lib/utils/dateFormat";
 import { plainify } from "@/lib/utils/textConverter";
 import type { BlogCardData } from "@/types/index";
@@ -21,11 +22,11 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
     <a href={`/blog/${data.slug}`}>
       <div class="rounded-3xl overflow-hidden bg-dark/10 w-full aspect-1150/600 relative">
         {image ? (
-          <img
+          <ImageMod
             src={image}
             alt={title}
-            width="1150"
-            height="600"
+            width={1150}
+            height={600}
             loading="lazy"
             decoding="async"
             class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
@@ -50,11 +51,11 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
       <div class="flex items-center gap-2.5">
         {author?.avatar && (
           <div class="shrink-0 size-8 rounded-full overflow-hidden border border-border/6">
-            <img
+            <ImageMod
               src={author.avatar}
               alt={author.name}
-              width="32"
-              height="32"
+              width={32}
+              height={32}
               loading="lazy"
               decoding="async"
               class="object-cover size-full"

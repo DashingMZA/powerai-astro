@@ -1,4 +1,5 @@
 ---
+import ImageMod from "./ImageMod.astro";
 // IconBox — converted from IconBox.tsx (motion-only, no React state)
 interface Props {
   icon: string;
@@ -12,7 +13,7 @@ const uid = `iconbox-${Math.random().toString(36).slice(2, 8)}`;
   style="opacity:0"
   class="border border-border/6 bg-gradient-dark size-22.5 rounded-4xl flex items-center justify-center mb-7"
 >
-  <img src={icon} alt="" width="44" height="44" />
+  <ImageMod src={icon} alt="" width={44} height={44} loading="eager" />
 </div>
 
 <script>

@@ -1,6 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import CallToAction from "@/partials/CallToAction.astro";
+import ImageMod from "@/components/ImageMod.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import Statistics from "@/components/Statistics";
 import Testimonials from "@/partials/Testimonials";
@@ -54,13 +55,16 @@ const callToAction = await getListPage("sections/call-to-action.md");
   <PageHeader page_header={page_header}>
     <div class="border border-border/6 bg-card rounded-4xl p-2.5">
       <CardShape>
-        <img
-          src={who_we_are?.image}
-          alt="Feature"
-          width="1230"
-          height="800"
-          class="rounded-3xl object-cover relative z-1 w-full sm:h-140"
-        />
+        {who_we_are?.image && (
+          <ImageMod
+            src={who_we_are.image}
+            alt="Feature"
+            width={1230}
+            height={800}
+            loading="eager"
+            class="rounded-3xl object-cover relative z-1 w-full sm:h-140"
+          />
+        )}
       </CardShape>
       <div class="p-10 grid lg:grid-cols-2 text-left gap-10 sm:gap-20">
         <div>
@@ -76,7 +80,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
       </div>
     </div>
   </PageHeader>
-  <TrustedClients data={trusted_clients} client:load />
+  <TrustedClients data={trusted_clients} client:visible />
   <WhatOurGoals data={what_our_goals} />
   <WhyChooseUs data={whyChooseUs} />
   <OurTeam data={our_team} />

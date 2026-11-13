@@ -1,4 +1,5 @@
 ---
+import ImageMod from "@/components/ImageMod.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import type { WhatOurGoalsData } from "@/types/index";
@@ -21,13 +22,16 @@ const { badge, title, image, mission, vision } = data;
             style="opacity:0"
             class="border border-border/6 bg-card rounded-3xl p-2.5 h-full"
           >
-            <img
-              src={image}
-              width="800"
-              height="600"
-              class="w-full rounded-3xl object-cover h-full"
-              alt="goals"
-            />
+            {image && (
+              <ImageMod
+                src={image}
+                width={800}
+                height={600}
+                loading="eager"
+                class="w-full rounded-3xl object-cover h-full"
+                alt="goals"
+              />
+            )}
           </div>
           <!-- Right: mission + vision -->
           <div
@@ -38,11 +42,12 @@ const { badge, title, image, mission, vision } = data;
             <!-- Mission -->
             <div class="border border-border/6 bg-card/70 rounded-3xl p-10 hover:border-primary/20 transition-colors duration-300">
               <div class="border border-border/6 bg-gradient-dark size-14 rounded-xl flex items-center justify-center mb-6">
-                <img
+                <ImageMod
                   src={mission.icon}
                   alt="mission icon"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
+                  loading="eager"
                 />
               </div>
               <h3 class="mb-4 text-2xl font-medium">{mission.title}</h3>
@@ -54,11 +59,12 @@ const { badge, title, image, mission, vision } = data;
             <!-- Vision -->
             <div class="border border-border/6 bg-card/70 rounded-3xl p-10 hover:border-primary/20 transition-colors duration-300">
               <div class="border border-border/6 bg-gradient-dark size-14 rounded-xl flex items-center justify-center mb-6">
-                <img
+                <ImageMod
                   src={vision.icon}
                   alt="vision icon"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
+                  loading="eager"
                 />
               </div>
               <h3 class="mb-4 text-2xl font-medium">{vision.title}</h3>
