@@ -19,8 +19,7 @@ const { career } = Astro.props;
 if (career.data.draft) return Astro.redirect("/404");
 
 const { Content } = await render(career);
-const { title, meta_title, description, job_info, date, active } =
-  career.data;
+const { title, meta_title, description, job_info, date, active } = career.data;
 // A role is archived when explicitly marked inactive or its deadline
 // has passed. Archived pages stay readable as historical records, but
 // they carry no JobPosting markup (jobPostingJsonLd already returns null
@@ -76,20 +75,18 @@ const jobInfoCards = [
           <h1 class="font-primary font-semibold text-display-l md:text-[60px] text-center text-text capitalize">
             {title}
           </h1>
-          {
-            isArchived && (
-              <div class="bg-card/30 border border-border/10 rounded-3xl px-8 py-5 text-center max-w-3xl">
-                <p class="font-medium text-h6 text-text">
-                  This position is closed
-                </p>
-                <p class="text-gray mt-1">
-                  {deadline
-                    ? `Applications closed on ${deadline}. This page is kept as an archive of a past opening.`
-                    : "This role is no longer open. This page is kept as an archive of a past opening."}
-                </p>
-              </div>
-            )
-          }
+          {isArchived && (
+            <div class="bg-card/30 border border-border/10 rounded-3xl px-8 py-5 text-center max-w-3xl">
+              <p class="font-medium text-h6 text-text">
+                This position is closed
+              </p>
+              <p class="text-gray mt-1">
+                {deadline
+                  ? `Applications closed on ${deadline}. This page is kept as an archive of a past opening.`
+                  : "This role is no longer open. This page is kept as an archive of a past opening."}
+              </p>
+            </div>
+          )}
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full max-w-7xl">
             {jobInfoCards.map((card, index) => (
               <div class="bg-card/30 backdrop-blur-xl border border-border/6 rounded-3xl p-8 flex flex-col gap-7 items-center text-center">
@@ -189,120 +186,121 @@ const jobInfoCards = [
         <div class="flex flex-col lg:flex-row gap-12 items-start">
           <div class="lg:w-85 shrink-0 order-last lg:order-first w-full">
             <div class="bg-card/30 border border-border/10 rounded-3xl p-8 sticky top-24">
-              {
-                isArchived ? (
-                  <div class="flex flex-col gap-5">
-                    <p class="font-medium text-h6 text-text">
-                      Applications are closed
-                    </p>
-                    <p class="text-gray">
-                      This position closed
-                      {deadline ? ` on ${deadline}` : ""} and is no longer
-                      accepting applications. Please check the{" "}
-                      <a href="/careers" class="text-primary underline">
-                        careers page
-                      </a>{" "}
-                      for future openings.
-                    </p>
-                  </div>
-                ) : (
-              <form
-                id="apply-form"
-                action="/api/apply"
-                method="post"
-                enctype="multipart/form-data"
-                class="flex flex-col gap-10"
-              >
-                <!-- Honeypot (spam trap): off-screen, never labelled. -->
-                <div aria-hidden="true" style="position:absolute;left:-9999px;">
-                  <label for="apply-company">Company</label>
-                  <input
-                    type="text"
-                    id="apply-company"
-                    name="company"
-                    tabindex="-1"
-                    autocomplete="off"
-                  />
-                </div>
-                <input type="hidden" name="_ts" id="apply-ts" value="" />
+              {isArchived ? (
                 <div class="flex flex-col gap-5">
                   <p class="font-medium text-h6 text-text">
-                    Apply for the position
+                    Applications are closed
                   </p>
-                  <div class="flex flex-col gap-5">
+                  <p class="text-gray">
+                    This position closed
+                    {deadline ? ` on ${deadline}` : ""} and is no longer
+                    accepting applications. Please check the{" "}
+                    <a href="/careers" class="text-primary underline">
+                      careers page
+                    </a>{" "}
+                    for future openings.
+                  </p>
+                </div>
+              ) : (
+                <form
+                  id="apply-form"
+                  action="/api/apply"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="flex flex-col gap-10"
+                >
+                  <!-- Honeypot (spam trap): off-screen, never labelled. -->
+                  <div
+                    aria-hidden="true"
+                    style="position:absolute;left:-9999px;"
+                  >
+                    <label for="apply-company">Company</label>
                     <input
                       type="text"
-                      name="name"
-                      placeholder="Name"
-                      required
-                      class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                      id="apply-company"
+                      name="company"
+                      tabindex="-1"
+                      autocomplete="off"
                     />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      required
-                      class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
-                    />
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Phone"
-                      class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
-                    />
-                    <label
-                      for="cv-upload"
-                      class="w-full bg-card/30 backdrop-blur-sm border border-dashed border-border/6 rounded-full px-7 py-3 text-gray hover:border-primary/50 transition-colors duration-200 flex items-center gap-2.5 cursor-pointer"
-                    >
-                      <svg
-                        class="size-5"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
+                  </div>
+                  <input type="hidden" name="_ts" id="apply-ts" value="" />
+                  <div class="flex flex-col gap-5">
+                    <p class="font-medium text-h6 text-text">
+                      Apply for the position
+                    </p>
+                    <div class="flex flex-col gap-5">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        required
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                      />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                      />
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-full px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50"
+                      />
+                      <label
+                        for="cv-upload"
+                        class="w-full bg-card/30 backdrop-blur-sm border border-dashed border-border/6 rounded-full px-7 py-3 text-gray hover:border-primary/50 transition-colors duration-200 flex items-center gap-2.5 cursor-pointer"
                       >
-                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                      </svg>
-                      Upload your cv
-                      <span id="cv-file-name" class="truncate"></span>
-                    </label>
-                    <input
-                      id="cv-upload"
-                      type="file"
-                      name="cv"
-                      accept=".pdf,.doc,.docx"
-                      required
-                      class="hidden"
-                    />
-                    <textarea
-                      name="message"
-                      placeholder="Why are you applying?"
-                      rows="4"
-                      required
-                      class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-2xl px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50 resize-none"
-                    />
-                    <!-- Position slug (validated server-side against the
+                        <svg
+                          class="size-5"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                        </svg>
+                        Upload your cv
+                        <span id="cv-file-name" class="truncate"></span>
+                      </label>
+                      <input
+                        id="cv-upload"
+                        type="file"
+                        name="cv"
+                        accept=".pdf,.doc,.docx"
+                        required
+                        class="hidden"
+                      />
+                      <textarea
+                        name="message"
+                        placeholder="Why are you applying?"
+                        rows="4"
+                        required
+                        class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-2xl px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50 resize-none"
+                      />
+                      <!-- Position slug (validated server-side against the
                       careers collection); the visible title is not
                       trusted as the position. -->
-                    <input type="hidden" name="position" value={career.id} />
+                      <input type="hidden" name="position" value={career.id} />
+                    </div>
                   </div>
-                </div>
-                <p
-                  id="apply-status"
-                  class="text-gray"
-                  role="status"
-                  aria-live="polite"
-                ></p>
-                <button
-                  id="apply-submit"
-                  type="submit"
-                  class="w-full btn btn-primary disabled:opacity-50 cursor-pointer"
-                >
-                  Apply Now
-                </button>
-              </form>
-                )
-              }
+                  <p
+                    id="apply-status"
+                    class="text-gray"
+                    role="status"
+                    aria-live="polite"
+                  ></p>
+                  <button
+                    id="apply-submit"
+                    type="submit"
+                    class="w-full btn btn-primary disabled:opacity-50 cursor-pointer"
+                  >
+                    Apply Now
+                  </button>
+                </form>
+              )}
             </div>
           </div>
           <div class="flex-1 min-w-0 border-l border-border/6 lg:pl-12">

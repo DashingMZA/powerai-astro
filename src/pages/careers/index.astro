@@ -58,106 +58,99 @@ const openPositions = data.frontmatter.open_positions;
     </div>
   </PageHeader>
   <WhyChooseUs data={our_value} />
-  {
-    openPositions?.enable && openRoles.length > 0 && (
-      <OpenPositions
-        badge={openPositions.badge}
-        title={openPositions.title}
-        careers={openRoles}
-        client:visible
-      />
-    )
-  }
-  {
-    openRoles.length === 0 && (
-      <section>
-        <div class="main-container">
-          <div class="container">
-            <div class="container-padding-x container-padding-y">
-              <div class="text-center mb-10">
-                <div class="bg-gradient-primary p-px inline-block rounded-full mb-2">
-                  <div class="bg-gradient-black-grid px-4 py-1.5 rounded-full">
-                    <span class="gradient-text-primary">Hiring Status</span>
-                  </div>
+  {openPositions?.enable && openRoles.length > 0 && (
+    <OpenPositions
+      badge={openPositions.badge}
+      title={openPositions.title}
+      careers={openRoles}
+      client:visible
+    />
+  )}
+  {openRoles.length === 0 && (
+    <section>
+      <div class="main-container">
+        <div class="container">
+          <div class="container-padding-x container-padding-y">
+            <div class="text-center mb-10">
+              <div class="bg-gradient-primary p-px inline-block rounded-full mb-2">
+                <div class="bg-gradient-black-grid px-4 py-1.5 rounded-full">
+                  <span class="gradient-text-primary">Hiring Status</span>
                 </div>
-                <h2 class="text-h2 font-medium lg:w-2/5 mx-auto">
-                  No open roles right now
-                </h2>
-                <p class="text-gray max-w-2xl mx-auto mt-4">
-                  We are not hiring at the moment. Please check back later
-                  for future openings — the roles below are from past hiring
-                  rounds and are kept here as an archive.
-                </p>
               </div>
+              <h2 class="text-h2 font-medium lg:w-2/5 mx-auto">
+                No open roles right now
+              </h2>
+              <p class="text-gray max-w-2xl mx-auto mt-4">
+                We are not hiring at the moment. Please check back later for
+                future openings — the roles below are from past hiring rounds
+                and are kept here as an archive.
+              </p>
             </div>
           </div>
         </div>
-      </section>
-    )
-  }
-  {
-    archivedRoles.length > 0 && (
-      <section>
-        <div class="main-container">
-          <div class="container">
-            <div class="container-padding-x container-padding-y">
-              <div class="text-center mb-10">
-                <div class="bg-gradient-primary p-px inline-block rounded-full mb-2">
-                  <div class="bg-gradient-black-grid px-4 py-1.5 rounded-full">
-                    <span class="gradient-text-primary">Archive</span>
-                  </div>
+      </div>
+    </section>
+  )}
+  {archivedRoles.length > 0 && (
+    <section>
+      <div class="main-container">
+        <div class="container">
+          <div class="container-padding-x container-padding-y">
+            <div class="text-center mb-10">
+              <div class="bg-gradient-primary p-px inline-block rounded-full mb-2">
+                <div class="bg-gradient-black-grid px-4 py-1.5 rounded-full">
+                  <span class="gradient-text-primary">Archive</span>
                 </div>
-                <h2 class="text-h2 font-medium lg:w-2/5 mx-auto">
-                  Archived roles
-                </h2>
-                <p class="text-gray max-w-2xl mx-auto mt-4">
-                  These positions have closed and are no longer accepting
-                  applications.
-                </p>
               </div>
-              <div class="flex flex-col gap-2.5">
-                {archivedRoles.map((career) => (
-                  <div class="bg-card/70 border border-border/6 rounded-3xl p-10 flex lg:items-center lg:justify-between gap-8 flex-col lg:flex-row">
-                    <div class="flex flex-col gap-1 min-w-0 flex-1">
-                      <a href={`/careers/${career.slug}`}>
-                        <h3 class="font-primary font-medium text-h6 text-text hover:text-primary transition-colors duration-200">
-                          {career.frontmatter.title}
-                        </h3>
-                      </a>
-                      <p class="text-gray">
-                        {career.frontmatter.job_info?.department}
-                      </p>
-                    </div>
-                    <div class="flex items-center gap-3 flex-wrap">
-                      <span class="text-gray">
-                        {career.frontmatter.job_info?.employ_type}
-                      </span>
-                      <div class="size-1 rounded-full bg-gray/40" />
-                      <span class="text-gray">
-                        {career.frontmatter.job_info?.location}
-                      </span>
-                      {career.frontmatter.job_info?.deadline && (
-                        <>
-                          <div class="size-1 rounded-full bg-gray/40" />
-                          <span class="text-gray">
-                            Closed{" "}
-                            {career.frontmatter.job_info.deadline}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <span class="bg-gradient-dark btn btn-dark w-fit opacity-60 cursor-default">
-                      Closed
+              <h2 class="text-h2 font-medium lg:w-2/5 mx-auto">
+                Archived roles
+              </h2>
+              <p class="text-gray max-w-2xl mx-auto mt-4">
+                These positions have closed and are no longer accepting
+                applications.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2.5">
+              {archivedRoles.map((career) => (
+                <div class="bg-card/70 border border-border/6 rounded-3xl p-10 flex lg:items-center lg:justify-between gap-8 flex-col lg:flex-row">
+                  <div class="flex flex-col gap-1 min-w-0 flex-1">
+                    <a href={`/careers/${career.slug}`}>
+                      <h3 class="font-primary font-medium text-h6 text-text hover:text-primary transition-colors duration-200">
+                        {career.frontmatter.title}
+                      </h3>
+                    </a>
+                    <p class="text-gray">
+                      {career.frontmatter.job_info?.department}
+                    </p>
+                  </div>
+                  <div class="flex items-center gap-3 flex-wrap">
+                    <span class="text-gray">
+                      {career.frontmatter.job_info?.employ_type}
                     </span>
+                    <div class="size-1 rounded-full bg-gray/40" />
+                    <span class="text-gray">
+                      {career.frontmatter.job_info?.location}
+                    </span>
+                    {career.frontmatter.job_info?.deadline && (
+                      <>
+                        <div class="size-1 rounded-full bg-gray/40" />
+                        <span class="text-gray">
+                          Closed {career.frontmatter.job_info.deadline}
+                        </span>
+                      </>
+                    )}
                   </div>
-                ))}
-              </div>
+                  <span class="bg-gradient-dark btn btn-dark w-fit opacity-60 cursor-default">
+                    Closed
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
-    )
-  }
+      </div>
+    </section>
+  )}
   {gallery && <Gallery data={gallery} />}
   <FAQ data={faq} client:visible />
   <CallToAction data={callToAction} />
