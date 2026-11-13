@@ -3,14 +3,22 @@ allowBuilds:
   workerd: true
 # 2026-11-13 secperf audit: force patched copies of transitive deps
 # flagged by `pnpm audit` (all patch/minor bumps, verified by rebuild).
-# Deliberately NOT overridden (major jumps): deepmerge-ts 7->8,
-# glob 13->14, minimatch 10->11, katex 0.16->0.18 (rehype-katex 7
-# declares katex ^0.16.0 — forcing 0.18.x risks math rendering).
+# 2026-11-13 security round: the deliberate decision NOT to override
+# the four major-jump vulns below is REVERSED — patched versions now
+# exist (deepmerge-ts 8.0.2, glob 14.0.6, minimatch 11.0.8,
+# katex 0.19.1) and each override was verified one at a time with
+# `pnpm astro check` + `pnpm build` (see security audit
+# /tmp/audit-security-101.md). None of the four executes in production
+# (build/dev-time only), but the overrides close all 4 advisories.
 overrides:
   sharp: 0.35.5
   svgo: 4.1.0
   path-to-regexp: 6.3.0
   postcss-selector-parser: 6.1.5
+  katex: 0.19.1 # GHSA-238p-pmpm-9mq7 (low) — collapses 3 copies to one patched version
+  minimatch: 11.0.8 # GHSA-g3hv-75wg-m249 (moderate) — 10.x line ends at 10.2.6, no patched 10.x
+  deepmerge-ts: 8.0.2 # GHSA-ggr8-5vv4-36mx (high) — 8.0.0 adds circular-ref support + maxDepth
+  glob: 14.0.6 # GHSA-3g3m-2fjr-6pw4 (moderate) — 13.x ends at 13.0.7, no patched 13.x; @vercel/nft tracing check still pending at deploy time
 minimumReleaseAgeExclude:
   - framer-motion@14.13.0
   - glob@14.0.6
