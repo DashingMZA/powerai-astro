@@ -324,42 +324,54 @@ const jobInfoCards = [
   const cvInput = document.getElementById("cv-upload") as HTMLInputElement;
   const cvFileName = document.getElementById("cv-file-name") as HTMLElement;
 
-  let applySending = false;
+  // Archived roles render no apply form, so every element above is null
+  // there. Guard the whole wiring so archived career pages throw no error.
+  if (
+    applyForm &&
+    applyTs &&
+    applyStatus &&
+    applySubmit &&
+    cvInput &&
+    cvFileName
+  ) {
+    let applySending = false;
 
-  // Timestamp for the server's minimum-time-to-submit check.
-  applyTs.value = String(Date.now());
+    // Timestamp for the server's minimum-time-to-submit check.
+    applyTs.value = String(Date.now());
 
-  cvInput.addEventListener("change", () => {
-    cvFileName.textContent = cvInput.files?.[0]?.name ?? "";
-  });
+    cvInput.addEventListener("change", () => {
+      cvFileName.textContent = cvInput.files?.[0]?.name ?? "";
+    });
 
-  applyForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (applySending) return;
-    applySending = true;
-    applySubmit.disabled = true;
-    applySubmit.textContent = "Sending…";
-    applyStatus.textContent = "";
-    try {
-      const response = await fetch("/api/apply", {
-        method: "POST",
-        body: new FormData(applyForm),
-      });
-      const result = (await response.json()) as {
-        ok: boolean;
-        message: string;
-      };
-      applyStatus.textContent = result.message;
-      if (response.ok && result.ok) {
-        applyForm.reset();
-        cvFileName.textContent = "";
+    applyForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (applySending) return;
+      applySending = true;
+      applySubmit.disabled = true;
+      applySubmit.textContent = "Sending…";
+      applyStatus.textContent = "";
+      try {
+        const response = await fetch("/api/apply", {
+          method: "POST",
+          body: new FormData(applyForm),
+        });
+        const result = (await response.json()) as {
+          ok: boolean;
+          message: string;
+        };
+        applyStatus.textContent = result.message;
+        if (response.ok && result.ok) {
+          applyForm.reset();
+          cvFileName.textContent = "";
+        }
+      } catch {
+        applyStatus.textContent =
+          "Something went wrong. Please try again later.";
+      } finally {
+        applySending = false;
+        applySubmit.disabled = false;
+        applySubmit.textContent = "Apply Now";
       }
-    } catch {
-      applyStatus.textContent = "Something went wrong. Please try again later.";
-    } finally {
-      applySending = false;
-      applySubmit.disabled = false;
-      applySubmit.textContent = "Apply Now";
-    }
-  });
+    });
+  }
 </script>
