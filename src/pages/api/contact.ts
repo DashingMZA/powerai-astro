@@ -3,9 +3,11 @@
 // Accepts JSON (fetch clients) or urlencoded/multipart form posts
 // (no-JS fallback). Validates server-side, then emails CONTACT_EMAIL
 // via Resend. Success is reported ONLY when Resend returns an email
-// id. No credentials exist yet — without RESEND_API_KEY /
-// CONTACT_EMAIL / CONTACT_FROM_EMAIL this answers 503 and sends
-// nothing (live delivery NOT tested — no credentials were provided).
+// id. Credentials are configured in Vercel Production (since
+// 2026-11-13); without RESEND_API_KEY / CONTACT_EMAIL /
+// CONTACT_FROM_EMAIL this answers 503 and sends nothing. Live
+// delivery currently FAILS on a config error: CONTACT_FROM_EMAIL is
+// malformed (Resend 422 "Invalid `from` field") — see docs.
 
 import type { APIRoute } from "astro";
 import {

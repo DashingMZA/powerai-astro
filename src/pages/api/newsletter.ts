@@ -14,7 +14,11 @@
 // No welcome email is sent (NEWSLETTER_FROM_EMAIL is reserved for
 // one, if it is ever added — see .env.example).
 //
-// Live delivery NOT tested — no Resend credentials were provided.
+// Live delivery currently FAILS on a config error: credentials are
+// set in Vercel Production (since 2026-11-13), but the configured
+// RESEND_API_KEY is sending-only (Resend 401 `restricted_api_key` on
+// contacts.create) — the newsletter needs a key with Contacts
+// permission. See docs.
 
 import type { APIRoute } from "astro";
 import { Resend } from "resend";

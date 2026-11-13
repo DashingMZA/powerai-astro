@@ -13,7 +13,9 @@
 // hiring-status worker's job, not this endpoint's, and no vacancy is
 // invented here.
 //
-// Live delivery NOT tested — no Resend credentials were provided.
+// Live delivery currently FAILS on a config error: credentials are
+// set in Vercel Production (since 2026-11-13), but CONTACT_FROM_EMAIL
+// is malformed (Resend 422 "Invalid `from` field"). See docs.
 
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
