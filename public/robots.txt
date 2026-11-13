@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://powerai.csofts.tech/sitemap-index.xml
+Sitemap: https://powerai.jadoo.bond/sitemap-index.xml

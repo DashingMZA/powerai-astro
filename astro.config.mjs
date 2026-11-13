@@ -6,6 +6,9 @@ import compress from "@playform/compress";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
 import icon from "astro-icon";
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, fontProviders } from "astro/config";
 import rehypeKatex from "rehype-katex";
@@ -50,6 +53,41 @@ const fontsConfig = Object.entries(theme.fonts.font_family)
     };
   });
 
+// Filename-alias paths for slug-routed blog posts. When a post sets a
+// frontmatter `slug` that differs from its filename,
+// `src/pages/blog/[single].astro` builds BOTH `/blog/<slug>` (canonical)
+// and `/blog/<filename>` (alias). The sitemap must list only the
+// canonical slug URL, so the alias pathnames are collected here — read
+// straight from the content files at config load, because the sitemap
+// `filter` below only sees URL strings, not collection entries — and
+// excluded there. No post sets `slug` today, so this set is currently
+// empty; it fills automatically the moment a slug lands. A `slug` equal
+// to the filename builds no alias and is not collected. Drafts are
+// excluded by `getSingleEntry` before routing, so a draft's filename
+// never reaches the sitemap either way.
+const blogAliasPaths = new Set();
+try {
+  const blogDir = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "src",
+    "content",
+    "blog",
+  );
+  for (const file of readdirSync(blogDir)) {
+    if (!/\.(md|mdx)$/.test(file) || file.startsWith("-")) continue;
+    const raw = readFileSync(path.join(blogDir, file), "utf8");
+    const frontmatter = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    const slug = frontmatter?.[1]
+      .match(/^slug:\s*["']?([^"'\r\n]+?)["']?\s*$/m)?.[1]
+      ?.trim();
+    const filename = file.replace(/\.(md|mdx)$/, "");
+    if (slug && slug !== filename) blogAliasPaths.add(`/blog/${filename}`);
+  }
+} catch {
+  // Blog dir unreadable — the sitemap filter degrades to the noindex
+  // exclusions below; alias filtering resumes on the next successful read.
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: config.site.base_url ? config.site.base_url : "http://examplesite.com",
@@ -72,9 +110,16 @@ export default defineConfig({
     react(),
     sitemap({
       // Drafts are never built as routes; exclude pages that must not be
-      // indexed (404 and the dead auth placeholder pages).
-      filter: (page) =>
-        !/\/(404|login|sign-up)\/?$/.test(new URL(page).pathname),
+      // indexed (404 and the dead auth placeholder pages), plus the
+      // filename-alias URLs of slug-routed blog posts — the sitemap must
+      // contain only the canonical slug URL for those posts (see
+      // `blogAliasPaths` above; empty today, no post sets `slug` yet).
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, "") || "/";
+        if (/^\/(404|login|sign-up)$/.test(pathname)) return false;
+        if (blogAliasPaths.has(pathname)) return false;
+        return true;
+      },
     }),
     AutoImport({
       imports: [

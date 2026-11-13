@@ -32,6 +32,11 @@ export async function GET(context: APIContext) {
     title: site.title,
     description: defaultSeo.description,
     site: context.site ?? site.baseUrl,
+    // Site-wide `trailing_slash: false` — RSS must emit the same
+    // no-trailing-slash item links as the canonical URLs, not the
+    // @astrojs/rss default (`trailingSlash: true`), which appended `/`
+    // to every item link while canonicals had none.
+    trailingSlash: false,
     items: sorted.map((post) => ({
       title: post.data.title,
       description: post.data.description ?? "",

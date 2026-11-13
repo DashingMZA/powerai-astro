@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "Power AI - A Free AI SaaS Website Template built with Astro",
-    "base_url": "https://powerai.csofts.tech",
+    "base_url": "https://powerai.jadoo.bond",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
