@@ -1,7 +1,7 @@
 ---
 title: "Notion Integration"
 meta_title: "Notion Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Generate AI images inside Notion with /powerai commands — diagrams, illustrations, page covers, and database-driven visuals."
 image: ""
 draft: false
 category: "Productivity"

@@ -46,6 +46,7 @@ export async function getStaticPaths() {
 
 const { category, posts } = Astro.props;
 const count = posts.length;
+const pageDescription = `Browse all ${count} ${count === 1 ? "post" : "posts"} in ${category} on the Power AI blog — practical guides and insights on ${category} from the Power AI team, all in one archive.`;
 const page_header = {
   title: category,
   badge: "Category",
@@ -61,7 +62,7 @@ const breadcrumbs = [
 
 <Base
   title={`${category} — Category`}
-  description={page_header.subtitle}
+  description={pageDescription}
   jsonLd={breadcrumbJsonLd(breadcrumbs)}
 >
   <Breadcrumbs items={breadcrumbs} />

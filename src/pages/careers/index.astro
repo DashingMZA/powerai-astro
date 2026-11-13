@@ -9,6 +9,7 @@ import CardShape from "@/components/shape/CardShape";
 import OpenPositions from "@/partials/OpenPositions";
 import config from "@/config/config.json";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { FAQPageData } from "@/partials/FAQ";
 import type { Career, IndexFrontmatter } from "@/types/index";
 
@@ -36,6 +37,12 @@ const isOpen = (career: Career) => {
 const openRoles = careers.filter(isOpen);
 const archivedRoles = careers.filter((career) => !isOpen(career));
 const openPositions = data.frontmatter.open_positions;
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Careers" }];
+const pageJsonLd = [
+  webPageJsonLd({ name: title, description, canonical }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 ---
 
 <Base
@@ -43,6 +50,7 @@ const openPositions = data.frontmatter.open_positions;
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header}>
     <div class="border border-border/6 bg-card/60 rounded-4xl p-2.5">

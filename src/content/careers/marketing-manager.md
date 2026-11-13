@@ -1,7 +1,7 @@
 ---
 title: Marketing Manager
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: Marketing Manager (London, full-time, 4+ years) leading campaigns and brand awareness. Applications closed 30 May 2025."
 date: 2025-04-07T05:00:00Z # this is created date
 
 job_info:

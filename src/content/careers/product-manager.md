@@ -1,7 +1,7 @@
 ---
 title: Product Manager
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: Product Manager (London, full-time, 5+ years) owning product vision, strategy, and roadmap. Applications closed 10 June 2025."
 date: 2025-04-10T05:00:00Z # this is created date
 
 job_info:

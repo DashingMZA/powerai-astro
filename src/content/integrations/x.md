@@ -1,7 +1,7 @@
 ---
 title: "X Integration"
 meta_title: "X Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Automatically generate and publish AI images to X — visuals for tweets, threads, and media posts, scheduled without manual design work."
 image: ""
 draft: false
 category: "Social Media"

@@ -6,11 +6,18 @@ import MainContainer from "@/components/MainContainer.astro";
 import Badge from "@/components/Badge.astro";
 import theme from "@/config/theme.json";
 import { getListPage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { IndexFrontmatter } from "@/types/index";
 
 const data = await getListPage<IndexFrontmatter>("changelog/-index.md");
 const { title, description, meta_title, image, page_header, changelog_list } =
   data.frontmatter;
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Changelog" }];
+const pageJsonLd = [
+  webPageJsonLd({ name: title, description, canonical }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 const callToAction = await getListPage("sections/call-to-action.md");
 const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
 ---
@@ -20,6 +27,7 @@ const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header} />
 

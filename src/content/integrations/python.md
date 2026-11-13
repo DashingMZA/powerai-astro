@@ -1,7 +1,7 @@
 ---
 title: "Python Integration"
 meta_title: "Python Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Add AI image generation to Python apps with a clean, Pythonic SDK — async support, type hints, and simple APIs for any project."
 image: ""
 draft: false
 category: "Development"

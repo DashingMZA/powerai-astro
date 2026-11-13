@@ -78,6 +78,32 @@ export function breadcrumbJsonLd(items: BreadcrumbItem[]): JsonLdObject {
   };
 }
 
+export interface WebPageInput {
+  /** Schema type: "WebPage" default; "AboutPage" / "ContactPage" /
+   *  "CollectionPage" where semantically appropriate. */
+  type?: "WebPage" | "AboutPage" | "ContactPage" | "CollectionPage";
+  name: string;
+  description?: string;
+  canonical: string;
+}
+
+/**
+ * WebPage-family JSON-LD for index pages that have no Article/BlogPosting
+ * of their own. Only the page's real title/description are used — no
+ * address, phone, price, rating or other invented data. Do NOT use this
+ * to repeat the homepage Organization/WebSite entities (they live on `/`
+ * only via organizationJsonLd()).
+ */
+export function webPageJsonLd(input: WebPageInput): JsonLdObject {
+  return {
+    "@context": "https://schema.org",
+    "@type": input.type ?? "WebPage",
+    name: input.name,
+    ...(input.description ? { description: input.description } : {}),
+    url: input.canonical,
+  };
+}
+
 export interface ArticleInput {
   title: string;
   description?: string;

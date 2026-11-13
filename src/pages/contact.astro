@@ -5,12 +5,19 @@ import CallToAction from "@/partials/CallToAction.astro";
 import FAQ from "@/partials/FAQ";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getListPage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { FAQPageData } from "@/partials/FAQ";
 import type { IndexFrontmatter } from "@/types/index";
 
 const data = await getListPage<IndexFrontmatter>("contact/-index.md");
 const { title, description, meta_title, image, page_header, contact_info } =
   data.frontmatter;
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Contact" }];
+const pageJsonLd = [
+  webPageJsonLd({ type: "ContactPage", name: title, description, canonical }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 const faq = await getListPage<FAQPageData["frontmatter"]>("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
 ---
@@ -20,6 +27,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header}>
     <ContactForm contact_info={contact_info} />

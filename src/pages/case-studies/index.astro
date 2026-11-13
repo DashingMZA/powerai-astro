@@ -6,6 +6,7 @@ import MainContainer from "@/components/MainContainer.astro";
 import Pagination from "@/components/Pagination.astro";
 import config from "@/config/config.json";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { CaseStudy } from "@/types/index";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import CallToAction from "@/partials/CallToAction.astro";
@@ -21,6 +22,17 @@ const totalPages = Math.ceil(caseStudies.length / pagination);
 const currentCaseStudies = sortedCaseStudies.slice(0, pagination);
 const page_header = { title, badge: "Case Studies", description };
 const callToAction = await getListPage("sections/call-to-action.md");
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Case Studies" }];
+const pageJsonLd = [
+  webPageJsonLd({
+    type: "CollectionPage",
+    name: title,
+    description,
+    canonical,
+  }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 const featuredCaseStudy = sortedCaseStudies.filter(
   (study) => study.frontmatter.featured,
 )[0];
@@ -31,6 +43,7 @@ const featuredCaseStudy = sortedCaseStudies.filter(
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header}>
     {featuredCaseStudy && (

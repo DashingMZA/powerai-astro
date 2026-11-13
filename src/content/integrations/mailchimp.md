@@ -1,7 +1,7 @@
 ---
 title: "Mailchimp Integration"
 meta_title: "Mailchimp Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Automate image generation for Mailchimp campaigns: email headers, product showcases, and A/B test variations, right in your workflow."
 image: ""
 draft: false
 category: "Marketing"

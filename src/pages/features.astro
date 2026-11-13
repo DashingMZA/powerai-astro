@@ -6,10 +6,17 @@ import KeyFeatures from "@/partials/KeyFeatures.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import TrustedClients from "@/partials/TrustedClients";
 import { getListPage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { IndexFrontmatter, LogoMarqueeType } from "@/types/index";
 
 const data = await getListPage<IndexFrontmatter>("features/-index.md");
 const { title, description, meta_title, image, page_header } = data.frontmatter;
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Features" }];
+const pageJsonLd = [
+  webPageJsonLd({ name: title, description, canonical }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 const essential_features = await getListPage("sections/essential-features.md");
 const trusted_clients = await getListPage<LogoMarqueeType>(
   "sections/trusted-clients.md",
@@ -23,6 +30,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header} />
   <EssentialFeatures data={essential_features} />

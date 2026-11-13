@@ -1,7 +1,7 @@
 ---
 title: "Webflow Integration"
 meta_title: "Webflow Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Generate hero images and visuals inside Webflow — CMS-driven images, asset management, and responsive sizes for your projects."
 image: ""
 draft: false
 category: "Design"

@@ -1,7 +1,7 @@
 ---
 title: "Figma Integration"
 meta_title: "Figma Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Power AI integration for Figma: connect the design tool to AI image generation and streamline your design workflow, all in one place."
 image: ""
 draft: false
 category: "Design"

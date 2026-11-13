@@ -1,7 +1,7 @@
 ---
 title: "Features"
 meta_title: ""
-description: "this is meta description"
+description: "Explore Power AI's features: AI-powered tools that keep your data safe and lift your site's visibility, built for modern workflows."
 image: ""
 draft: false
 page_header:

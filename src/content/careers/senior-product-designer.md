@@ -1,7 +1,7 @@
 ---
 title: Senior Product Designer
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: Senior Product Designer (London, full-time, 5+ years) crafting intuitive, user-centred experiences. Applications closed 15 May 2025."
 date: 2025-04-04T05:00:00Z # this is created date
 
 job_info:

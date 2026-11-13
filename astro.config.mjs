@@ -127,9 +127,11 @@ export default defineConfig({
       // filename-alias URLs of slug-routed blog posts — the sitemap must
       // contain only the canonical slug URL for those posts (see
       // `blogAliasPaths` above; empty today, no post sets `slug` yet).
+      // `/elements` is excluded too: it is a demo/style-guide page with
+      // filler text and is noindexed in src/pages/[regular].astro.
       filter: (page) => {
         const pathname = new URL(page).pathname.replace(/\/$/, "") || "/";
-        if (/^\/(404|login|sign-up)$/.test(pathname)) return false;
+        if (/^\/(404|login|sign-up|elements)$/.test(pathname)) return false;
         if (blogAliasPaths.has(pathname)) return false;
         return true;
       },

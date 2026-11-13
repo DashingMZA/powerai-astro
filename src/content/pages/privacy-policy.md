@@ -1,7 +1,7 @@
 ---
 title: "Privacy"
 meta_title: ""
-description: "this is meta description"
+description: "Read Power AI's Privacy Policy: what we collect through forms and comments, how we use it, and how your personal information is protected."
 image: ""
 draft: false
 page_header:

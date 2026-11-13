@@ -1,7 +1,7 @@
 ---
 title: "Sketch Integration"
 meta_title: "Sketch Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Bring AI image generation into Sketch: generate images into layers, build reusable symbols, and keep your design system consistent."
 image: ""
 draft: false
 category: "Design"

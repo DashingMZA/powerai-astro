@@ -1,7 +1,7 @@
 ---
 title: Data Analyst
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: Data Analyst (Remote, full-time, 2+ years) turning raw data into dashboards and insights. Applications closed 1 June 2025."
 date: 2025-04-08T05:00:00Z # this is created date
 
 job_info:

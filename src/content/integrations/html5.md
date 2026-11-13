@@ -1,7 +1,7 @@
 ---
 title: "HTML5 Integration"
 meta_title: "HTML5 Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Embed AI-generated images directly in HTML5 projects — responsive visuals, lazy loading, and canvas support for the modern web."
 image: ""
 draft: false
 category: "Development"

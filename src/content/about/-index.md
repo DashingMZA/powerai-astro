@@ -1,7 +1,7 @@
 ---
 title: "About Us"
 meta_title: "About"
-description: "this is meta description"
+description: "Meet the team behind Power AI. We monitor and grow your online visibility, keeping your reputation positive and trustworthy across the web."
 image: "/images/image-placeholder.png"
 draft: false
 page_header:

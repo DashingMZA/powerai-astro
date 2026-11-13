@@ -1,7 +1,7 @@
 ---
 title: "Blog Posts"
 meta_title: ""
-description: "A collection of articles and insights on AI, machine learning, and data science. Explore our latest blog posts to stay updated on industry trends, best practices, and innovative solutions."
+description: "Articles and insights on AI, machine learning, and data science — the latest Power AI blog posts on trends, best practices, and new ideas."
 image: ""
 draft: false
 ---

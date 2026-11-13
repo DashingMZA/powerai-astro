@@ -1,7 +1,7 @@
 ---
 title: "Discord Integration"
 meta_title: "Discord Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Connect Power AI to Discord and generate AI images inside your servers — automated image creation for your community channels."
 image: ""
 draft: false
 category: "Communication"

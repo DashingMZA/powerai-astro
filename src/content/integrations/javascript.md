@@ -1,7 +1,7 @@
 ---
 title: "JavaScript Integration"
 meta_title: "JavaScript Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Add AI image generation to any JavaScript app with the Power AI SDK — Node.js, browsers, and edge, with TypeScript support built in."
 image: ""
 draft: false
 category: "Development"

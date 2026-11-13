@@ -1,7 +1,7 @@
 ---
 title: UI/UX Designer
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: UI/UX Designer (New York, full-time, 2+ years) designing web and mobile interfaces. Applications closed 25 May 2025."
 date: 2025-04-06T05:00:00Z # this is created date
 
 job_info:

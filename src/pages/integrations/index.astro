@@ -5,6 +5,7 @@ import CallToAction from "@/partials/CallToAction.astro";
 import FAQ from "@/partials/FAQ";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { FAQPageData } from "@/partials/FAQ";
 import type { IndexFrontmatter, IntegrationType } from "@/types/index";
 
@@ -16,6 +17,17 @@ const { title, description, meta_title, image, page_header } =
 const integrationItems = await getSinglePage<IntegrationType>("integrations");
 const faq = await getListPage<FAQPageData["frontmatter"]>("sections/faq.md");
 const callToAction = await getListPage("sections/call-to-action.md");
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Integrations" }];
+const pageJsonLd = [
+  webPageJsonLd({
+    type: "CollectionPage",
+    name: title,
+    description,
+    canonical,
+  }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 ---
 
 <Base
@@ -23,6 +35,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header} />
   <IntegrationList items={integrationItems} client:load />

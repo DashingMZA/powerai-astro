@@ -1,7 +1,7 @@
 ---
 title: "Integration"
 meta_title: "Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Browse all Power AI integrations: connect your favourite tools, automate image generation, and streamline your workflow in one place."
 image: ""
 draft: false
 page_header:

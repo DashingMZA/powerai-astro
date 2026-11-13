@@ -1,7 +1,7 @@
 ---
 title: "Pricing"
 meta_title: "Pricing"
-description: "this is meta description"
+description: "Compare Power AI's flexible pricing plans and pick the one that fits your business, from getting started to growing at scale."
 image: "/images/image-placeholder.png"
 draft: false
 page_header:

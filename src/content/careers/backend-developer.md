@@ -1,7 +1,7 @@
 ---
 title: Backend Developer
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: Backend Developer (Remote, full-time, 3+ years) building scalable APIs and backend systems. Applications closed 20 May 2025."
 date: 2025-04-05T05:00:00Z # this is created date
 
 job_info:

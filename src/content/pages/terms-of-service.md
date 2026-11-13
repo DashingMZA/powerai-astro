@@ -1,7 +1,7 @@
 ---
 title: "Terms of Service"
 meta_title: ""
-description: "this is meta description"
+description: "Read Power AI's Terms of Service: the rules for using this site, its forms and comments, and the content and licences that apply."
 image: ""
 draft: false
 page_header:

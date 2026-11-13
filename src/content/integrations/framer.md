@@ -1,7 +1,7 @@
 ---
 title: "Framer Integration"
 meta_title: "Framer Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Bring AI image generation into Framer: create visuals, illustrations, and graphics for your designs without leaving your design tool."
 image: ""
 draft: false
 category: "Design"

@@ -1,7 +1,7 @@
 ---
 title: "Changelog"
 meta_title: "Changelog"
-description: "this is meta description"
+description: "Track every Power AI update: new features, improvements, and bug fixes, from the latest release back through earlier versions."
 image: "/images/image-placeholder.png"
 draft: false
 page_header:

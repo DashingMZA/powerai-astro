@@ -1,7 +1,7 @@
 ---
 title: "Slack Integration"
 meta_title: "Slack Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Generate AI images inside Slack channels and DMs with /powerai commands — visual content without leaving your team's conversation."
 image: ""
 draft: false
 category: "Communication"

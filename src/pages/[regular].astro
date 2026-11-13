@@ -3,6 +3,7 @@ import Base from "@/layouts/Base.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getSingleEntry } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import { render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -19,6 +20,18 @@ if (page.data.draft) return Astro.redirect("/404");
 
 const { Content } = await render(page);
 const { title, meta_title, description, image, page_header } = page.data;
+// /elements is a demo/style-guide page with filler text (Star Trek
+// placeholder copy), not real content — keep it out of the index. The
+// sitemap filter in astro.config.mjs excludes it as well.
+const isElements = page.id === "elements";
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: title }];
+const pageJsonLd = isElements
+  ? undefined
+  : [
+      webPageJsonLd({ name: title, description, canonical }),
+      breadcrumbJsonLd(breadcrumbs),
+    ];
 ---
 
 <Base
@@ -26,6 +39,8 @@ const { title, meta_title, description, image, page_header } = page.data;
   meta_title={meta_title}
   description={description}
   image={image}
+  noindex={isElements}
+  jsonLd={pageJsonLd}
 >
   {page_header && <PageHeader page_header={page_header} />}
   <section>

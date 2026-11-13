@@ -1,7 +1,7 @@
 ---
 title: "Facebook Integration"
 meta_title: "Facebook Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Generate and publish AI images to your Facebook pages and groups automatically — visual content for social marketing, without manual design."
 image: ""
 draft: false
 category: "Social Media"

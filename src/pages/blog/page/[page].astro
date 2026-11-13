@@ -29,7 +29,7 @@ const { page } = Astro.params;
 const currentPage = Number(page) || 1;
 
 const postIndex = await getListPage(`${blog_folder}/-index.md`);
-const { title, meta_title, description, image } = postIndex.frontmatter;
+const { title, meta_title, image } = postIndex.frontmatter;
 const posts = await getSinglePage<Post>(blog_folder);
 const sortedPosts = sortByDate(posts);
 const totalPages = Math.ceil(posts.length / pagination);
@@ -37,7 +37,8 @@ const indexOfLastPost = currentPage * pagination;
 const indexOfFirstPost = indexOfLastPost - pagination;
 const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
-const page_header = { title, badge: "Blog", subtitle: description };
+const pageDescription = `Blog posts, page ${currentPage}: more articles on AI, machine learning, and data science from the Power AI team — trends, guides, and best practices.`;
+const page_header = { title, badge: "Blog", subtitle: pageDescription };
 const callToAction = await getListPage("sections/call-to-action.md");
 const featuredPost = sortedPosts.filter((post) => post.frontmatter.featured)[0];
 const breadcrumbs = [
@@ -50,7 +51,7 @@ const breadcrumbs = [
 <Base
   title={`${title} — Page ${currentPage}`}
   meta_title={meta_title ? `${meta_title} — Page ${currentPage}` : undefined}
-  description={description}
+  description={pageDescription}
   image={image}
   jsonLd={breadcrumbJsonLd(breadcrumbs)}
 >

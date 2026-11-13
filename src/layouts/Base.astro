@@ -1,7 +1,7 @@
 ---
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
-import { defaultSeo, language, locale, site } from "@/config/site";
+import { defaultSeo, language, locale, site, socialLinks } from "@/config/site";
 import theme from "@/config/theme.json";
 import { plainify } from "@/lib/utils/textConverter";
 import {
@@ -77,6 +77,14 @@ const localImages = import.meta.glob(
   "/public/images/**/*.{jpeg,jpg,png,gif,svg,webp,avif}",
 );
 const rawImage = image ? image : defaultSeo.ogImage;
+// Twitter handle, derived (not invented) from the site's own X profile
+// in src/config/social.json (https://x.com/Dashing_ZB). Absent if no
+// x.com/twitter.com profile is configured there.
+const twitterHandle = socialLinks
+  .find((link) => link.name === "x")
+  ?.link.match(
+    /^https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/([A-Za-z0-9_]+)/i,
+  )?.[1];
 const ogImage = toAbsoluteUrl(
   rawImage && !isAbsoluteUrl(rawImage) && !localImages[`/public${rawImage}`]
     ? defaultSeo.ogImage
@@ -135,6 +143,7 @@ const ogImage = toAbsoluteUrl(
     <meta name="author" content={defaultSeo.author} />
 
     <!-- og tags -->
+    <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content={ogType} />
@@ -157,6 +166,12 @@ const ogImage = toAbsoluteUrl(
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:card" content="summary_large_image" />
+    {twitterHandle && (
+      <meta name="twitter:site" content={`@${twitterHandle}`} />
+    )}
+    {twitterHandle && (
+      <meta name="twitter:creator" content={`@${twitterHandle}`} />
+    )}
 
     <!-- og-image / twitter-image (absolute URLs pass through verbatim) -->
     {ogImage && <meta property="og:image" content={ogImage} />}

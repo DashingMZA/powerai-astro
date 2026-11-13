@@ -12,6 +12,7 @@ import CardShape from "@/components/shape/CardShape";
 import Badge from "@/components/Badge.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getListPage } from "@/lib/contentParser";
+import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
 import type { StatisticsPageData } from "@/components/Statistics";
 import type { AboutFrontmatter, LogoMarqueeType } from "@/types/index";
 
@@ -26,6 +27,12 @@ const {
   what_our_goals,
   our_team,
 } = data.frontmatter;
+const canonical = canonicalUrl(Astro.url.pathname);
+const breadcrumbs = [{ label: "Home", href: "/" }, { label: "About" }];
+const pageJsonLd = [
+  webPageJsonLd({ type: "AboutPage", name: title, description, canonical }),
+  breadcrumbJsonLd(breadcrumbs),
+];
 const trusted_clients = await getListPage<LogoMarqueeType>(
   "sections/trusted-clients.md",
 );
@@ -42,6 +49,7 @@ const callToAction = await getListPage("sections/call-to-action.md");
   meta_title={meta_title}
   description={description}
   image={image}
+  jsonLd={pageJsonLd}
 >
   <PageHeader page_header={page_header}>
     <div class="border border-border/6 bg-card rounded-4xl p-2.5">

@@ -1,7 +1,7 @@
 ---
 title: "Github Integration"
 meta_title: "Github Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Automate image generation for GitHub: cover images for pull requests, visuals for issues and releases, and graphics for your docs."
 image: ""
 draft: false
 category: "Development"

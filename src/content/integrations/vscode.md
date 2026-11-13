@@ -1,7 +1,7 @@
 ---
 title: "VS Code Integration"
 meta_title: "VS Code Integration - Power AI"
-description: "Discover our powerful integration capabilities and seamless connections"
+description: "Generate diagrams, documentation images, and visual assets inside VS Code — command palette, live preview, and direct file saving."
 image: ""
 draft: false
 category: "Development"

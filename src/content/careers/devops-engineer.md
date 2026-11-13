@@ -1,7 +1,7 @@
 ---
 title: DevOps Engineer
 meta_title: ""
-description: "this is meta description"
+description: "Archived listing: DevOps Engineer (San Francisco, full-time, 4+ years) running cloud infrastructure and CI/CD. Applications closed 5 June 2025."
 date: 2025-04-09T05:00:00Z # this is created date
 
 job_info:

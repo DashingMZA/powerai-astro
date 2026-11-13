@@ -1,7 +1,7 @@
 ---
 title: "Contact Us"
 meta_title: "Contact"
-description: "this is meta description"
+description: "Questions about Power AI? Reach our support team through the contact form — we help with product questions, feedback, and anything else."
 image: "/images/image-placeholder.png"
 draft: false
 page_header:
