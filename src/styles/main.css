@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* KaTeX CSS for $...$ / $$...$$ math rendered by rehype-katex. */
+@import "katex/dist/katex.min.css";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 

@@ -76,7 +76,7 @@ These are real, verified limitations of the current state. They are documented h
 - **No security headers** (no CSP/HSTS/etc.) on any deployment target yet.
 - **Dockerfile is broken as committed** — it copies `config/nginx/nginx.conf`, which does not exist in the repo. See [DEPLOYMENT.md](./DEPLOYMENT.md).
 - **No Lighthouse / Core Web Vitals measurement yet** — no Chromium was available in the sandbox, so no CWV claims are made. See [PERFORMANCE.md](./PERFORMANCE.md).
-- **Several installed dependencies are not wired yet** (KaTeX, Mermaid, astro-icon, `@playform/compress`, S3/exif tooling, Disqus, i18n, adapters, ESLint config). Each is listed with its follow-up step in [INSTALLATION.md](./INSTALLATION.md) and [CHANGELOG.md](./CHANGELOG.md).
+- **Several installed dependencies are now wired** (KaTeX/math, Mermaid, astro-icon, `@playform/compress`, S3/exif upload helper, GTM package, opt-in bundle visualizer). Still intentionally unwired: Disqus (OpenRemark is the comments system), i18n (single-language site), `@astrojs/cloudflare`/`@astrojs/vercel` adapters (output stays static), `astro-swiper` (no real carousel surface), `turndown`/`glob`/`node-html-parser`/`@supercharge/promise-pool` (no script needs them). Each is listed with its status in [INSTALLATION.md](./INSTALLATION.md).
 
 ## Contributing / license
 

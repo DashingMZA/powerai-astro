@@ -1,10 +1,16 @@
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import compress from "@playform/compress";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
+import icon from "astro-icon";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, fontProviders } from "astro/config";
+import rehypeKatex from "rehype-katex";
 import remarkCollapse from "remark-collapse";
+import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
@@ -51,7 +57,14 @@ export default defineConfig({
   trailingSlash: config.site.trailing_slash ? "always" : "never",
   image: { service: sharp() },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      // Opt-in bundle report only: `ANALYZE=true pnpm run build` writes
+      // stats.html at the repo root. Normal builds are unaffected.
+      ...(process.env.ANALYZE === "true"
+        ? [visualizer({ filename: "stats.html", open: false })]
+        : []),
+    ],
     server: { watch: { ignored: ["**/.claude/**"] } },
   },
   fonts: fontsConfig,
@@ -75,9 +88,24 @@ export default defineConfig({
       ],
     }),
     mdx(),
+    // Provides the `virtual:astro-icon` module for <Icon> (src/icons/).
+    icon(),
+    // Last: compresses the statically generated HTML/CSS/JS/images.
+    compress(),
   ],
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    // `markdown.remarkPlugins` / `rehypePlugins` are deprecated in Astro 7;
+    // plugins go through `unified({...})` from @astrojs/markdown-remark.
+    // remark-math + rehype-katex enable $...$ / $$...$$ math in .md/.mdx.
+    // KaTeX CSS is imported in src/styles/main.css.
+    processor: unified({
+      remarkPlugins: [
+        remarkToc,
+        [remarkCollapse, { test: "Table of contents" }],
+        remarkMath,
+      ],
+      rehypePlugins: [rehypeKatex],
+    }),
     shikiConfig: { theme: "one-dark-pro", wrap: true },
   },
 });

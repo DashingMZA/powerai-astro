@@ -20,11 +20,23 @@ Props: `src`, `alt`, `width`, `height` (required), plus optional `loading`, `dec
 
 18 plain `<img>` tags exist across the layouts and pages (blog cards, post hero, case-study cards, featured post, icon boxes, gallery, team, about, careers index). Those images get **no resizing, no format conversion, and no `srcset`** — what is in `public/images` is what is served, including large PNG hero images (`/images/banner.png`, `/images/about-banner.png`). If an image needs optimization, route it through `ImageMod.astro` or convert it at the source.
 
-## R2 workflow (no credentials in code)
+## R2 workflow (env-based credentials only, never in code)
 
-There is no R2/S3 integration in this repo: `@aws-sdk/client-s3` and `exif-be-gone` are installed but **not imported anywhere**, and no bucket name, endpoint, or credential exists in code or config. The R2 workflow is therefore entirely outside the repo:
+`@aws-sdk/client-s3` and `exif-be-gone` are wired into one script:
+`scripts/upload-to-r2.mjs` (`pnpm upload:r2 -- --file <path> [--key <key>] [--dry-run]`).
+It strips EXIF/XMP metadata before upload and PUTs the file to the R2 bucket
+that serves `https://media.csofts.tech/…`. Credentials come only from the
+environment (`R2_ENDPOINT`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY`; optional `R2_PUBLIC_BASE_URL` just for printing the
+public URL) — no bucket name, endpoint, or credential exists in code or
+config, and the script refuses to upload when any variable is missing.
+`--dry-run` needs no credentials: it prints the planned key, content-type,
+original vs stripped size, and sha256. Nothing in this repo runs the script
+automatically; it is a manual upload step.
 
-1. **Upload** the image to your R2 bucket by your normal route (Cloudflare dashboard, `wrangler r2 object put`, or your existing upload tooling). The repo has no opinion here and stores no credentials for it.
+1. **Upload** the image: `pnpm upload:r2 -- --file public/images/blog/my-post-hero.png --key blog/my-post-hero.png`
+   (or `--dry-run` first to check the plan; or use the Cloudflare dashboard /
+   `wrangler r2 object put` instead — the repo has no opinion here).
 2. **Use the public media URL in frontmatter or config**, e.g.:
    ```yaml
    image: "https://media.csofts.tech/blog/my-post-hero.png"
