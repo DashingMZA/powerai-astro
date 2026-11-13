@@ -39,9 +39,7 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
 const page_header = { title, badge: "Blog", subtitle: description };
 const callToAction = await getListPage("sections/call-to-action.md");
-const featuredPost = sortedPosts.filter(
-  (post: any) => post.frontmatter.featured,
-)[0];
+const featuredPost = sortedPosts.filter((post) => post.frontmatter.featured)[0];
 const breadcrumbs = [
   { label: "Home", href: "/" },
   { label: "Blog", href: "/blog" },
@@ -63,7 +61,7 @@ const breadcrumbs = [
     <MainContainer>
       <div class="container-padding-x container-padding-y">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-10">
-          {currentPosts.map((post: any) => (
+          {currentPosts.map((post) => (
             <div>
               <BlogCard data={post} />
             </div>

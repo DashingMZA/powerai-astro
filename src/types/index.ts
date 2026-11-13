@@ -149,7 +149,9 @@ export type CallToAction = {
 };
 
 export type Button = {
-  enable: boolean;
+  // Optional, matching buttonSchema (`enable` is optional in the
+  // content schemas); every template reads it as `button?.enable`.
+  enable?: boolean;
   label: string;
   link: string;
 };
@@ -296,13 +298,15 @@ export type OurTeamData = {
 
 /** Page-header shape as the `PageHeader` partial consumes it. `badge` is
  *  optional here (unlike `PageHeaderType`): `about/-index.md` has no
- *  badge, and the partial already guards it. */
+ *  badge, and the partial already guards it. Buttons are nullable: the
+ *  schema declares them `buttonSchema.nullable().optional()`, and
+ *  `about/-index.md` sets an empty `button_dark:` (null). */
 export type PageHeaderProps = {
   title: string;
   badge?: string;
   subtitle?: string;
-  button_primary?: Button;
-  button_dark?: Button;
+  button_primary?: Button | null;
+  button_dark?: Button | null;
 };
 
 /** What `BlogCard` / `FeaturedPost` read: the legacy `Post` shape and the

@@ -42,7 +42,7 @@ const currentCaseStudies = sortedCaseStudies.slice(
 const page_header = { title, badge: "Case Studies", description };
 const callToAction = await getListPage("sections/call-to-action.md");
 const featuredCaseStudy = sortedCaseStudies.filter(
-  (study: any) => study.frontmatter.featured,
+  (study) => study.frontmatter.featured,
 )[0];
 ---
 
@@ -61,7 +61,7 @@ const featuredCaseStudy = sortedCaseStudies.filter(
     <MainContainer>
       <div class="container-padding-x container-padding-y">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-10">
-          {currentCaseStudies.map((study: any) => (
+          {currentCaseStudies.map((study) => (
             <div>
               <CaseStudyCard data={study} client:visible />
             </div>

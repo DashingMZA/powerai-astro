@@ -2,6 +2,7 @@ import rss from "@astrojs/rss";
 import { defaultSeo, site } from "@/config/site";
 import { postUrl } from "@/lib/blogUrls";
 import { getCollection } from "astro:content";
+import type { APIContext } from "astro";
 
 // Loose local shape: the RSS feed only needs these fields, and typing
 // against the collection schema directly breaks whenever the schema file
@@ -17,7 +18,7 @@ type BlogPost = {
   };
 };
 
-export async function GET(context: any) {
+export async function GET(context: APIContext) {
   const all = (await getCollection("blog")) as unknown as BlogPost[];
   const posts = all.filter(
     (post) => !post.data?.draft && !post.id.startsWith("-"),

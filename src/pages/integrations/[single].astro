@@ -9,7 +9,7 @@ import { render } from "astro:content";
 
 export async function getStaticPaths() {
   const integrations = await getSingleEntry("integrations");
-  return integrations.map((integration: any) => ({
+  return integrations.map((integration) => ({
     params: { single: integration.id },
     props: { integration },
   }));

@@ -10,7 +10,7 @@ import CaseStudyCard from "@/components/CaseStudyCard.astro";
 
 export async function getStaticPaths() {
   const caseStudies = await getSingleEntry("case-studies");
-  return caseStudies.map((study: any) => ({
+  return caseStudies.map((study) => ({
     params: { single: study.id },
     props: { caseStudy: study },
   }));
@@ -19,20 +19,18 @@ export async function getStaticPaths() {
 const { caseStudy } = Astro.props;
 
 const allCaseStudies = await getSingleEntry("case-studies");
-const otherCaseStudies = allCaseStudies.filter(
-  (s: any) => s.id !== caseStudy.id,
-);
+const otherCaseStudies = allCaseStudies.filter((s) => s.id !== caseStudy.id);
 const sameCategoryStudies = otherCaseStudies.filter(
-  (s: any) => s.data.category === caseStudy.data.category,
+  (s) => s.data.category === caseStudy.data.category,
 );
 const relatedCaseStudies = [
   ...sameCategoryStudies,
   ...otherCaseStudies.filter(
-    (s: any) => s.data.category !== caseStudy.data.category,
+    (s) => s.data.category !== caseStudy.data.category,
   ),
 ]
   .slice(0, 3)
-  .map((s: any) => ({
+  .map((s) => ({
     frontmatter: s.data,
     slug: s.id,
     content: s.body || "",
@@ -112,7 +110,7 @@ const caseStudyLegacy = {
             Related Case Studies
           </h2>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {relatedCaseStudies.map((study: any) => (
+            {relatedCaseStudies.map((study) => (
               <CaseStudyCard data={study} />
             ))}
           </div>

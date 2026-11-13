@@ -11,7 +11,7 @@ const { apply_form_action } = config.params;
 
 export async function getStaticPaths() {
   const careers = await getSingleEntry("careers");
-  return careers.map((career: any) => ({
+  return careers.map((career) => ({
     params: { single: career.id },
     props: { career },
   }));
@@ -48,10 +48,10 @@ const careerJsonLd = jobPosting
   : breadcrumbJsonLd(breadcrumbs);
 
 const jobInfoCards = [
-  { icon: "briefcase", label: "Job Type", value: job_info.employ_type },
-  { icon: "stack", label: "Experience", value: job_info.experience },
-  { icon: "wallet", label: "Salary Range", value: job_info.salary_range },
-  { icon: "location", label: "Location", value: job_info.location },
+  { icon: "briefcase", label: "Job Type", value: job_info?.employ_type },
+  { icon: "stack", label: "Experience", value: job_info?.experience },
+  { icon: "wallet", label: "Salary Range", value: job_info?.salary_range },
+  { icon: "location", label: "Location", value: job_info?.location },
 ];
 ---
 

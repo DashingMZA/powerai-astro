@@ -7,7 +7,7 @@ import { render } from "astro:content";
 
 export async function getStaticPaths() {
   const pages = await getSingleEntry("pages");
-  return pages.map((page: any) => ({
+  return pages.map((page) => ({
     params: { regular: page.id },
     props: { page },
   }));

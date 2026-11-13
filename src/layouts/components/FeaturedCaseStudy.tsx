@@ -1,4 +1,3 @@
-import type { CaseStudy } from "@/types/index";
 import ImageFallback from "@/helpers/ImageFallback";
 import { plainify } from "@/lib/utils/textConverter";
 import { useState } from "react";
@@ -12,7 +11,23 @@ const FeaturedCaseStudy = ({
   disableLink = true,
   headingTag = "h2",
 }: {
-  data: CaseStudy;
+  // Only what the component reads: the legacy `CaseStudy` shape from
+  // list pages and the `{ frontmatter, slug, content }` object the
+  // [single] page builds from a zod-validated entry both satisfy this.
+  // (The full `CaseStudy` type is not used here: the [single] page's
+  // entry carries `date` as a `Date`, not the string `CaseStudy`
+  // declares.)
+  data: {
+    frontmatter: {
+      title: string;
+      image?: string;
+      logo?: string;
+      description?: string;
+      review_video?: string;
+    };
+    slug?: string;
+    content?: string;
+  };
   hideButton?: boolean;
   disableLink?: boolean;
   // Single case-study pages render the title as the page's only h1;

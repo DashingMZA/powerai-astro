@@ -25,7 +25,7 @@ const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
 
   {changelog_list && changelog_list.length > 0 && (
     <section>
-      {changelog_list.map((item: any) => (
+      {changelog_list.map((item) => (
         <MainContainer>
           <div class="py-12 container-padding-x">
             <div class="flex flex-col gap-10">
@@ -58,13 +58,13 @@ const primaryColor = theme?.colors?.default?.theme_color?.primary || "#8F2FFE";
                     <p class="text-lg text-gray">{item.description}</p>
                   </div>
                   <div class="flex flex-col gap-6">
-                    {item.categories.map((category: any) => (
+                    {item.categories.map((category) => (
                       <div class="flex flex-col gap-4">
                         <h3 class="text-lg font-bold text-text">
                           {category.name}
                         </h3>
                         <div class="flex flex-col gap-4">
-                          {category.items.map((listItem: any) => (
+                          {category.items.map((listItem) => (
                             <div class="flex items-start gap-3">
                               <div class="mt-2.5 shrink-0">
                                 <div
