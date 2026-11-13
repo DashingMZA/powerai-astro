@@ -12,6 +12,7 @@ job_info:
   department: "Marketing"
   deadline: "2025-05-30"
 draft: false
+active: false
 ---
 
 ### Job Description

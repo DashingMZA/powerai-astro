@@ -12,6 +12,7 @@ job_info:
   department: "Product"
   deadline: "2025-06-10"
 draft: false
+active: false
 ---
 
 ### Job Description

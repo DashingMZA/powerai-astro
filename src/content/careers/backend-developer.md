@@ -12,6 +12,7 @@ job_info:
   department: "Developer"
   deadline: "2025-05-20"
 draft: false
+active: false
 ---
 
 ### Job Description

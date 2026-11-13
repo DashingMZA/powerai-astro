@@ -12,6 +12,7 @@ job_info:
   department: "Engineering"
   deadline: "2025-06-05"
 draft: false
+active: false
 ---
 
 ### Job Description

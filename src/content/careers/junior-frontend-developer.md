@@ -12,11 +12,12 @@ job_info:
   department: "Developer"
   deadline: "2025-05-01"
 draft: false
+active: false
 ---
 
 ### Job Description
 
-We are seeking a talented Senior Product Designer to join our dynamic team. The ideal candidate will have a strong background in user-centered design, a keen eye for detail, and the ability to create intuitive and engaging user experiences. You will work closely with cross-functional teams to design innovative solutions that meet user needs and business goals.
+We are seeking a talented Junior Frontend Developer to join our dynamic team. The ideal candidate will have a strong background in user-centered design, a keen eye for detail, and the ability to create intuitive and engaging user experiences. You will work closely with cross-functional teams to design innovative solutions that meet user needs and business goals.
 
 ### Responsibilities
 

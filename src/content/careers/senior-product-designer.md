@@ -12,6 +12,7 @@ job_info:
   department: "Design"
   deadline: "2025-05-15"
 draft: false
+active: false
 ---
 
 ### Job Description

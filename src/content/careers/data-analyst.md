@@ -12,6 +12,7 @@ job_info:
   department: "Analytics"
   deadline: "2025-06-01"
 draft: false
+active: false
 ---
 
 ### Job Description

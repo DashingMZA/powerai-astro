@@ -19,7 +19,16 @@ const { career } = Astro.props;
 if (career.data.draft) return Astro.redirect("/404");
 
 const { Content } = await render(career);
-const { title, meta_title, description, job_info, date } = career.data;
+const { title, meta_title, description, job_info, date, active } =
+  career.data;
+// A role is archived when explicitly marked inactive or its deadline
+// has passed. Archived pages stay readable as historical records, but
+// they carry no JobPosting markup (jobPostingJsonLd already returns null
+// for past deadlines) and no working application form.
+const deadline = job_info?.deadline;
+const isArchived =
+  active === false ||
+  (deadline ? new Date(deadline).getTime() < Date.now() : false);
 const canonical = canonicalUrl(`/careers/${career.id}`);
 const breadcrumbs = [
   { label: "Home", href: "/" },
@@ -67,6 +76,20 @@ const jobInfoCards = [
           <h1 class="font-primary font-semibold text-display-l md:text-[60px] text-center text-text capitalize">
             {title}
           </h1>
+          {
+            isArchived && (
+              <div class="bg-card/30 border border-border/10 rounded-3xl px-8 py-5 text-center max-w-3xl">
+                <p class="font-medium text-h6 text-text">
+                  This position is closed
+                </p>
+                <p class="text-gray mt-1">
+                  {deadline
+                    ? `Applications closed on ${deadline}. This page is kept as an archive of a past opening.`
+                    : "This role is no longer open. This page is kept as an archive of a past opening."}
+                </p>
+              </div>
+            )
+          }
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full max-w-7xl">
             {jobInfoCards.map((card, index) => (
               <div class="bg-card/30 backdrop-blur-xl border border-border/6 rounded-3xl p-8 flex flex-col gap-7 items-center text-center">
@@ -166,6 +189,23 @@ const jobInfoCards = [
         <div class="flex flex-col lg:flex-row gap-12 items-start">
           <div class="lg:w-85 shrink-0 order-last lg:order-first w-full">
             <div class="bg-card/30 border border-border/10 rounded-3xl p-8 sticky top-24">
+              {
+                isArchived ? (
+                  <div class="flex flex-col gap-5">
+                    <p class="font-medium text-h6 text-text">
+                      Applications are closed
+                    </p>
+                    <p class="text-gray">
+                      This position closed
+                      {deadline ? ` on ${deadline}` : ""} and is no longer
+                      accepting applications. Please check the{" "}
+                      <a href="/careers" class="text-primary underline">
+                        careers page
+                      </a>{" "}
+                      for future openings.
+                    </p>
+                  </div>
+                ) : (
               <form
                 id="apply-form"
                 action="/api/apply"
@@ -261,6 +301,8 @@ const jobInfoCards = [
                   Apply Now
                 </button>
               </form>
+                )
+              }
             </div>
           </div>
           <div class="flex-1 min-w-0 border-l border-border/6 lg:pl-12">

@@ -1,7 +1,7 @@
 ---
 title: "Career"
 meta_title: "Career"
-description: "Join our team and build the future together"
+description: "We currently have no open roles. Browse our archived positions below and check back for future openings."
 image: "/images/career.png"
 draft: false
 page_header:
@@ -10,7 +10,7 @@ page_header:
     Join Our Team and
     <br/>
     <mark>Build the Future Together</mark>
-  subtitle: "Discover exciting opportunities to grow your career and make a meaningful impact in the world of technology."
+  subtitle: "We currently have no open roles. The positions below are archived listings from past hiring rounds — check back for future openings."
 open_positions:
   enable: true
   badge: "Open Jobs"
