@@ -63,7 +63,7 @@ const iconPaths: Record<string, string> = {
   id="site-header"
   class:list={["header z-30", settings.sticky_header && "sticky top-0"]}
 >
-  <nav class="navbar container relative">
+  <nav class="navbar container relative" aria-label="Main">
     <!-- Logo -->
     <div class="order-0">
       <Logo />
@@ -95,26 +95,31 @@ const iconPaths: Record<string, string> = {
       id="nav-menu"
       class="navbar-nav order-3 xl:order-1 xl:flex xl:w-auto xl:pb-0 xl:space-x-8 hidden"
     >
-      {main.map((item) =>
+      {main.map((item, index) =>
         item.hasChildren ? (
           <li
             class="nav-item nav-dropdown group relative"
             data-menu-name={item.name}
           >
-            <!-- Dropdown toggle button (pointer-events disabled on desktop; hover handles it via CSS) -->
+            <!-- Dropdown toggle button: click toggles on every
+                 viewport (desktop: .is-open class; mobile: the
+                 [data-submenu] panel). Hover/focus-within also open
+                 it via CSS — keyboard users are not hover-dependent. -->
             <button
               class:list={[
-                "nav-link inline-flex items-center w-full xl:pointer-events-none justify-center",
+                "nav-link inline-flex items-center w-full justify-center",
                 isMegaMenuActive(item) && "active",
               ]}
               data-submenu-toggle={item.name}
               aria-expanded="false"
               aria-haspopup="true"
+              aria-controls={`desktop-submenu-${index} mobile-submenu-${index}`}
             >
               {item.name}
               <svg
                 class="chevron h-4 w-4 fill-current transition-transform xl:transition-none"
                 viewBox="0 0 20 20"
+                aria-hidden="true"
               >
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
               </svg>
@@ -123,7 +128,11 @@ const iconPaths: Record<string, string> = {
             {item.mega_menu ? (
               <>
                 <!-- Mobile: mega menu (JS-controlled visibility) -->
-                <div class="xl:hidden hidden" data-submenu={item.name}>
+                <div
+                  class="xl:hidden hidden"
+                  data-submenu={item.name}
+                  id={`mobile-submenu-${index}`}
+                >
                   <div class="p-2.5 w-full rounded-3xl mt-3 bg-card border border-border/6 grid gap-3">
                     <div class="nav-dropdown-list nav-mega-menu col-span-2">
                       <div class="nav-mega-grid">
@@ -173,7 +182,10 @@ const iconPaths: Record<string, string> = {
 
                 <!-- Desktop: mega menu (CSS hover + transition animation) -->
                 <div class="hidden xl:block">
-                  <div class="desktop-dropdown absolute left-1/5 w-245 -translate-x-1/2">
+                  <div
+                    class="desktop-dropdown absolute left-1/5 w-245 -translate-x-1/2"
+                    id={`desktop-submenu-${index}`}
+                  >
                     <div class="p-2.5 w-full rounded-3xl mt-4 bg-card border border-border/6 grid gap-3 grid-cols-3 items-start">
                       <div class="nav-dropdown-list nav-mega-menu col-span-2">
                         <div class="nav-mega-grid">
@@ -256,6 +268,7 @@ const iconPaths: Record<string, string> = {
                 <ul
                   class="nav-dropdown-list xl:hidden hidden"
                   data-submenu={item.name}
+                  id={`mobile-submenu-${index}`}
                 >
                   {item.children?.map((child) => (
                     <li class="nav-dropdown-item">
@@ -276,7 +289,10 @@ const iconPaths: Record<string, string> = {
 
                 <!-- Desktop: simple dropdown (CSS hover + transition animation) -->
                 <div class="hidden xl:block">
-                  <ul class="desktop-dropdown nav-dropdown-list absolute top-full left-0">
+                  <ul
+                    class="desktop-dropdown nav-dropdown-list absolute top-full left-0"
+                    id={`desktop-submenu-${index}`}
+                  >
                     {item.children?.map((child) => (
                       <li class="nav-dropdown-item">
                         <a
@@ -330,6 +346,9 @@ const iconPaths: Record<string, string> = {
             }
           >
             {navigation_button.label}
+            {navigation_button.link.startsWith("http") && (
+              <span class="sr-only"> (opens in new tab)</span>
+            )}
           </a>
         </li>
       )}
@@ -351,6 +370,9 @@ const iconPaths: Record<string, string> = {
           }
         >
           {navigation_button.label}
+          {navigation_button.link.startsWith("http") && (
+            <span class="sr-only"> (opens in new tab)</span>
+          )}
         </a>
       )}
     </div>
@@ -388,7 +410,9 @@ const iconPaths: Record<string, string> = {
       transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
-  .group:hover .desktop-dropdown {
+  .group:hover .desktop-dropdown,
+  .group:focus-within .desktop-dropdown,
+  .nav-dropdown.is-open .desktop-dropdown {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -468,6 +492,9 @@ const iconPaths: Record<string, string> = {
         btn.classList.remove("is-open");
         btn.setAttribute("aria-expanded", "false");
       });
+      document
+        .querySelectorAll(".nav-dropdown.is-open")
+        .forEach((li) => li.classList.remove("is-open"));
       openSubmenu = null;
     };
 
@@ -486,6 +513,49 @@ const iconPaths: Record<string, string> = {
       menuToggle.setAttribute("aria-label", "Close menu");
       menuToggle.setAttribute("aria-expanded", "true");
       syncToggleIcons(true);
+      // Keyboard users land inside the drawer instead of having to
+      // Tab through the page to reach it (H9).
+      (navMenu.querySelector("a, button") as HTMLElement | null)?.focus();
+    };
+
+    // Escape closes whatever is open and returns focus to the control
+    // that opened it (C3/H9): desktop dropdown, mobile submenu, menu.
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      const openDropdown = document.querySelector(".nav-dropdown.is-open");
+      if (openDropdown) {
+        const toggle = openDropdown.querySelector(
+          "[data-submenu-toggle]",
+        ) as HTMLElement | null;
+        const focusWasInside = !!(
+          document.activeElement &&
+          openDropdown.contains(document.activeElement)
+        );
+        closeAllSubmenus();
+        if (focusWasInside) toggle?.focus();
+        return;
+      }
+      if (openSubmenu) {
+        closeAllSubmenus();
+        return;
+      }
+      if (!navMenu.classList.contains("hidden")) {
+        closeMenu();
+        menuToggle.focus();
+      }
+    };
+
+    // Clicking outside a click-opened desktop dropdown closes it.
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.closest(".nav-dropdown")) return;
+      document.querySelectorAll(".nav-dropdown.is-open").forEach((li) => {
+        li.classList.remove("is-open");
+        li.querySelector("[data-submenu-toggle]")?.setAttribute(
+          "aria-expanded",
+          "false",
+        );
+      });
     };
 
     // ── Event handlers ───────────────────────────────────────────────────────
@@ -503,6 +573,20 @@ const iconPaths: Record<string, string> = {
       if (!name) return;
 
       const handler: EventListener = () => {
+        // Desktop (xl+): toggle the hover-driven dropdown via the
+        // .is-open class so click/keyboard users can open it too;
+        // the mobile panel stays hidden at this viewport.
+        if (window.matchMedia("(min-width: 1280px)").matches) {
+          const li = btn.closest(".nav-dropdown");
+          const isOpen = li?.classList.contains("is-open");
+          closeAllSubmenus();
+          if (!isOpen) {
+            li?.classList.add("is-open");
+            btn.classList.add("is-open");
+            btn.setAttribute("aria-expanded", "true");
+          }
+          return;
+        }
         const submenuEl = document.querySelector(`[data-submenu="${name}"]`);
         if (openSubmenu === name) {
           submenuEl?.classList.add("hidden");
@@ -545,12 +629,16 @@ const iconPaths: Record<string, string> = {
 
     menuToggle.addEventListener("click", handleMenuToggle);
     window.addEventListener("resize", handleResize);
+    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("click", handleClickOutside);
     window.scroll(0, 0);
 
     // ── Cleanup before view-transition swap ──────────────────────────────────
     const cleanup = () => {
       menuToggle.removeEventListener("click", handleMenuToggle);
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("click", handleClickOutside);
       submenuHandlers.forEach((handler, btn) =>
         btn.removeEventListener("click", handler),
       );

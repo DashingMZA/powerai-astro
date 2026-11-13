@@ -1,14 +1,14 @@
 ---
 import Base from "@/layouts/Base.astro";
 import CallToAction from "@/partials/CallToAction.astro";
-import FAQ from "@/partials/FAQ";
+import FAQ from "@/partials/FAQ.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import TrustedClients from "@/partials/TrustedClients";
 import PricingSection from "@/partials/Pricing";
 import PricingTable from "@/components/PricingTable";
 import { getListPage } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
-import type { FAQPageData } from "@/partials/FAQ";
+import type { FAQPageData } from "@/partials/FAQ.astro";
 import type { PricingPageData } from "@/partials/Pricing";
 import type { IndexFrontmatter, LogoMarqueeType } from "@/types/index";
 
@@ -43,6 +43,6 @@ const callToAction = await getListPage("sections/call-to-action.md");
   </PageHeader>
   <TrustedClients data={trusted_clients} client:visible />
   <PricingTable data={pricing_table} client:visible />
-  <FAQ data={faq} client:visible />
+  <FAQ data={faq} />
   <CallToAction data={callToAction} />
 </Base>

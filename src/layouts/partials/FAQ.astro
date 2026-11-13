@@ -1,0 +1,99 @@
+---
+// FAQ — native <details>/<summary> disclosure.
+//
+// Previously a React island (FAQ.tsx + components/Accordion.tsx):
+// answers only rendered after hydration, the toggle was a div
+// role="button" wrapping an <h3>, and the section was empty without
+// JS. Native disclosure keeps the answers in the SSR HTML and
+// reachable with no JS at all; the plus icon rotates via CSS when
+// open. No JS is involved in opening/closing.
+import { markdownify } from "@/lib/utils/textConverter";
+import type { Button as ButtonType, FAQType } from "@/types/index";
+
+export interface FAQPageData {
+  notFound?: boolean;
+  content?: string;
+  frontmatter: {
+    enable: boolean;
+    title: string;
+    subtitle?: string;
+    badge?: string;
+    button: ButtonType;
+    faq_list: Array<FAQType>;
+  };
+}
+
+const { data } = Astro.props;
+const { enable, badge, title, subtitle, faq_list } = data.frontmatter;
+---
+
+{enable && (
+  <section>
+    <div class="main-container">
+      <div class="container">
+        <div class="container-padding-y container-padding-x">
+          <div class="grid lg:grid-cols-2 gap-y-12">
+            <div class="text-center lg:text-left">
+              <div class="xl:w-4/6">
+                {badge && (
+                  <div class="bg-gradient-primary p-px inline-block rounded-full mb-2">
+                    <div class="bg-gradient-black-grid px-4 py-1.5 rounded-full">
+                      <span class="gradient-text-primary">{badge}</span>
+                    </div>
+                  </div>
+                )}
+                <h2
+                  class="text-h1 font-medium"
+                  set:html={markdownify(title).__html}
+                />
+                {subtitle && <p class="text-lg mt-4">{subtitle}</p>}
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-6 flex flex-col gap-y-2.5">
+              {faq_list.map((faq: FAQType) => (
+                <details class="faq-item bg-card border border-border/5 py-6 px-7 rounded-3xl">
+                  <summary class="faq-summary flex justify-between gap-x-4 items-center cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    <span class="text-xl mb-0 font-medium">{faq.question}</span>
+                    <span
+                      class="faq-icon size-10 rounded-full shrink-0 flex items-center text-text justify-center"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div class="mt-4 text-gray">{faq.answer}</div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  /* Plus rotates into an x while the answer is open. */
+  .faq-item .faq-icon {
+    transition: transform 0.3s ease-in-out;
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+  .faq-summary:focus-visible {
+    outline: 2px solid #9a4dfe;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+</style>

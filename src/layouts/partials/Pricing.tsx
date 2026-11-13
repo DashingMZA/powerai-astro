@@ -46,7 +46,7 @@ const Pricing = ({
 
     const updateSlider = () => {
       const active = container.querySelector(
-        '[role="tab"][aria-selected="true"]',
+        '[aria-pressed="true"]',
       ) as HTMLElement | null;
       if (!active) return;
       const containerRect = container.getBoundingClientRect();
@@ -144,8 +144,8 @@ const Pricing = ({
                     variants={fadeInUpVariants}
                     ref={toggleRef}
                     className="relative bg-lighter border border-border/30 px-1.5 py-1.25 rounded-full inline-flex w-max mx-auto gap-2"
-                    role="tablist"
-                    aria-label="Pricing toggle"
+                    role="group"
+                    aria-label="Billing period"
                   >
                     {/* sliding background (positioned/sized by JS to match active tab) */}
                     <span
@@ -156,8 +156,8 @@ const Pricing = ({
                     />
 
                     <motion.button
-                      role="tab"
-                      aria-selected={!isYearly}
+                      type="button"
+                      aria-pressed={!isYearly}
                       className={`px-6 py-2.5 rounded-full relative z-10 cursor-pointer text-text `}
                       onClick={() => setIsYearly(false)}
                       whileHover={{ scale: 1.05 }}
@@ -166,8 +166,8 @@ const Pricing = ({
                       Monthly
                     </motion.button>
                     <motion.button
-                      role="tab"
-                      aria-selected={isYearly}
+                      type="button"
+                      aria-pressed={isYearly}
                       className={`px-6 py-2 rounded-full relative z-10 cursor-pointer text-light`}
                       onClick={() => setIsYearly(true)}
                       whileHover={{ scale: 1.05 }}
@@ -370,8 +370,8 @@ const Pricing = ({
               variants={fadeInUpVariants}
               ref={toggleRef}
               className="relative bg-lighter border border-border/30 px-1.5 py-1.25 rounded-full inline-flex w-max mx-auto gap-2 mt-8"
-              role="tablist"
-              aria-label="Pricing toggle"
+              role="group"
+              aria-label="Billing period"
             >
               {/* sliding background (positioned/sized by JS to match active tab) */}
               <span
@@ -382,8 +382,8 @@ const Pricing = ({
               />
 
               <motion.button
-                role="tab"
-                aria-selected={!isYearly}
+                type="button"
+                aria-pressed={!isYearly}
                 className={`px-6 py-2.5 rounded-full relative z-10 cursor-pointer text-text `}
                 onClick={() => setIsYearly(false)}
                 whileHover={{ scale: 1.05 }}
@@ -392,8 +392,8 @@ const Pricing = ({
                 Monthly
               </motion.button>
               <motion.button
-                role="tab"
-                aria-selected={isYearly}
+                type="button"
+                aria-pressed={isYearly}
                 className={`px-6 py-2 rounded-full relative z-10 cursor-pointer text-light`}
                 onClick={() => setIsYearly(true)}
                 whileHover={{ scale: 1.05 }}

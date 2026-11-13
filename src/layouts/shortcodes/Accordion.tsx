@@ -11,10 +11,12 @@ const Accordion = ({
 }) => {
   const [show, setShow] = useState(false);
   const panelId = useId();
+  const headerId = useId();
 
   return (
     <div className={`accordion ${show && "active"} ${className}`}>
       <button
+        id={headerId}
         className="accordion-header"
         aria-expanded={show}
         aria-controls={panelId}
@@ -23,6 +25,7 @@ const Accordion = ({
         {title}
         <svg
           className="accordion-icon"
+          aria-hidden="true"
           x="0px"
           y="0px"
           viewBox="0 0 512 512"
@@ -34,7 +37,13 @@ const Accordion = ({
           ></path>
         </svg>
       </button>
-      <div className="accordion-content" id={panelId} role="region">
+      <div
+        className="accordion-content"
+        id={panelId}
+        role="region"
+        aria-labelledby={headerId}
+        hidden={!show}
+      >
         {children}
       </div>
     </div>

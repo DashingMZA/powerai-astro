@@ -2,11 +2,11 @@
 import Base from "@/layouts/Base.astro";
 import ContactForm from "@/layouts/components/ContactForm.astro";
 import CallToAction from "@/partials/CallToAction.astro";
-import FAQ from "@/partials/FAQ";
+import FAQ from "@/partials/FAQ.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import { getListPage } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
-import type { FAQPageData } from "@/partials/FAQ";
+import type { FAQPageData } from "@/partials/FAQ.astro";
 import type { IndexFrontmatter } from "@/types/index";
 
 const data = await getListPage<IndexFrontmatter>("contact/-index.md");
@@ -32,6 +32,6 @@ const callToAction = await getListPage("sections/call-to-action.md");
   <PageHeader page_header={page_header}>
     <ContactForm contact_info={contact_info} />
   </PageHeader>
-  <FAQ data={faq} client:visible />
+  <FAQ data={faq} />
   <CallToAction data={callToAction} />
 </Base>

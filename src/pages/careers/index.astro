@@ -2,7 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import CallToAction from "@/partials/CallToAction.astro";
 import ImageMod from "@/components/ImageMod.astro";
-import FAQ from "@/partials/FAQ";
+import FAQ from "@/partials/FAQ.astro";
 import Gallery from "@/partials/Gallery.astro";
 import PageHeader from "@/partials/PageHeader.astro";
 import WhyChooseUs from "@/partials/WhyChooseUs.astro";
@@ -11,7 +11,7 @@ import OpenPositions from "@/partials/OpenPositions";
 import config from "@/config/config.json";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl, webPageJsonLd } from "@/lib/seo";
-import type { FAQPageData } from "@/partials/FAQ";
+import type { FAQPageData } from "@/partials/FAQ.astro";
 import type { Career, IndexFrontmatter } from "@/types/index";
 
 const { career_folder } = config.settings;
@@ -164,6 +164,6 @@ const pageJsonLd = [
     </section>
   )}
   {gallery && <Gallery data={gallery} />}
-  <FAQ data={faq} client:visible />
+  <FAQ data={faq} />
   <CallToAction data={callToAction} />
 </Base>
