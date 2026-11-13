@@ -107,14 +107,16 @@ export const settings = {
 } as const;
 
 /**
- * Contact placeholders from `config.json` params. NOTE: `mail` and `phone`
- * are still the template placeholders (`john@example.com`,
- * `(+1) 123-346-7890`) — replace them in `config.json` before launch.
- * Form actions are `"#"` (dead forms) until a backend is wired up.
+ * Contact settings from `config.json` params. NOTE: no contact email
+ * address or phone number is published on the site — the template
+ * placeholders (`john@example.com`, `(+1) 123-346-7890`) were removed
+ * 2026-11-13 because they reached nobody. Visitors reach the owner
+ * through the contact form; the owner supplies real details via the
+ * legal-review checklist (docs/legal-review-checklist.md) if and when
+ * they want them published. Form actions are `"#"` (dead forms) until
+ * a backend is wired up.
  */
 export const contact = {
-  email: configJson.params.mail,
-  phone: configJson.params.phone,
   footerText: configJson.params.footer_text,
   copyright: configJson.params.copyright,
   contactFormAction: configJson.params.contact_form_action,

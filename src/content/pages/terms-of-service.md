@@ -28,7 +28,7 @@ You agree to use the site lawfully and not to misuse it. In particular, you agre
 - upload files other than a genuine CV (PDF, DOC, or DOCX, up to 5 MB) through the application form, where that form is available;
 - copy, republish, or misrepresent the site's content as your own, except as the licences below allow.
 
-To keep the forms usable for everyone, submissions are rate-limited (contact and newsletter forms: 5 submissions per 10 minutes per IP address; application forms: 3 per 60 minutes per IP address). We may block or ignore submissions that breach these terms.
+To keep the forms usable for everyone, submissions are rate-limited (contact and newsletter forms: 5 submissions per 10 minutes per IP address; application forms: 3 per 60 minutes per IP address). Each limit applies per server instance, not across the whole site, and the counts are kept only in server memory. We may block or ignore submissions that breach these terms.
 
 #### Content and intellectual property
 
@@ -40,7 +40,7 @@ Blog posts include a commenting widget provided by Open Remark. You are responsi
 
 #### Careers and job applications
 
-The careers pages list past openings only. All roles shown closed in May–June 2025 and no role is currently open. When a role is open in future, the application form will appear on that role's page; for closed roles no application form is shown and applications are not accepted. Nothing on the careers pages is an offer of employment, and submitting an application does not guarantee a response or an interview.
+The careers pages list past openings only. All roles shown closed in May–June 2025 and no role is currently open. When a role is open in future, the application form will appear on that role's page; for closed roles no application form is shown. **[Owner to confirm: how applications sent for a closed role should be handled — the application endpoint does not currently check a role's deadline, so an application submitted directly to it for a closed role would still be emailed to the owner.]** Nothing on the careers pages is an offer of employment, and submitting an application does not guarantee a response or an interview.
 
 #### Third-party services and links
 
@@ -64,4 +64,4 @@ We may update these terms when the site or the law changes. The updated terms wi
 
 #### Contact
 
-If you have any question about these terms, please use the contact form on this site. **[Owner to confirm: add a direct contact email address here.]**
+If you have any question about these terms, please use the contact form on this site. No contact email address, phone number, or postal address is published on the site at present. **[Owner to confirm: add a direct contact email address here.]**

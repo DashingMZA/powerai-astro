@@ -15,24 +15,14 @@ const { footer_company, footer_legal, footer_resource } = menu;
       <div class="md:col-span-3">
         <Logo />
         <p class="text-gray mb-10 mt-3 md:w-2/5">{config.params.footer_text}</p>
-        <ul>
-          <li class="mb-2">
-            <a
-              href={`mailto:${config.params.mail}`}
-              class="text-text hover:text-primary transition text-lg"
-            >
-              {config.params.mail}
-            </a>
-          </li>
-          <li class="mb-2">
-            <a
-              href={`tel:${config.params.phone}`}
-              class="text-text hover:text-primary transition text-lg"
-            >
-              {config.params.phone}
-            </a>
-          </li>
-        </ul>
+        <p>
+          <a
+            href="/contact"
+            class="text-text hover:text-primary transition text-lg"
+          >
+            Contact us
+          </a>
+        </p>
       </div>
 
       <div class="md:col-span-3">

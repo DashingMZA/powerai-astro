@@ -21,9 +21,9 @@ We collect only what the features of this site need to work. We do not run user 
 
 - **Contact form.** If you write to us, we collect your name, email address, and message, plus your phone number and subject if you choose to provide them. Your message is emailed to the site owner through our email provider, Resend, and your email address is used as the reply-to address so we can answer you. We use it only to respond to your enquiry.
 - **Newsletter.** If you subscribe, we collect your email address and your first name if you provide it. Your address is stored as a contact with our email provider, Resend, so we can send you the newsletter. We do not send a welcome email today; subscribing only adds you to the list.
-- **Job applications.** The careers pages list past openings only, and no role is open at the moment. If a role is open in future and you apply, we will collect your name, email address, phone number if provided, cover letter, and the CV file you upload (PDF, DOC, or DOCX, up to 5 MB). Your application is emailed to the site owner through Resend, with your CV attached. Your CV is sent as an email attachment only; it is never saved to the website or to any publicly accessible location.
+- **Job applications.** The careers pages list past openings only, and no role is open at the moment. If a role is open in future and you apply, we will collect your name, email address, phone number if provided, cover letter, and the CV file you upload (PDF, DOC, or DOCX, up to 5 MB). Your application is emailed to the site owner through Resend, with your CV attached. Your CV is processed in server memory and sent as an email attachment only; it is never written to the website's files or to any publicly accessible location. Once emailed, the CV exists in the recipient's email inbox and in Resend's systems, and how long it is kept there is governed by those services, not by this site. **[Owner to confirm: how long CVs and unsuccessful applications are kept in the inbox and in Resend, and when they are deleted.]**
 - **Blog comments.** Blog posts show a commenting widget provided by Open Remark. If you leave a comment, the widget loads from Open Remark's servers and your comment and any details you enter there are handled by Open Remark under its own terms and privacy policy, which we do not control. **[Owner to confirm: link to Open Remark's privacy policy here once verified.]**
-- **Rate limiting.** To protect the contact, newsletter, and application forms from spam, the site briefly keeps a count of recent submissions per IP address in server memory. These counts are not stored in a database and are discarded when the count expires or the server restarts.
+- **Rate limiting.** To protect the contact, newsletter, and application forms from spam, the site briefly keeps a count of recent submissions per IP address in server memory. Each server instance keeps its own count (on Vercel, each serverless instance counts separately), so the limit applies per instance rather than across the whole site. These counts are not stored in a database and are discarded when the count expires or the server restarts. Your IP address is used only as the key for this count; it is not stored, logged, or sent to Resend.
 
 #### What we do not collect
 
@@ -48,8 +48,8 @@ We do not share your information with anyone else, and we do not sell it. We wil
 
 #### Your choices and rights
 
-- **Newsletter:** you can unsubscribe at any time using the unsubscribe link in any newsletter email, or by asking us through the contact form.
-- **Contact messages and applications:** you can ask us what information we hold about you, ask us to correct it, or ask us to delete it, by writing to us through the contact form. We will deal with your request as the site owner. **[Owner to confirm: the contact address for these requests and any response times the owner is willing to commit to.]**
+- **Newsletter:** no newsletter email has been sent from this site yet, so no unsubscribe link has been verified. If a newsletter is sent in future, use the unsubscribe link in that email if one is provided, or ask us through the contact form and we will remove your address from the list. **[Owner to confirm: that Resend-sent mail carries a working unsubscribe link, or reword this if no newsletter will ever be sent.]**
+- **Contact messages and applications:** you can ask us what information we hold about you, ask us to correct it, or ask us to delete it, by writing to us through the contact form. There is no automated way to view, correct, or delete this information on the site: requests are handled manually by the site owner, from the email inbox and, for newsletter contacts, from Resend. **[Owner to confirm: who handles these requests, the contact address for them, and any response time the owner is willing to commit to. No response time is promised here.]**
 
 #### Children's privacy
 
@@ -65,4 +65,4 @@ We may update this policy when the site or the law changes. The updated policy w
 
 #### Contact
 
-For any question about this policy or about your personal information, please use the contact form on this site. **[Owner to confirm: add a direct privacy contact email address here.]**
+For any question about this policy or about your personal information, please use the contact form on this site. No contact email address, phone number, or postal address is published on the site at present. **[Owner to confirm: add a direct privacy contact email address here.]**

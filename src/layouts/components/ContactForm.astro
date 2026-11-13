@@ -75,65 +75,75 @@ const svgPaths = {
       </p>
     </div>
 
-    <!-- Contact Details -->
-    <div class="flex flex-col gap-6 relative z-10 mt-12">
-      <!-- Phone -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-2">
-          <div class="relative shrink-0 size-6">
-            <svg
-              class="absolute block size-full"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path d={svgPaths.phone} fill="var(--color-text)" />
-            </svg>
+    <!-- Contact Details (each line renders only when the owner has
+         supplied a real value in the contact content file; no
+         placeholder email, phone, or address is shown) -->
+    {(contact_info.phone || contact_info.email || contact_info.address) && (
+      <div class="flex flex-col gap-6 relative z-10 mt-12">
+        {/* Phone */}
+        {contact_info.phone && (
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <div class="relative shrink-0 size-6">
+                <svg
+                  class="absolute block size-full"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path d={svgPaths.phone} fill="var(--color-text)" />
+                </svg>
+              </div>
+              <span class="text-text text-lg font-medium">Phone</span>
+            </div>
+            <p class="text-gray text-base leading-6 font-normal">
+              {contact_info.phone}
+            </p>
           </div>
-          <span class="text-text text-lg font-medium">Phone</span>
-        </div>
-        <p class="text-gray text-base leading-6 font-normal">
-          {contact_info.phone}
-        </p>
-      </div>
+        )}
 
-      <!-- Email -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-2">
-          <div class="relative shrink-0 size-6">
-            <svg
-              class="absolute block size-full"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path d={svgPaths.email} fill="var(--color-text)" />
-            </svg>
+        {/* Email */}
+        {contact_info.email && (
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <div class="relative shrink-0 size-6">
+                <svg
+                  class="absolute block size-full"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path d={svgPaths.email} fill="var(--color-text)" />
+                </svg>
+              </div>
+              <span class="text-text text-lg font-medium">Email</span>
+            </div>
+            <p class="text-gray text-base leading-6 font-normal">
+              {contact_info.email}
+            </p>
           </div>
-          <span class="text-text text-lg font-medium">Email</span>
-        </div>
-        <p class="text-gray text-base leading-6 font-normal">
-          {contact_info.email}
-        </p>
-      </div>
+        )}
 
-      <!-- Address -->
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-2">
-          <div class="relative shrink-0 size-6">
-            <svg
-              class="absolute block size-full"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path d={svgPaths.location} fill="var(--color-text)" />
-            </svg>
+        {/* Address */}
+        {contact_info.address && (
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <div class="relative shrink-0 size-6">
+                <svg
+                  class="absolute block size-full"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path d={svgPaths.location} fill="var(--color-text)" />
+                </svg>
+              </div>
+              <span class="text-text text-lg font-medium">Address</span>
+            </div>
+            <p class="text-gray text-base leading-6 font-normal w-58.25">
+              {contact_info.address}
+            </p>
           </div>
-          <span class="text-text text-lg font-medium">Address</span>
-        </div>
-        <p class="text-gray text-base leading-6 font-normal w-58.25">
-          {contact_info.address}
-        </p>
+        )}
       </div>
-    </div>
+    )}
   </div>
 
   <!-- Form Panel -->
