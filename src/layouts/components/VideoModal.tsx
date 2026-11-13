@@ -18,10 +18,17 @@ export default function VideoModal({ videoUrl, onClose }: VideoModalProps) {
   useEffect(() => {
     // Prevent body scroll when modal is open
     document.body.style.overflow = "hidden";
+    // Escape closes the modal (keyboard users otherwise have no way out
+    // short of the close button).
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   if (!videoId) return null;
 
@@ -33,6 +40,9 @@ export default function VideoModal({ videoUrl, onClose }: VideoModalProps) {
 
   return createPortal(
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Case study video"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       onClick={handleBackdropClick}
     >

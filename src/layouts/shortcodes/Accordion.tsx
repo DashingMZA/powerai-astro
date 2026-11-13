@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 
 const Accordion = ({
   title,
@@ -10,10 +10,16 @@ const Accordion = ({
   className?: string;
 }) => {
   const [show, setShow] = useState(false);
+  const panelId = useId();
 
   return (
     <div className={`accordion ${show && "active"} ${className}`}>
-      <button className="accordion-header" onClick={() => setShow(!show)}>
+      <button
+        className="accordion-header"
+        aria-expanded={show}
+        aria-controls={panelId}
+        onClick={() => setShow(!show)}
+      >
         {title}
         <svg
           className="accordion-icon"
@@ -28,7 +34,9 @@ const Accordion = ({
           ></path>
         </svg>
       </button>
-      <div className="accordion-content">{children}</div>
+      <div className="accordion-content" id={panelId} role="region">
+        {children}
+      </div>
     </div>
   );
 };

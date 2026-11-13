@@ -26,6 +26,8 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
             alt={title}
             width="1150"
             height="600"
+            loading="lazy"
+            decoding="async"
             class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
@@ -53,6 +55,8 @@ const uid = `blogcard-${Math.random().toString(36).slice(2, 8)}`;
               alt={author.name}
               width="32"
               height="32"
+              loading="lazy"
+              decoding="async"
               class="object-cover size-full"
             />
           </div>

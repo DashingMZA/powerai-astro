@@ -75,10 +75,13 @@ const OpenPositions = ({ badge, title, careers }: OpenPositionsProps) => {
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                 className="inline-flex items-center gap-3 p-1.5 border border-border/6 rounded-2xl lg:rounded-full mt-10 flex-wrap justify-center"
+                role="group"
+                aria-label="Filter roles by department"
               >
                 {departments.map((dept) => (
                   <motion.button
                     key={dept.name}
+                    aria-pressed={activeFilter === dept.name}
                     onClick={() => setActiveFilter(dept.name)}
                     whileHover={{ y: -1 }}
                     whileTap={{ scale: 0.97 }}

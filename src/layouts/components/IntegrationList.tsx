@@ -37,6 +37,7 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
                 </span>
                 <input
                   type="text"
+                  aria-label="Search integrations"
                   placeholder={`Search ${items.length} integrations...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -46,6 +47,7 @@ const IntegrationList = ({ items }: { items: IntegrationType[] }) => {
 
               <div className="flex items-center justify-between  bg-light/5 rounded-xl sm:w-1/3 w-2/3">
                 <select
+                  aria-label="Filter by category"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="cursor-pointer appearance-none bg-transparent py-4 pl-4 pr-10 text-lg text-text focus:outline-none border-none ring-0  w-full"

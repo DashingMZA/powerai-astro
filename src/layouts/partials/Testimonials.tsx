@@ -37,6 +37,10 @@ interface PageData {
 const Testimonials = ({ data }: { data: PageData }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  // Auto-rotation pauses while the user hovers or focuses the section —
+  // a 4 s rotation with no pause control fails WCAG 2.2.2 (Pause, Stop,
+  // Hide) and yanks content away from keyboard/screen-reader users.
+  const [paused, setPaused] = useState(false);
 
   const legacyItem: TestimonialItem | null =
     data.frontmatter.name &&
@@ -59,7 +63,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
         : [];
 
   useEffect(() => {
-    if (testimonials.length <= 1) return;
+    if (testimonials.length <= 1 || paused) return;
 
     const intervalId = window.setInterval(() => {
       setDirection(1);
@@ -67,7 +71,7 @@ const Testimonials = ({ data }: { data: PageData }) => {
     }, 4000);
 
     return () => window.clearInterval(intervalId);
-  }, [testimonials.length]);
+  }, [testimonials.length, paused]);
 
   if (!data.frontmatter.enable || testimonials.length === 0) {
     return null;
@@ -96,7 +100,13 @@ const Testimonials = ({ data }: { data: PageData }) => {
   return (
     <>
       {data.frontmatter.enable && (
-        <section className="overflow-hidden">
+        <section
+          className="overflow-hidden"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
           <div className="main-container">
             <div className="container">
               <motion.div

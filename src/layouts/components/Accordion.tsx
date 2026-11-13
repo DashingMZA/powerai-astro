@@ -1,5 +1,6 @@
 import { FaPlus } from "react-icons/fa6";
 import { motion, AnimatePresence } from "motion/react";
+import { useId } from "react";
 
 interface AccordionProps {
   question: string;
@@ -9,6 +10,7 @@ interface AccordionProps {
 }
 
 const Accordion = ({ question, answer, isOpen, onToggle }: AccordionProps) => {
+  const panelId = useId();
   return (
     <motion.div
       initial="hidden"
@@ -28,6 +30,7 @@ const Accordion = ({ question, answer, isOpen, onToggle }: AccordionProps) => {
       }}
       role="button"
       aria-expanded={isOpen}
+      aria-controls={panelId}
       tabIndex={0}
     >
       <div className="flex justify-between gap-x-4 items-center">
@@ -45,6 +48,8 @@ const Accordion = ({ question, answer, isOpen, onToggle }: AccordionProps) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={panelId}
+            role="region"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

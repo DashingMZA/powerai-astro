@@ -30,6 +30,8 @@ const uid = `cscard-${Math.random().toString(36).slice(2, 8)}`;
             alt={title}
             width="1150"
             height="600"
+            loading="lazy"
+            decoding="async"
             class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
