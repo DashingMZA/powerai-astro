@@ -45,8 +45,7 @@ jobs:
         run: pnpm run check
               - name: Lint (eslint)
                       run: pnpm run lint
-              
-      - name: Format check
+                    - name: Format check
         run: npx prettier --check ./src
       - name: Production build
         run: pnpm run build
