@@ -5,9 +5,11 @@
 #
 # Node 24 + pnpm only (see `packageManager` in package.json). The lockfile
 # is installed frozen; there are no yarn/npm branches — this repo is
-# pnpm-only. The build output (`dist/`) is copied into nginx; see
+# pnpm-only. The Vercel adapter moved the static client output from `dist/`
+# to `dist/client`, so the runner copies `dist/client` into nginx; see
 # config/nginx/nginx.conf for the serving rules (Astro 404 page, hashed
-# `/_astro/` assets cached immutably).
+# `/_astro/` assets cached immutably). The /api/* form endpoints are Vercel
+# serverless functions and do NOT run in this image (static only).
 #
 # NOTE: this Dockerfile is reviewed, not build-tested — no Docker daemon
 # is available in this environment (`docker` is not installed).
@@ -38,6 +40,6 @@ RUN pnpm run build
 # Production image, copy the static build and serve it with nginx
 FROM nginx:alpine AS runner
 COPY ./config/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist/client /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,5 +1,8 @@
+# NOTE (2026-11-13): the Vercel adapter moved the static client output
+# from dist/ to dist/client. The /api/* form endpoints are Vercel-only
+# and will not run on Netlify.
 [build]
-publish = "dist"
+publish = "dist/client"
 command = "pnpm build"
 
 [build.environment]

@@ -1,11 +1,15 @@
 {
-  // Cloudflare Workers — Static Assets deployment
-  // Deploy:  npm run deploy:cf-workers
-  // Preview: npm run preview:cf-workers
+  // Cloudflare Workers — Static Assets deployment.
+  // NOTE (2026-11-13): the Vercel adapter moved the static client output
+  // from dist/ to dist/client, so the assets directory is ./dist/client.
+  // The /api/* form endpoints are Vercel serverless functions and do NOT
+  // run on Cloudflare — forms on this host will answer 503 ("not set up").
+  // Deploy:  pnpm run deploy:cf-workers
+  // Preview: pnpm run preview:cf-workers
   "name": "powerai-astro",
   "compatibility_date": "2026-11-09",
   "assets": {
-    "directory": "./dist",
+    "directory": "./dist/client",
     "not_found_handling": "404-page"
   }
 }

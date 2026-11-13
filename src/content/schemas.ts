@@ -240,7 +240,7 @@ export const careersSchema = z.object({
   responsibilities: z.array(z.string()).optional(),
   requirements: z.array(z.string()).optional(),
   /** External application URL. Empty today — the apply form posts to
-   *  `config.params.apply_form_action` ("#", dead form, out of scope). */
+   *  the built-in `/api/apply` endpoint (Resend; see `.env.example`). */
   apply_url: z.string().optional(),
   /** Whether the role is currently open. No deadline filtering exists;
    *  all 8 listed jobs have 2025 deadlines and still render. */
