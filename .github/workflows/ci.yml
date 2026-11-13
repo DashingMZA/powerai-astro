@@ -43,6 +43,9 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Typecheck (astro check)
         run: pnpm run check
+              - name: Lint (eslint)
+                      run: pnpm run lint
+              
       - name: Format check
         run: npx prettier --check ./src
       - name: Production build
