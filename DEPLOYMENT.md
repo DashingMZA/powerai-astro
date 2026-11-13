@@ -7,33 +7,33 @@
 > `powerai-rel-sec` worktree (`a7a9c4a`): `astro build` exits 0, 77 pages,
 > `dist/` 20,255,062 bytes.
 
-## ⚠️ Domain mismatch in this tree — fix before release
+# Domain — fixed 2026-11-13
 
-**`src/config/config.json` `site.base_url` is still `https://powerai.csofts.tech`.**
-The live site is `https://powerai.jadoo.bond`, but every build from this tree
-emits `csofts.tech` canonicals, `og:url`/`og:image` URLs, sitemap URLs, and RSS
-links, and `public/robots.txt` still points at the `csofts.tech` sitemap. Change
-`base_url` to `https://powerai.jadoo.bond` (and the `robots.txt` `Sitemap:` line
-by hand — nothing generates it), rebuild, and re-verify the sitemap and a
-sample page's `<head>` before treating a deploy as the release. The other
-placeholders are unchanged: `john@example.com`, `(+1) 123-346-7890`, and the
-broken `https://csofts` copyright link are still in `config.json` — replace
-them before launch. The forms are still dead (`"#"` actions) and there are no
-security headers outside Vercel; see [SECURITY.md](./SECURITY.md).
+**`src/config/config.json` `site.base_url` is `https://powerai.jadoo.bond`**, matching
+live production. Builds from this tree emit `jadoo.bond` canonicals, `og:url`/`og:image`
+URLs, sitemap URLs, and RSS links, and `public/robots.txt` points at the `jadoo.bond`
+sitemap. Unauthenticated curl checks (2026-11-13) confirm the custom domain serves
+publicly with SSO bypassed, while `*.vercel.app` URLs still redirect to Vercel login.
+Placeholders still in `config.json`: `john@example.com`, `(+1) 123-346-7890`, and the
+broken `https://csofts` copyright link — replace them before launch. Forms are
+implemented (Resend API routes, see [CONFIGURATION.md](./CONFIGURATION.md)) but need
+real env vars before any message is delivered. Security headers exist on Vercel
+via `vercel.json`; see [SECURITY.md](./SECURITY.md).
 
 ## Output model
 
-The site is **fully static**: `astro.config.mjs` has **no `adapter()` call**, and neither installed adapter (`@astrojs/cloudflare` 14.4.7, `@astrojs/vercel` ^11.0.21) is wired. `pnpm run build` produces `dist/` — plain HTML/CSS/JS plus `rss.xml`, `sitemap-index.xml`, `sitemap-0.xml`, and `robots.txt`. Any static host can serve it. Wiring an adapter is a deliberate, separate change (it changes the output mode); do not add one casually. **Exception:** the forms worker may wire `@astrojs/vercel` as the adapter for API routes — that decision is pending and is theirs, not this doc's.
+The site is **static pages + Vercel serverless API routes**: `astro.config.mjs` wires `@astrojs/vercel` with the default `output: "static"` (added 2026-11-13 for the Resend form backends). All 78 pages stay prerendered; only `src/pages/api/*` (`/api/contact`, `/api/newsletter`, `/api/apply`) opt out with `export const prerender = false`. `pnpm run build` produces `dist/client/` (the static site: HTML/CSS/JS plus `rss.xml`, `sitemap-index.xml`, `sitemap-0.xml`, `robots.txt`) and `dist/server/` (the API functions). Any static host can serve `dist/client/` — but the `/api/*` endpoints only run on Vercel. `@astrojs/cloudflare` 14.4.7 stays installed but unwired.
 
 ## Vercel — the live production host
 
 - **Production:** https://powerai.jadoo.bond (custom domain, SSO-exempt, public).
   Preview deployments and `*.vercel.app` URLs remain behind Vercel deployment
-  protection (login). Deployments are **manual only** by project policy: do not
-  enable Vercel auto-deploy on git push without an explicit decision.
+  protection (login). **Deployments auto-deploy on git push to `main`** (verified:
+  the 2026-11-12 push of `06c19e9` produced a production READY deployment
+  automatically) — treat every push to `main` as a production deploy.
 - **Build:** import the repo, build command `pnpm run build`, output directory
-  `dist`, Node.js 24. No Vercel adapter is wired — this is a plain static
-  deployment, which is why no adapter is needed.
+  (auto-detected from the Vercel adapter), Node.js 24. The Vercel adapter is
+  wired (2026-11-13) for the `/api/*` form endpoints; pages stay static.
 - **Security headers:** `vercel.json` (added 2026-11-13) sets `Strict-Transport-Security`,
   `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`,
   and `X-Frame-Options: SAMEORIGIN` on every response. **No CSP is shipped**
@@ -46,10 +46,10 @@ The site is **fully static**: `astro.config.mjs` has **no `adapter()` call**, an
 
 ## Cloudflare Workers (static assets) — the configured alternative path
 
-- `wrangler.jsonc`: `name: "powerai-astro"`, `compatibility_date: "2026-11-09"`, `assets: { directory: "./dist", not_found_handling: "404-page" }`. This serves `dist/` as static assets; the custom 404 page is served for unknown paths.
+- `wrangler.jsonc`: `name: "powerai-astro"`, `compatibility_date: "2026-11-09"`, `assets: { directory: "./dist/client", not_found_handling: "404-page" }`. This serves `dist/client/` as static assets; the custom 404 page is served for unknown paths. The `/api/*` form endpoints do NOT run on Cloudflare.
 - Deploy: `pnpm run deploy:cf-workers` (`pnpm run build && wrangler deploy`). Preview: `pnpm run preview:cf-workers` (`pnpm run build && wrangler dev`).
 - `wrangler` ^4.161.0 is a devDependency. No `wrangler.toml` exists (only `wrangler.jsonc`).
-- **Stale comment:** the comments at the top of `wrangler.jsonc` still say `npm run deploy:cf-workers` / `npm run preview:cf-workers`. The scripts are `pnpm` — use the `pnpm run …` forms above.
+- The comments at the top of `wrangler.jsonc` now say `pnpm run deploy:cf-workers` / `pnpm run preview:cf-workers` (fixed 2026-11-13).
 - **No headers are configured** for this path (no `_headers` file in `public/`, nothing in `wrangler.jsonc`). The `vercel.json` headers do not apply here. If this path is ever used for production, add a `_headers` file to `public/` (the Cloudflare-native way) with the same values as `vercel.json` — and re-check the CSP note in [SECURITY.md](./SECURITY.md).
 - The README's old demo link `https://powerai-astro.pages.dev/` was not verified live.
 
@@ -58,7 +58,7 @@ The site is **fully static**: `astro.config.mjs` has **no `adapter()` call**, an
 - `netlify.toml` (current):
   ```toml
   [build]
-  publish = "dist"
+  publish = "dist/client"
   command = "pnpm build"
 
   [build.environment]
@@ -68,7 +68,7 @@ The site is **fully static**: `astro.config.mjs` has **no `adapter()` call**, an
 
 ## Docker — nginx config now exists, still not build-tested
 
-`config/nginx/nginx.conf` **now exists** (added in commit `ec8d817`, which also fixed the Node 24 pin) — the old "Dockerfile broken, nginx.conf missing" blocker is gone. The `runner` stage copies it and serves `dist/` with `error_page 404 /404.html` and immutable caching for `/_astro/` assets. **Still not build-tested:** no Docker daemon is available in the sandbox (`docker` is not installed), so the image has never been built. The Dockerfile's own header says the same. Do not call Docker deployable until someone builds and runs it. Note the nginx config sets **no security headers** — add the `vercel.json` equivalents (`add_header … always;`) if Docker ever becomes a real deploy target.
+`config/nginx/nginx.conf` **now exists** (added in commit `ec8d817`, which also fixed the Node 24 pin) — the old "Dockerfile broken, nginx.conf missing" blocker is gone. The `runner` stage copies it and serves `dist/client/` (the adapter moved the static output from `dist/`) with `error_page 404 /404.html` and immutable caching for `/_astro/` assets. The `/api/*` endpoints do NOT run in Docker (static only). **Still not build-tested:** no Docker daemon is available in the sandbox (`docker` is not installed), so the image has never been built. The Dockerfile's own header says the same. Do not call Docker deployable until someone builds and runs it. Note the nginx config sets **no security headers** — add the `vercel.json` equivalents (`add_header … always;`) if Docker ever becomes a real deploy target.
 
 ## GitHub Pages (CI)
 

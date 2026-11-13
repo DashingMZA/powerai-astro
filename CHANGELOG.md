@@ -2,25 +2,54 @@
 
 All notable changes to PowerAI Astro. Dates are commit dates (2026-11-12). This file was created as part of the documentation pass on 2026-11-12; earlier history is summarized from the git log.
 
+## [Unreleased] — Public production release (2026-11-13)
+
+### Added
+
+- **Production domain `https://powerai.jadoo.bond`**: `site.base_url` in `src/config/config.json` changed from `https://powerai.csofts.tech`; canonicals, `og:url`/`og:image`, sitemap, RSS, and JSON-LD now emit the live domain. Unauthenticated curl checks confirm the custom domain serves publicly (SSO bypassed) while `*.vercel.app` URLs still redirect to Vercel login.
+- **Resend form backends** (`src/pages/api/contact.ts`, `newsletter.ts`, `apply.ts`; shared `src/lib/formValidation.ts`, `rateLimit.ts`, `resend.ts`; `resend` ^6.38.0): server-side validation, honeypot + min-time-to-submit + in-memory rate limiting, accessible success/error messages, duplicate-submit prevention. Contact/newsletter: 5/10 min/IP. Apply: CV PDF/DOC/DOCX ≤ 5 MB, magic-byte checked, sent as a Resend attachment, never stored on disk or in `public/`. `.env.example` documents `RESEND_API_KEY`, `CONTACT_EMAIL`, `CONTACT_FROM_EMAIL` (all empty). **Live delivery NOT tested** — no credentials exist; without env vars the endpoints answer 503.
+- **Vercel adapter wired** (`@astrojs/vercel`, default `output: "static"`): all pages stay prerendered; only `/api/*` routes opt out of prerendering. Static client output moved from `dist/` to `dist/client/` — `wrangler.jsonc`, `netlify.toml`, and the Dockerfile updated to match; `/api/*` works on Vercel only.
+- **`vercel.json` security headers** (from the security round, kept): HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options: SAMEORIGIN`. No CSP shipped (would break inline scripts; recommended CSP documented in [SECURITY.md](./SECURITY.md)).
+- **Blog article**: "Retrieval-Augmented Generation (RAG) for SaaS Teams" (`src/content/blog/rag-for-saas-teams.md`, 2026-11-13).
+
+### Changed
+
+- **All 20 blog posts refreshed**: lorem ipsum removed (508–715 words each), descriptions trimmed to 124–150 chars, `updated: 2026-11-13` set, one genuine internal link per post. Publication dates unchanged except post-6 (Next.js 14 article dated before the release — corrected to 2023-10-26).
+- **All 8 careers archived** (`active: false`): careers page shows "No open roles right now" with an "Archived roles" section; single pages show a closed banner and hide the apply form; no JobPosting markup.
+- **Slug-alias sitemap filter** (`astro.config.mjs`): when a post sets frontmatter `slug`, the sitemap lists only `/blog/<slug>`, never the `/blog/<filename>` alias (verified end-to-end with a temporary slug).
+- **RSS**: `trailingSlash: false` — item links no longer get a trailing slash, matching canonicals.
+- **`/elements` demo link fixed**: `../blob/master/LICENSE` (404) → the repo LICENSE on GitHub.
+- **`prefers-reduced-motion` guard** added to `src/styles/base.css`.
+
+### Fixed
+
+- Stale documentation corrected throughout (domain, output model, auto-deploy on push, forms, lockfile, `wrangler.jsonc`/`netlify.toml`/Dockerfile `dist/client` paths).
+
+### Not yet done / needs the owner
+
+- **Resend credentials**: `RESEND_API_KEY`, `CONTACT_EMAIL`, `CONTACT_FROM_EMAIL` (+ verified sender domain) — set in Vercel, then smoke-test one real submit per form.
+- **Junior Frontend Developer body copy** is largely Senior Product Designer copy — needs owner-supplied correct copy.
+- **Dockerfile build test** (no Docker in the sandbox), **form backend smoke test**, **career/content refresh decisions**, **Lighthouse/CWV** (no Chromium).
+
 ## [Unreleased] — Security + build/perf/a11y + docs round (2026-11-13, worktree at `a7a9c4a`, not committed)
 
 ### Added
 
 - **`vercel.json` (new):** security headers on every Vercel response — `Strict-Transport-Security: max-age=63072000; includeSubDomains` (no `preload`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()`, `X-Frame-Options: SAMEORIGIN`. No CSP shipped — it would break the site's inline scripts; the recommended CSP is documented in [SECURITY.md](./SECURITY.md). Headers apply to Vercel only.
 - **`pnpm audit` baseline** (see [SECURITY.md](./SECURITY.md)): 11 vulnerabilities (6 high, 4 moderate, 1 low), all transitive. None fixed — every fix needs a major-version jump or a lockfile regen that is out of scope for this worktree.
-- **API-route security requirements** (see [SECURITY.md](./SECURITY.md)): no `src/pages/api/*` routes exist in this tree; the requirements the forms worker's routes must satisfy are documented (env-only secrets, no permissive CORS, server-side validation + upload size/type checks by content, rate limiting, generic error responses, no invented auth).
+- **API-route security requirements** (see [SECURITY.md](./SECURITY.md)): the Resend form endpoints (`src/pages/api/*`, added in the public release round) follow them — env-only secrets, no permissive CORS, server-side validation + upload size/type checks by content (magic bytes, not extension), rate limiting, generic error responses, no invented auth.
 
 ### Changed
 
-- **Removed eight zero-usage dependencies from `package.json`** (verified by grep over `src/`, `config/`, `scripts/`, `astro.config.mjs` — each appeared only in `package.json` / `pnpm-lock.yaml` / docs): `astro-swiper`, `disqus-react`, `i18n`, `@supercharge/promise-pool`, `turndown`, `glob`, `node-html-parser`, `tailwind-bootstrap-grid`. **⚠️ `pnpm-lock.yaml` was NOT regenerated** — run `pnpm install` and commit the lockfile before pushing, or `pnpm install --frozen-lockfile` (and CI) will fail. Kept deliberately: `@astrojs/vercel` (forms worker may need it for API routes) and `@astrojs/cloudflare` (Cloudflare deploy-path option).
-- **Live production is https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). Docs updated throughout; **open item: `src/config/config.json` `site.base_url` is still `https://powerai.csofts.tech`** — builds from this tree still emit `csofts.tech` canonicals/sitemap/RSS.
+- **Removed eight zero-usage dependencies from `package.json`** (verified by grep over `src/`, `config/`, `scripts/`, `astro.config.mjs` — each appeared only in `package.json` / `pnpm-lock.yaml` / docs): `astro-swiper`, `disqus-react`, `i18n`, `@supercharge/promise-pool`, `turndown`, `glob`, `node-html-parser`, `tailwind-bootstrap-grid`. Lockfile regenerated in the release round (`pnpm install`, which also added `resend`). Kept deliberately: `@astrojs/vercel` (now wired as the adapter for the `/api/*` form routes) and `@astrojs/cloudflare` (Cloudflare deploy-path option).
+- **Live production is https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). Docs updated throughout.
 - **Docs corrected:** `Dockerfile` is no longer broken (`config/nginx/nginx.conf` exists since `ec8d817`; still never built — no Docker in the sandbox); ESLint is configured and runs (`eslint.config.js`, CI runs it); `astro check` is 0/0/0 (95 files, no hint); heading order verified fixed (1 `<h1>` per sampled page); author (7) + category (5) archives exist (only tag archives are missing); `blog.slug` dual-routing is wired; the R2 upload script (`scripts/upload-to-r2.mjs`) exists — the old "no S3 code" claims were wrong; GTM is rendered by the `@digi4care/astro-google-tagmanager` package, not a hand-rolled snippet; `.nvmrc` pins 24.22.1; `contentParser.astro` is deleted (single parser `contentParser.ts`).
 
 ### Verified (no code change, 2026-11-13)
 
 - `astro build` exits 0 — 77 pages, 71 s wall / 1m1s Astro time, `dist/` 20,255,062 bytes (second run 100 s wall under contention, byte-identical `dist/`); compress totals unchanged (HTML 283.2 KB, Image 2.45 MB, SVG 338.97 KB). `astro check` 0/0/0; `eslint .` 0/0; Prettier check passes.
 - Hydration inventory corrected: **24** `client:*` directives (5 `client:load`, 19 `client:visible`), not 29. Largest bundles: `elk-*.js` 1.5 MB, `chunk-*.js` 629 KB, `cytoscape.esm` 442 KB.
-- Accessibility (code-reading + built `dist/`, no axe/Lighthouse — no Chromium): skip link + `:focus-visible` + hero `fetchpriority="high"` + `width`/`height` on images verified; gaps confirmed — desktop dropdowns hover-only, no site-authored `prefers-reduced-motion`, placeholder-only form labels, newsletter input missing `name`, agree control is a `<button>` not a checkbox, no `aria-live` error messaging, mobile menu has no Escape/focus handling, contrast unmeasured. See [ACCESSIBILITY.md](./ACCESSIBILITY.md) and [PERFORMANCE.md](./PERFORMANCE.md).
+- Accessibility (code-reading + built `dist/`, no axe/Lighthouse — no Chromium): skip link + `:focus-visible` + hero `fetchpriority="high"` + `width`/`height` on images verified; gaps confirmed — desktop dropdowns hover-only, placeholder-only form labels, agree control is a `<button>` not a checkbox, mobile menu has no Escape/focus handling, contrast unmeasured. Fixed since: a `prefers-reduced-motion` guard was added to `src/styles/base.css`, the newsletter input got a `name` attribute, and the three forms gained `aria-live` status regions. See [ACCESSIBILITY.md](./ACCESSIBILITY.md) and [PERFORMANCE.md](./PERFORMANCE.md).
 
 ## [Unreleased] — ESLint cleanup + build performance audit (2026-11-12)
 
@@ -85,11 +114,11 @@ All notable changes to PowerAI Astro. Dates are commit dates (2026-11-12). This 
 - **Dockerfile fixed but untested**: `config/nginx/nginx.conf` now exists (commit `ec8d817`) — the old "missing nginx.conf" blocker is gone — but the image has never been built (no Docker daemon in the sandbox). Do not call Docker deployable until someone builds and runs it. The nginx config sets no security headers.
 - **Duplicate featured post** on `/blog`, `/blog/page/2`, `/blog/page/3`.
 - **Dead `client:*` directives** on `.astro` components in `src/pages/case-studies/page/[page].astro` (`client:load` on `PageHeader`, `client:visible` on `CaseStudyCard`).
-- **Desktop dropdown menus are hover-only** (keyboard users cannot open them); no site-authored `prefers-reduced-motion` guard; form fields lack associated labels; mobile menu has no Escape/focus handling.
+- **Desktop dropdown menus are hover-only** (keyboard users cannot open them); mobile menu has no Escape/focus handling. A `prefers-reduced-motion` guard was added to `src/styles/base.css` (2026-11-13).
 - **No CSP shipped** — headers now exist on Vercel via `vercel.json`, but no `Content-Security-Policy` (it would break the site's inline scripts; the recommended CSP is documented in [SECURITY.md](./SECURITY.md)). Cloudflare/Netlify/Docker paths still have no headers at all.
 - **`pnpm audit`: 11 vulnerabilities (6 high, 4 moderate, 1 low)**, all transitive — see [SECURITY.md](./SECURITY.md). Fixes need overrides + a lockfile regen.
-- **Lockfile out of sync (2026-11-13):** eight packages were removed from `package.json` without regenerating `pnpm-lock.yaml`. Run `pnpm install` before pushing.
+- **Lockfile regenerated 2026-11-13** (`pnpm install` after the dep removals + `resend` addition).
 - **No Lighthouse / CWV measurement** (no Chromium in the sandbox).
-- **`wrangler.jsonc` comments still say `npm run …`** (scripts are pnpm).
-- **Stale demo content**: blog posts 2022–2023, all 8 careers past deadline (May–June 2025), changelog has two `1.0.2` entries, `/images/image-placeholder.png` referenced but missing.
-- **`base_url` still `https://powerai.csofts.tech`** while live production is `https://powerai.jadoo.bond` — canonicals, sitemap, and RSS emit the old domain until it is changed (see [DEPLOYMENT.md](./DEPLOYMENT.md)).
+- **`wrangler.jsonc` comments fixed** (now `pnpm run …`) and assets directory updated to `./dist/client` for the adapter output model.
+- **Content refreshed 2026-11-13** (see the release entry above): all 20 blog posts rewritten, all 8 careers archived, `/images/image-placeholder.png` now exists. Remaining: Junior Frontend Developer body is largely Senior Product Designer copy — needs owner-supplied correct copy.
+- **`base_url` fixed 2026-11-13**: `https://powerai.jadoo.bond` — canonicals, sitemap, and RSS now emit the live domain.

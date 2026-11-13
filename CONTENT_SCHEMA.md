@@ -121,7 +121,7 @@ active: true # optional; no deadline filtering exists
 
 - **All 8 jobs are past deadline** (deadlines 2025-05-01 → 2025-06-10) and still render, because no deadline filtering exists. `JobPosting` JSON-LD is emitted only for roles with a future deadline, so **no career page currently emits `JobPosting`** — see [SEO_GUIDE.md](./SEO_GUIDE.md).
 - The `-index.md` list page also carries `page_header`, `open_positions` (`{enable, badge, title}`), and `gallery` (`{enable, badge, title, images[]}`).
-- The apply form posts to `"#"` (dead form) — see [CONFIGURATION.md](./CONFIGURATION.md).
+- The apply form posts to `/api/apply` (Resend; CV as email attachment, never stored) — see [CONFIGURATION.md](./CONFIGURATION.md). Archived roles (`active: false`) hide the form.
 
 ## Integrations
 

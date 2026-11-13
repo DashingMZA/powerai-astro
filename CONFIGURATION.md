@@ -19,7 +19,7 @@ All site configuration lives in JSON files under `src/config/` plus one typed Ty
 {
   "site": {
     "title": "Power AI - A Free AI SaaS Website Template built with Astro",
-    "base_url": "https://powerai.csofts.tech",   // canonical origin, no trailing slash
+    "base_url": "https://powerai.jadoo.bond",   // canonical origin, no trailing slash
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
@@ -62,8 +62,8 @@ All site configuration lives in JSON files under `src/config/` plus one typed Ty
 
 ### Rules and gotchas
 
-- **`base_url` is the single source of truth for the domain.** `astro.config.mjs` reads it for the build-time `site` value, `src/lib/seo.ts` reads it for canonicals/OG URLs, and `public/robots.txt` must match it by hand (it currently does: `Sitemap: https://powerai.csofts.tech/sitemap-index.xml`). Change it in `config.json` and check all three.
-- **⚠️ Production domain is `https://powerai.jadoo.bond`, but `base_url` in this tree is still `https://powerai.csofts.tech`.** Every build from this tree emits `csofts.tech` canonicals, sitemap URLs, and RSS links. Change `base_url` to `https://powerai.jadoo.bond` (and the `robots.txt` `Sitemap:` line) before release — see [DEPLOYMENT.md](./DEPLOYMENT.md).
+- **`base_url` is the single source of truth for the domain.** `astro.config.mjs` reads it for the build-time `site` value, `src/lib/seo.ts` reads it for canonicals/OG URLs, and `public/robots.txt` must match it by hand (it does: `Sitemap: https://powerai.jadoo.bond/sitemap-index.xml`). Change it in `config.json` and check all three.
+- **Production domain is `https://powerai.jadoo.bond`** and `base_url` matches it (fixed 2026-11-13) — builds emit `jadoo.bond` canonicals, sitemap URLs, and RSS links, and the `robots.txt` `Sitemap:` line matches. See [DEPLOYMENT.md](./DEPLOYMENT.md).
 - **`trailing_slash: false`** — Astro is configured with `trailingSlash: "never"`. Do not flip this without checking that the sitemap, canonicals, and any external links still agree.
 - **Placeholder values that must change before launch:** `params.mail` (`john@example.com`), `params.phone` (`(+1) 123-346-7890`), and the `copyright` link `https://csofts` (no TLD — not a valid URL). These are template placeholders, verified present on 2026-11-12.
 - **`metadata.meta_description`** still says "47 components" — a stale count carried over from the old README. Update the copy when you update the description; the layouts tree is not 47 files.
@@ -71,13 +71,13 @@ All site configuration lives in JSON files under `src/config/` plus one typed Ty
 
 ## Forms — all dead until a backend is wired
 
-`contact_form_action`, `apply_form_action`, and `newsletter_form_action` are all `"#"`. The contact form (`src/layouts/components/ContactForm.astro`), the apply form (`src/pages/careers/[single].astro`, including a **required CV file upload**), and the newsletter form (`src/layouts/PostSingle.astro`) all submit nowhere. Login / sign-up (`src/pages/login.astro`, `src/pages/sign-up.astro`) use `<form action="">` with no handler, no validation, and no backend; their "continue with" social buttons are not wired to any auth provider.
+Forms are implemented with Resend API routes (2026-11-13): the contact form (`src/layouts/components/ContactForm.astro`) posts to `/api/contact`, the apply form (`src/pages/careers/[single].astro`, including a **required CV file upload**, PDF/DOC/DOCX ≤ 5 MB) posts to `/api/apply`, and the newsletter form (`src/layouts/PostSingle.astro`) posts to `/api/newsletter`. Server-side validation, honeypot + rate limiting, and accessible success/error messages are built in. The old `*_form_action: "#"` values in `config.json` are no longer read by the forms (kept for reference only). The false "protected by reCAPTCHA" claim was removed — no reCAPTCHA exists; spam protection is the honeypot + rate limit. Login / sign-up (`src/pages/login.astro`, `src/pages/sign-up.astro`) still use `<form action="">` with no handler, no validation, and no backend; their "continue with" social buttons are not wired to any auth provider.
 
-To make a form live: point the action at a real endpoint (form service, serverless function, or your own API) and remove/implement the reCAPTCHA claim — the contact form label says "This site is protected by reCAPTCHA" but **no reCAPTCHA code exists anywhere in the repo**. Do not ship that claim until reCAPTCHA (or an alternative) is actually implemented. See [SECURITY.md](./SECURITY.md).
+To make a form live: set the Resend env vars (see `.env.example`: `RESEND_API_KEY`, `CONTACT_EMAIL`, `CONTACT_FROM_EMAIL`) in Vercel and redeploy — without them the endpoints answer 503 ("not set up yet") and send nothing. Live delivery has NOT been tested (no credentials exist yet). See [SECURITY.md](./SECURITY.md).
 
-**Graceful degradation (verified 2026-11-12):** the dead forms show no fake success. Submitting the contact / apply / newsletter form performs a plain POST to `"#"` — the page reloads, the entered data is discarded, and no confirmation is shown. Login / sign-up submit to the same page (`action=""`) with the same reload-and-discard behaviour; their submit buttons stay disabled until the required fields are filled. A page reload after submit is **not** a delivery confirmation — nothing is sent anywhere until a backend endpoint is configured above. This gap stays **documented, needs the user's backend choice**: no backend is invented here.
+**Behaviour without credentials (verified 2026-11-13):** the forms never claim a false success. Without Resend env vars the endpoints answer 503 ("not set up yet") and send nothing; with a bad key they answer 502. Login / sign-up submit to the same page (`action=""`) with reload-and-discard behaviour; their submit buttons stay disabled until the required fields are filled. A page reload after submit is **not** a delivery confirmation.
 
-**Backend options when you are ready:** (a) a hosted form service (e.g. Formspree, Basin, Getform) — paste its endpoint URL into the matching `*_form_action` in `config.json`, no code change; (b) a serverless function / your own API endpoint that accepts the POST body (note the apply form uploads a CV file, so the endpoint must accept `multipart/form-data`); (c) for login / sign-up, a real auth provider — the pages have no auth wiring at all, so this is a build-out, not a config change. Whichever you pick, also wire the reCAPTCHA claim (or remove it) and add a real success/error message — the forms currently have none by design.
+**Remaining form work:** (a) set the Resend env vars and smoke-test one real submit per form; (b) for login / sign-up, a real auth provider — the pages have no auth wiring at all, so this is a build-out, not a config change. Note the apply form only accepts applications while a role is open — all 8 current roles are archived, so its form is hidden until a role is re-opened with `active: true` and a future deadline.
 
 ## Google Tag Manager
 

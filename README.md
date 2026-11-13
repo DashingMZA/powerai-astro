@@ -2,7 +2,7 @@
 
 PowerAI Astro is a free, dark-themed AI SaaS website template built with Astro, Tailwind CSS, TypeScript, and React. It is designed for AI product teams, SaaS founders, and agencies who need a complete, launch-ready web presence: homepage, features, pricing, blog, case studies, careers, integrations, changelog, and contact — all pre-built and driven by content files and JSON config.
 
-> **Status (2026-11-13, worktree at `a7a9c4a`):** upgraded to **Astro 7.4.11**, **pnpm 12.19.0**, **Node ≥ 24**. **Live production: https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). Verified in the sandbox on 2026-11-13: `astro build` exits 0 (77 pages, 71 s wall / 1m1s Astro time, `dist/` 20,255,062 bytes), `astro check` 0 errors / 0 warnings / 0 hints (95 files), `eslint .` 0 errors / 0 warnings, Prettier check passes. **Open item: `src/config/config.json` `site.base_url` is still `https://powerai.csofts.tech`** — canonicals, sitemap, and RSS from this tree still emit `csofts.tech`; change it to `jadoo.bond` before release. See [DEPLOYMENT.md](./DEPLOYMENT.md) and [CHANGELOG.md](./CHANGELOG.md).
+> **Status (2026-11-13, public release round):** upgraded to **Astro 7.4.11**, **pnpm 12.19.0**, **Node ≥ 24**. **Live production: https://powerai.jadoo.bond** (Vercel, custom domain, SSO on with the custom domain exempt). `site.base_url` is `https://powerai.jadoo.bond` — canonicals, sitemap, and RSS emit the live domain. Forms are implemented (Resend `/api/*`, env vars required, live delivery not yet tested); all 8 careers archived with a "no open roles" message; all 20 blog posts refreshed. See [DEPLOYMENT.md](./DEPLOYMENT.md) and [CHANGELOG.md](./CHANGELOG.md).
 
 ## Key features
 
