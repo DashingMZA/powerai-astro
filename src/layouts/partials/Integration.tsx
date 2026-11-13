@@ -103,7 +103,12 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
                         <motion.div
                           className={`absolute rounded-full flex justify-center items-center transition-transform hover:scale-110 duration-300 bg-gradient-dark border border-border/4 w-[60px] h-[60px] md:w-[90px] md:h-[90px]`}
                           initial={hydrated ? { opacity: 0 } : false}
-                          animate={{ opacity: introStarted ? 1 : 0 }}
+
+                          animate={
+                            hydrated
+                              ? { opacity: introStarted ? 1 : 0 }
+                              : { opacity: 1 }
+                          }
                           transition={{
                             duration: fadeDuration,
                             delay: logoDelay,
@@ -141,7 +146,12 @@ const Integration = ({ data }: { data: IntegrationPageData }) => {
                         <motion.div
                           className="absolute rounded-full bg-white/20"
                           initial={hydrated ? { opacity: 0 } : false}
-                          animate={{ opacity: introStarted ? 1 : 0 }}
+
+                          animate={
+                            hydrated
+                              ? { opacity: introStarted ? 1 : 0 }
+                              : { opacity: 1 }
+                          }
                           transition={{
                             duration: fadeDuration,
                             delay: dotDelay,
