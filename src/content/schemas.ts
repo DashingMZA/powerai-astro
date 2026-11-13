@@ -75,6 +75,10 @@ export const seoFields = {
 // When author files are created, blog `author.slug` / `authors[]` link to
 // them by filename slug. Until then the collection is empty (the directory
 // holds only a `.gitkeep`) and `blog.author` remains the live author shape.
+// The collection is NOT registered in `src/content.config.ts` while it is
+// empty — Astro's glob loader warns on every check/build for a collection
+// with no files. Author archive pages (`/blog/author/[author]`) derive
+// from the inline `author` objects in blog frontmatter instead.
 
 export const authorSocialSchema = z.object({
   name: z.string(),
@@ -112,6 +116,10 @@ export const authorsSchema = z.object({
 // validated free-text `category: string` and `tags: string[]` fields until
 // category/tag files exist; at that point the strings become slugs that
 // resolve against these collections. Do not invent category/tag files.
+// The collections are NOT registered in `src/content.config.ts` while
+// empty (glob-loader warnings); category archive pages
+// (`/blog/category/[category]`) derive from blog `category` frontmatter
+// instead. No post sets `tags`, so there is no tag archive page.
 
 export const categoriesSchema = z.object({
   name: z.string(),
@@ -150,8 +158,11 @@ export const blogSchema = z.object({
   description: z.string().optional(),
   /** Short excerpt for cards/feeds. Falls back to `description`. */
   excerpt: z.string().optional(),
-  /** Custom URL slug. Routing still uses the filename; a set `slug` is
-   *  reserved for future custom routing and is NOT wired up yet. */
+  /** Custom URL slug. WIRED (2026-11-12): `src/pages/blog/[single].astro`
+   *  serves `/blog/<slug>` as the canonical URL AND keeps the filename
+   *  URL working as an alias; BlogCard links, RSS and canonicals all use
+   *  the slug URL via `src/lib/blogUrls.ts`. No post sets `slug` today,
+   *  so all 20 posts are still filename-routed. */
   slug: z.string().optional(),
   date: z.coerce.date().optional(),
   updated: z.coerce.date().optional(),

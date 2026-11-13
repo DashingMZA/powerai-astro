@@ -3,14 +3,34 @@ import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { postFilename, postSlug, postUrl } from "@/lib/blogUrls";
 import { articleJsonLd, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export async function getStaticPaths() {
   const posts = await getSinglePage("blog");
-  return posts.map((post: any) => ({
-    params: { single: post.id },
-    props: { post },
-  }));
+  // Dual routing: every post serves at its canonical URL (the
+  // frontmatter `slug` when set, else the filename — that is also what
+  // the content layer uses as the entry `id`) AND, when a `slug` is set
+  // and differs from the filename, at the filename URL as an alias.
+  // The filename is recovered from `post.filePath`, NOT from `post.id`:
+  // Astro's glob loader returns `data.slug` as the id when one is set,
+  // so the filename is otherwise unrecoverable (see `postFilename()` in
+  // `src/lib/blogUrls.ts`). No post sets `slug` today (all 20 are
+  // filename-routed), so this currently emits exactly one path per post;
+  // when a slug is added, the slug URL becomes canonical (see below)
+  // while the filename URL keeps working as an alias. Known wart: the
+  // sitemap integration lists every built page, so an aliased filename
+  // URL would appear in the sitemap until a filter is added in
+  // `astro.config.mjs` — see CONTENT_SCHEMA.md.
+  return posts.flatMap((post) => {
+    const slug = postSlug(post);
+    const filename = postFilename(post);
+    const paths = [{ params: { single: slug }, props: { post } }];
+    if (filename !== slug) {
+      paths.push({ params: { single: filename }, props: { post } });
+    }
+    return paths;
+  });
 }
 
 const { post } = Astro.props;
@@ -19,7 +39,9 @@ if (post.data.draft) return Astro.redirect("/404");
 
 const { title, meta_title, description, image, author, category, date } =
   post.data;
-const canonical = canonicalUrl(`/blog/${post.id}`);
+// Canonical is the slug URL when a slug is set, else the filename URL —
+// the same URL BlogCard links, RSS and the sitemap use (see blogUrls.ts).
+const canonical = canonicalUrl(postUrl(post));
 const breadcrumbs = [
   { label: "Home", href: "/" },
   { label: "Blog", href: "/blog" },

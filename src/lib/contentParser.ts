@@ -62,7 +62,15 @@ export async function getSinglePage(folder: string) {
       .filter((entry: any) => !entry.data?.draft)
       .map((entry: any) => ({
         frontmatter: entry.data,
-        slug: entry.data?.url || entry.id.replace(/\.(md|mdx)$/, ""),
+        // Canonical post slug: frontmatter `slug` wins, else the
+        // `url` override, else the filename id. See `src/lib/blogUrls.ts`
+        // — BlogCard links, RSS and canonicals all derive from this, so
+        // they can never disagree. (Only the blog schema defines `slug`,
+        // so other collections are unaffected.)
+        slug:
+          entry.data?.slug ||
+          entry.data?.url ||
+          entry.id.replace(/\.(md|mdx)$/, ""),
         content: entry.body || "",
       }));
 

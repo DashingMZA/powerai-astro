@@ -1,0 +1,82 @@
+---
+// Author archive: /blog/author/<slug>, e.g. /blog/author/jane-smith.
+//
+// Generated ONLY from the inline `author` objects in real blog frontmatter
+// — no author files are invented (the `authors` collection stays
+// schema-only; see CONTENT_SCHEMA.md). One page per distinct author name
+// across the 20 posts (7 authors). Posts are listed newest-first, using
+// the same BlogCard grid as the blog index. No pagination: the largest
+// archive holds 3 posts.
+import Base from "@/layouts/Base.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import BlogCard from "@/components/BlogCard.astro";
+import MainContainer from "@/components/MainContainer.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { authorSlug, postSlug } from "@/lib/blogUrls";
+import { getListPage } from "@/lib/contentParser";
+import { breadcrumbJsonLd } from "@/lib/seo";
+import { sortEntriesByDate } from "@/lib/utils/sortFunctions";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+
+export async function getStaticPaths() {
+  const posts = await getSinglePage("blog");
+  const byAuthor = new Map<string, typeof posts>();
+  for (const post of posts) {
+    const name = post.data.author?.name;
+    if (!name) continue;
+    const list = byAuthor.get(name) ?? [];
+    list.push(post);
+    byAuthor.set(name, list);
+  }
+  return [...byAuthor.entries()].map(([name, authorPosts]) => ({
+    params: { author: authorSlug(name) },
+    props: {
+      name,
+      designation: authorPosts[0].data.author?.designation,
+      posts: sortEntriesByDate(authorPosts).map((post) => ({
+        frontmatter: post.data,
+        slug: postSlug(post),
+        content: post.body || "",
+      })),
+    },
+  }));
+}
+
+const { name, designation, posts } = Astro.props;
+const count = posts.length;
+const page_header = {
+  title: name,
+  badge: "Author",
+  subtitle: `${count} ${count === 1 ? "post" : "posts"} by ${name}${designation ? ` — ${designation}` : ""}`,
+};
+const callToAction = await getListPage("sections/call-to-action.md");
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: `Author: ${name}` },
+];
+---
+
+<Base
+  title={`${name} — Author`}
+  description={page_header.subtitle}
+  jsonLd={breadcrumbJsonLd(breadcrumbs)}
+>
+  <Breadcrumbs items={breadcrumbs} />
+  <PageHeader page_header={page_header} />
+  <section>
+    <MainContainer>
+      <div class="container-padding-x container-padding-y">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-10">
+          {posts.map((post) => (
+            <div>
+              <BlogCard data={post} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </MainContainer>
+  </section>
+  <CallToAction data={callToAction} />
+</Base>

@@ -1,10 +1,8 @@
-import config from "@/config/config.json";
+import { site } from "@/config/site";
 
-/** Site origin with no trailing slash, from config (never hardcoded). */
-export const siteUrl: string = String(config.site.base_url || "").replace(
-  /\/+$/,
-  "",
-);
+/** Site origin with no trailing slash, from site.ts (which re-exports
+ *  `config.json` — the JSON stays the single source of truth). */
+export const siteUrl: string = String(site.baseUrl || "").replace(/\/+$/, "");
 
 /** True for absolute http(s) / protocol-relative URLs — e.g. R2 media URLs. */
 export function isAbsoluteUrl(url: string | undefined | null): boolean {
@@ -48,14 +46,14 @@ function isoDate(value: unknown): string | undefined {
 
 /** Organization + WebSite — homepage only. */
 export function organizationJsonLd(): JsonLdObject[] {
-  const name = String(config.site.logo_text || "Power AI");
+  const name = String(site.name || "Power AI");
   return [
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       name,
       url: `${siteUrl}/`,
-      logo: toAbsoluteUrl(config.site.logo),
+      logo: toAbsoluteUrl(site.logo),
     },
     {
       "@context": "https://schema.org",
@@ -123,8 +121,8 @@ export function articleJsonLd(input: ArticleInput): JsonLdObject {
     mainEntityOfPage: { "@type": "WebPage", "@id": input.canonical },
     publisher: {
       "@type": "Organization",
-      name: String(config.site.logo_text || "Power AI"),
-      logo: toAbsoluteUrl(config.site.logo),
+      name: String(site.name || "Power AI"),
+      logo: toAbsoluteUrl(site.logo),
     },
   };
 }
@@ -167,7 +165,7 @@ export function jobPostingJsonLd(input: JobInput): JsonLdObject | null {
     employmentType: input.employmentType || "FULL_TIME",
     hiringOrganization: {
       "@type": "Organization",
-      name: String(config.site.logo_text || "Power AI"),
+      name: String(site.name || "Power AI"),
       sameAs: `${siteUrl}/`,
     },
     jobLocation: {

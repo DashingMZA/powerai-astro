@@ -3,6 +3,7 @@ import BlogCard from "@/components/BlogCard.astro";
 import MainContainer from "@/components/MainContainer.astro";
 import Share from "@/components/Share.astro";
 import config from "@/config/config.json";
+import { authorUrl, categoryUrl, postSlug, postUrl } from "@/lib/blogUrls";
 import { getSinglePage } from "@/lib/contentParser";
 import dateFormat from "@/lib/utils/dateFormat";
 import readingTime from "@/lib/utils/readingTime";
@@ -18,8 +19,13 @@ const { Content, headings } = await render(post);
 const { title, description, image, author, category, date } = post.data;
 
 const allPosts = await getSinglePage("blog");
+// Exclude this post by its canonical slug (frontmatter `slug` when set,
+// else the filename id) — `p.slug` from contentParser.ts is slug-aware,
+// so comparing against `post.id` alone would list this post as its own
+// "related" post once a slug is set.
+const selfSlug = postSlug(post);
 const relatedPosts = allPosts
-  .filter((p: any) => p.slug !== post.id && p.frontmatter.category === category)
+  .filter((p) => p.slug !== selfSlug && p.frontmatter.category === category)
   .slice(0, 3);
 
 const readTime = post.body ? readingTime(post.body) : "0 min";
@@ -45,16 +51,32 @@ if (headings) {
         <div class="flex items-center gap-4 flex-wrap justify-center">
           <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-base text-gray">Author</p>
-            <p class="font-primary font-medium text-xl text-text">
-              {author?.name || "Unknown"}
-            </p>
+            {author?.name ? (
+              <a
+                href={authorUrl(author.name)}
+                class="font-primary font-medium text-xl text-text hover:text-primary transition-colors"
+              >
+                {author.name}
+              </a>
+            ) : (
+              <p class="font-primary font-medium text-xl text-text">Unknown</p>
+            )}
           </div>
           <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
             <p class="font-primary font-normal text-[16px] text-gray">
               Category
             </p>
             <p class="font-primary font-medium text-xl text-text">
-              {category || "Uncategorized"}
+              {category ? (
+                <a
+                  href={categoryUrl(category)}
+                  class="hover:text-primary transition-colors"
+                >
+                  {category}
+                </a>
+              ) : (
+                "Uncategorized"
+              )}
             </p>
           </div>
           <div class="flex flex-col justify-center gap-5 p-5 w-70 bg-card/70 border border-border/6 rounded-2xl">
@@ -132,7 +154,7 @@ if (headings) {
               <Share
                 title={title}
                 description={description}
-                slug={`blog/${post.id}`}
+                slug={postUrl(post).slice(1)}
                 className="social-icons flex gap-4 flex-wrap"
               />
             </div>
@@ -187,7 +209,7 @@ if (headings) {
           Related Blogs
         </h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          {relatedPosts.map((relatedPost: any) => (
+          {relatedPosts.map((relatedPost) => (
             <BlogCard data={relatedPost} />
           ))}
         </div>

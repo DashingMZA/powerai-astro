@@ -17,20 +17,25 @@
 //   `-index.md` list pages (plus page-specific blocks).
 // - blog / careers / case-studies / integrations / pages / sections:
 //   list pages plus routable entries.
-// - authors / categories / tags: NEW, schema-only, currently empty
-//   (directories hold only a `.gitkeep`). See `schemas.ts` for why no
-//   author/category/tag files are invented. Blog keeps validated free-text
-//   `category` / `tags` until those collections gain files.
+// - authors / categories / tags: NOT registered here. Their schemas live
+//   in `./content/schemas.ts` (and in the `.sitepins/schema/*.json`
+//   mirror) for future use, but the directories hold only a `.gitkeep`
+//   and Astro's glob loader warns "No files found" on every check/build
+//   for an empty collection. Registering them with zero files buys
+//   nothing — nothing queries them (blog posts carry an inline `author`
+//   object and free-text `category` / `tags`), and the author/category
+//   archive pages derive from blog frontmatter instead. Re-add a
+//   `defineCollection()` call here (one line each) the moment a real file
+//   lands in one of those directories; until then the schemas stay as the
+//   documented future-join path. See CONTENT_SCHEMA.md.
 
 import { glob } from "astro/loaders";
 import { defineCollection } from "astro:content";
 import {
   aboutSchema,
-  authorsSchema,
   blogSchema,
   careersSchema,
   caseStudiesSchema,
-  categoriesSchema,
   changelogSchema,
   contactSchema,
   featuresSchema,
@@ -39,7 +44,6 @@ import {
   pagesSchema,
   pricingSchema,
   sectionsSchema,
-  tagsSchema,
 } from "./content/schemas";
 
 const md = "**/*.{md,mdx}";
@@ -58,18 +62,6 @@ export const collections = {
   blog: defineCollection({
     loader: glob({ pattern: md, base: "src/content/blog" }),
     schema: blogSchema,
-  }),
-  authors: defineCollection({
-    loader: glob({ pattern: md, base: "src/content/authors" }),
-    schema: authorsSchema,
-  }),
-  categories: defineCollection({
-    loader: glob({ pattern: md, base: "src/content/categories" }),
-    schema: categoriesSchema,
-  }),
-  tags: defineCollection({
-    loader: glob({ pattern: md, base: "src/content/tags" }),
-    schema: tagsSchema,
   }),
   careers: defineCollection({
     loader: glob({ pattern: md, base: "src/content/careers" }),

@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss";
-import config from "@/config/config.json";
+import { defaultSeo, site } from "@/config/site";
+import { postUrl } from "@/lib/blogUrls";
 import { getCollection } from "astro:content";
 
 // Loose local shape: the RSS feed only needs these fields, and typing
@@ -12,6 +13,7 @@ type BlogPost = {
     description?: string;
     date?: Date | string;
     draft?: boolean;
+    slug?: string;
   };
 };
 
@@ -26,13 +28,15 @@ export async function GET(context: any) {
       new Date(a.data.date ?? 0).getTime(),
   );
   return rss({
-    title: config.site.title,
-    description: config.metadata.meta_description,
-    site: context.site ?? config.site.base_url,
+    title: site.title,
+    description: defaultSeo.description,
+    site: context.site ?? site.baseUrl,
     items: sorted.map((post) => ({
       title: post.data.title,
       description: post.data.description ?? "",
-      link: `/blog/${post.id}`,
+      // Slug URL when a frontmatter `slug` is set, else the filename URL
+      // — the same canonical URL `[single].astro` emits (see blogUrls.ts).
+      link: postUrl(post),
       pubDate: post.data.date ? new Date(post.data.date) : undefined,
     })),
   });
