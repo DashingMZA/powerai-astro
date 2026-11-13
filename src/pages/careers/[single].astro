@@ -2,12 +2,9 @@
 import Base from "@/layouts/Base.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import MainContainer from "@/components/MainContainer.astro";
-import config from "@/config/config.json";
 import { getSingleEntry } from "@/lib/contentParser";
 import { breadcrumbJsonLd, canonicalUrl, jobPostingJsonLd } from "@/lib/seo";
 import { render } from "astro:content";
-
-const { apply_form_action } = config.params;
 
 export async function getStaticPaths() {
   const careers = await getSingleEntry("careers");
@@ -170,11 +167,24 @@ const jobInfoCards = [
           <div class="lg:w-85 shrink-0 order-last lg:order-first w-full">
             <div class="bg-card/30 border border-border/10 rounded-3xl p-8 sticky top-24">
               <form
-                action={apply_form_action}
+                id="apply-form"
+                action="/api/apply"
                 method="post"
                 enctype="multipart/form-data"
                 class="flex flex-col gap-10"
               >
+                <!-- Honeypot (spam trap): off-screen, never labelled. -->
+                <div aria-hidden="true" style="position:absolute;left:-9999px;">
+                  <label for="apply-company">Company</label>
+                  <input
+                    type="text"
+                    id="apply-company"
+                    name="company"
+                    tabindex="-1"
+                    autocomplete="off"
+                  />
+                </div>
+                <input type="hidden" name="_ts" id="apply-ts" value="" />
                 <div class="flex flex-col gap-5">
                   <p class="font-medium text-h6 text-text">
                     Apply for the position
@@ -214,6 +224,7 @@ const jobInfoCards = [
                         <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
                       </svg>
                       Upload your cv
+                      <span id="cv-file-name" class="truncate"></span>
                     </label>
                     <input
                       id="cv-upload"
@@ -230,10 +241,23 @@ const jobInfoCards = [
                       required
                       class="w-full bg-card/30 backdrop-blur-sm border border-border/6 rounded-2xl px-7 py-3 text-gray placeholder:text-gray focus:outline-none focus:border-primary/50 resize-none"
                     />
-                    <input type="hidden" name="position" value={title} />
+                    <!-- Position slug (validated server-side against the
+                      careers collection); the visible title is not
+                      trusted as the position. -->
+                    <input type="hidden" name="position" value={career.id} />
                   </div>
                 </div>
-                <button type="submit" class="w-full btn btn-primary">
+                <p
+                  id="apply-status"
+                  class="text-gray"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+                <button
+                  id="apply-submit"
+                  type="submit"
+                  class="w-full btn btn-primary disabled:opacity-50 cursor-pointer"
+                >
                   Apply Now
                 </button>
               </form>
@@ -249,3 +273,53 @@ const jobInfoCards = [
     </MainContainer>
   </section>
 </Base>
+
+<script>
+  const applyForm = document.getElementById("apply-form") as HTMLFormElement;
+  const applyTs = document.getElementById("apply-ts") as HTMLInputElement;
+  const applyStatus = document.getElementById("apply-status") as HTMLElement;
+  const applySubmit = document.getElementById(
+    "apply-submit",
+  ) as HTMLButtonElement;
+  const cvInput = document.getElementById("cv-upload") as HTMLInputElement;
+  const cvFileName = document.getElementById("cv-file-name") as HTMLElement;
+
+  let applySending = false;
+
+  // Timestamp for the server's minimum-time-to-submit check.
+  applyTs.value = String(Date.now());
+
+  cvInput.addEventListener("change", () => {
+    cvFileName.textContent = cvInput.files?.[0]?.name ?? "";
+  });
+
+  applyForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (applySending) return;
+    applySending = true;
+    applySubmit.disabled = true;
+    applySubmit.textContent = "Sending…";
+    applyStatus.textContent = "";
+    try {
+      const response = await fetch("/api/apply", {
+        method: "POST",
+        body: new FormData(applyForm),
+      });
+      const result = (await response.json()) as {
+        ok: boolean;
+        message: string;
+      };
+      applyStatus.textContent = result.message;
+      if (response.ok && result.ok) {
+        applyForm.reset();
+        cvFileName.textContent = "";
+      }
+    } catch {
+      applyStatus.textContent = "Something went wrong. Please try again later.";
+    } finally {
+      applySending = false;
+      applySubmit.disabled = false;
+      applySubmit.textContent = "Apply Now";
+    }
+  });
+</script>

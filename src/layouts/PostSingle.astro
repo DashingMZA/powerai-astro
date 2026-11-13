@@ -164,19 +164,43 @@ if (headings) {
                 Subscribe for newsletter
               </h2>
               <form
+                id="newsletter-form"
                 class="flex flex-col gap-4"
                 method="POST"
-                action={config.params.newsletter_form_action}
+                action="/api/newsletter"
               >
+                <!-- Honeypot (spam trap): off-screen, never labelled. -->
+                <div aria-hidden="true" style="position:absolute;left:-9999px;">
+                  <label for="newsletter-company">Company</label>
+                  <input
+                    type="text"
+                    id="newsletter-company"
+                    name="company"
+                    tabindex="-1"
+                    autocomplete="off"
+                  />
+                </div>
+                <input type="hidden" name="_ts" id="newsletter-ts" value="" />
                 <div class="relative">
                   <input
                     type="email"
+                    name="email"
                     placeholder="Email"
                     required
                     class="w-full px-7.5 py-3 bg-transparent border border-border/6 rounded-[120px] font-primary font-normal text-[16px] text-text placeholder:text-gray focus:outline-none focus:border-primary/50 transition-colors duration-200"
                   />
                 </div>
-                <button class="w-full px-7.5 py-3.5 btn btn-primary">
+                <p
+                  id="newsletter-status"
+                  class="font-primary font-normal text-[15px] leading-6 text-gray"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+                <button
+                  id="newsletter-submit"
+                  type="submit"
+                  class="w-full px-7.5 py-3.5 btn btn-primary disabled:opacity-50 cursor-pointer"
+                >
                   Subscribe
                 </button>
               </form>
@@ -218,3 +242,60 @@ if (headings) {
     </MainContainer>
   </section>
 )}
+
+<script>
+  const newsletterForm = document.getElementById(
+    "newsletter-form",
+  ) as HTMLFormElement;
+  const newsletterTs = document.getElementById(
+    "newsletter-ts",
+  ) as HTMLInputElement;
+  const newsletterStatus = document.getElementById(
+    "newsletter-status",
+  ) as HTMLElement;
+  const newsletterSubmit = document.getElementById(
+    "newsletter-submit",
+  ) as HTMLButtonElement;
+
+  let newsletterSending = false;
+
+  // Timestamp for the server's minimum-time-to-submit check.
+  newsletterTs.value = String(Date.now());
+
+  newsletterForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (newsletterSending) return;
+    newsletterSending = true;
+    newsletterSubmit.disabled = true;
+    newsletterSubmit.textContent = "Subscribing…";
+    newsletterStatus.textContent = "";
+    try {
+      const payload = {
+        email: (newsletterForm.elements.namedItem("email") as HTMLInputElement)
+          .value,
+        company: (
+          newsletterForm.elements.namedItem("company") as HTMLInputElement
+        ).value,
+        _ts: newsletterTs.value,
+      };
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as {
+        ok: boolean;
+        message: string;
+      };
+      newsletterStatus.textContent = result.message;
+      if (response.ok && result.ok) newsletterForm.reset();
+    } catch {
+      newsletterStatus.textContent =
+        "Something went wrong. Please try again later.";
+    } finally {
+      newsletterSending = false;
+      newsletterSubmit.disabled = false;
+      newsletterSubmit.textContent = "Subscribe";
+    }
+  });
+</script>

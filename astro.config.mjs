@@ -2,6 +2,7 @@ import mdx from "@astrojs/mdx";
 import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import vercel from "@astrojs/vercel";
 import compress from "@playform/compress";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
@@ -90,6 +91,18 @@ try {
 
 // https://astro.build/config
 export default defineConfig({
+  // Forms backend (2026-11-13): the Vercel adapter is wired with the
+  // default `output: "static"` — every page stays prerendered/static,
+  // and ONLY the API routes under `src/pages/api/` opt out via
+  // `export const prerender = false` to run as Vercel Serverless
+  // Functions. `output: "server"` was NOT chosen: it would make all
+  // 77 pages server-rendered. Consequence for other hosts: the adapter
+  // moves the static client output to `dist/client/` (and mirrors it
+  // to `.vercel/output/static/`), so the Cloudflare Workers static
+  // deploy (wrangler.jsonc, `assets: { directory: "./dist" }`) must
+  // point at `./dist/client` to keep serving pages — and /api/* only
+  // ever works on Vercel, never on the static host.
+  adapter: vercel(),
   site: config.site.base_url ? config.site.base_url : "http://examplesite.com",
   base: config.site.base_path ? config.site.base_path : "/",
   trailingSlash: config.site.trailing_slash ? "always" : "never",
