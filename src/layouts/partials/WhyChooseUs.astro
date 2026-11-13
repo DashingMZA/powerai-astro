@@ -1,11 +1,12 @@
 ---
 import IconBox from "@/components/IconBox.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
+import type { LegacyPage } from "@/types/index";
 interface Props {
-  data: any;
+  data: LegacyPage;
 }
 const { data } = Astro.props;
-const { badge, title, feature_list, enable } = data.frontmatter;
+const { badge, title, feature_list = [], enable } = data.frontmatter;
 ---
 
 {enable && (
@@ -15,11 +16,11 @@ const { badge, title, feature_list, enable } = data.frontmatter;
         <div class="container-padding-y container-padding-x">
           <SectionHeader title={title} badge={badge} />
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-14 lg:gap-25 relative overflow-hidden">
-            {feature_list.map((item: any) => {
+            {feature_list.map((item) => {
               const uid = `wcu-${Math.random().toString(36).slice(2, 8)}`;
               return (
                 <div id={uid} style="opacity:0">
-                  <IconBox icon={item.icon} />
+                  {item.icon && <IconBox icon={item.icon} />}
                   <h3 class="text-h5 font-medium mb-5">{item.title}</h3>
                   <p class="text-gray">{item.content}</p>
                 </div>

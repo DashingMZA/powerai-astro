@@ -1,8 +1,9 @@
 ---
 import SectionHeader from "@/components/SectionHeader.astro";
 import { markdownify } from "@/lib/utils/textConverter";
+import type { WhatOurGoalsData } from "@/types/index";
 interface Props {
-  data: any;
+  data: WhatOurGoalsData;
 }
 const { data } = Astro.props;
 const { badge, title, image, mission, vision } = data;

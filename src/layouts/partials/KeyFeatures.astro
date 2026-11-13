@@ -2,11 +2,12 @@
 import Badge from "@/components/Badge.astro";
 import theme from "@/config/theme.json";
 
+import type { LegacyPage } from "@/types/index";
 interface Props {
-  data: any;
+  data: LegacyPage;
 }
 const { data } = Astro.props;
-const { badge, title, features } = data.frontmatter;
+const { badge, title, features = [] } = data.frontmatter;
 const primaryColor = theme?.colors?.default?.theme_color?.primary || "#9A4DFE";
 const secondaryColor =
   theme?.colors?.default?.theme_color?.secondary || "#E87CFF";
@@ -24,7 +25,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
               {badge && <Badge>{badge}</Badge>}
               <h2 class="mb-6 font-medium">{title}</h2>
               <div class="flex flex-col gap-y-3">
-                {features.map((feature: any, index: number) => (
+                {features.map((feature, index: number) => (
                   <span
                     class="kf-track text-lg flex items-center text-light/50"
                     data-kf-index={index}
@@ -70,7 +71,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
 
           <!-- Right: Feature cards -->
           <div id={`kf-right-${uid}`} style="opacity:0">
-            {features.map((feature: any, index: number) => (
+            {features.map((feature, index: number) => (
               <>
                 <!-- Intersection sentinel -->
                 <div
@@ -87,7 +88,7 @@ const uid = `kf-${Math.random().toString(36).slice(2, 8)}`;
                     <h2 class="text-h4 font-medium mb-2">{feature.title}</h2>
                     <p class="text-gray mb-5">{feature.content}</p>
                     <ul class="flex flex-col gap-y-1 list-disc list-inside">
-                      {feature.bullet_points.map((point: string) => (
+                      {feature.bullet_points?.map((point: string) => (
                         <li class="text-text font-medium">{point}</li>
                       ))}
                     </ul>

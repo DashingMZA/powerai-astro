@@ -13,6 +13,7 @@ import {
 import Footer from "@/partials/Footer.astro";
 import "@/styles/main.css";
 import { Font } from "astro:assets";
+import type { CssVariable } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import {
   GoogleTagmanager,
@@ -104,7 +105,11 @@ const ogImage = toAbsoluteUrl(
 
     <!-- google font css -->
     {fontEntries.map(([key]) => {
-      const cssVar = `--font-${key}` as any;
+      // `key` comes from the same theme.json the font config in
+      // astro.config.mjs is built from, so `--font-${key}` is always a
+      // registered variable — the cast bridges the dynamic
+      // Object.entries key (string) to the generated CssVariable union.
+      const cssVar = `--font-${key}` as CssVariable;
       return <Font cssVariable={cssVar} preload />;
     })}
 

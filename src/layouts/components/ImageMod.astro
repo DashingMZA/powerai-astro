@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from "astro";
+import type { HTMLAttributes } from "astro/types";
 import { Image } from "astro:assets";
 
 // Props interface for the component
@@ -14,7 +15,7 @@ interface Props {
   fit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   class?: string;
   fetchpriority?: "high" | "low" | "auto";
-  style?: any;
+  style?: NonNullable<HTMLAttributes<"img">["style"]>;
 }
 
 // Destructuring Astro.props to get the component's props
@@ -56,10 +57,11 @@ const images = import.meta.glob("/public/images/**/*.{jpeg,jpg,png,gif,svg}");
 const isValidPath = isAbsolute ? true : !!(localPath && images[localPath]);
 
 // Log a warning message in yellow if the image is not found
-!isValidPath &&
+if (!isValidPath) {
   console.warn(
     `\x1b[33mImage not found - ${src}.\x1b[0m Make sure the image is in the /public/images folder.`,
   );
+}
 ---
 
 {isValidPath && (isAbsolute || isSvg) && (

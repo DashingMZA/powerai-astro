@@ -7,14 +7,15 @@ const Youtube = ({
 }: {
   id: string;
   title: string;
-  [key: string]: any;
+  // Extra attributes passed through to <lite-youtube>.
+  [key: string]: unknown;
 }) => {
   useEffect(() => {
     import("@justinribeiro/lite-youtube");
   }, []);
 
   return (
-    // @ts-ignore - <lite-youtube> is a custom element registered by @justinribeiro/lite-youtube
+    // @ts-expect-error - <lite-youtube> is a custom element registered by @justinribeiro/lite-youtube
     <lite-youtube
       className="rounded-lg"
       videoid={id}

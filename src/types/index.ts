@@ -305,6 +305,23 @@ export type PageHeaderProps = {
   button_dark?: Button;
 };
 
+/** What `BlogCard` / `FeaturedPost` read: the legacy `Post` shape and the
+ *  `{ frontmatter, slug, content }` objects the author/category archives
+ *  build from zod-validated entries both satisfy this. (`Post` itself is
+ *  not used: the archives' entries carry `category` / `author` as
+ *  optional and `date` as a `Date`, while `Post` declares a required
+ *  string category, a required author object, and a string date.) */
+export type BlogCardData = {
+  frontmatter: {
+    title: string;
+    image?: string;
+    author?: { name: string; avatar?: string; designation?: string };
+    date?: string | Date;
+  };
+  slug?: string;
+  content?: string;
+};
+
 /** Frontmatter of a legacy parser entry. */
 export type LegacyFrontmatter = {
   title: string;

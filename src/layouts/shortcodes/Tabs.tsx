@@ -1,14 +1,17 @@
 import { marked } from "marked";
 import React, { useEffect, useRef, useState } from "react";
 
-const Tabs = ({ children }: { children: React.ReactElement }) => {
+const Tabs = ({
+  children,
+}: {
+  children: React.ReactElement<{ value: string }>;
+}) => {
   const [active, setActive] = useState<number>(0);
   const [defaultFocus, setDefaultFocus] = useState<boolean>(false);
 
-  const tabRefs: React.RefObject<HTMLElement[]> = useRef([]);
+  const tabRefs = useRef<(HTMLElement | null)[]>([]);
   useEffect(() => {
     if (defaultFocus) {
-      //@ts-ignore
       tabRefs.current[active]?.focus();
     } else {
       setDefaultFocus(true);
@@ -16,7 +19,7 @@ const Tabs = ({ children }: { children: React.ReactElement }) => {
   }, [active]);
 
   const tabLinks = Array.from(
-    (children.props as any).value.matchAll(
+    children.props.value.matchAll(
       /<div\s+data-name="([^"]+)"[^>]*>((?:.|\n)*?)<\/div>/g,
     ),
     (match: RegExpMatchArray) => ({ name: match[1], children: match[0] }),
@@ -47,8 +50,9 @@ const Tabs = ({ children }: { children: React.ReactElement }) => {
               tabIndex={index === active ? 0 : -1}
               onKeyDown={(event) => handleKeyDown(event, index)}
               onClick={() => setActive(index)}
-              //@ts-ignore
-              ref={(ref) => (tabRefs.current[index] = ref)}
+              ref={(ref) => {
+                tabRefs.current[index] = ref;
+              }}
             >
               {item.name}
             </li>

@@ -1,7 +1,8 @@
 ---
 import Badge from "@/components/Badge.astro";
+import type { GalleryType } from "@/types/index";
 interface Props {
-  data: any;
+  data: GalleryType;
 }
 const { data } = Astro.props;
 const { enable, badge, title, images } = data;

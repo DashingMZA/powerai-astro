@@ -10,7 +10,8 @@ function Video({
   width: number;
   height: number | "auto";
   src: string;
-  [key: string]: any;
+  // Extra attributes passed through to <video> (e.g. `class`, `poster`).
+  [key: string]: unknown;
 }) {
   return (
     <video

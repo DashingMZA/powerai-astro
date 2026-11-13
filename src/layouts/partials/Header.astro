@@ -489,7 +489,11 @@ const iconPaths: Record<string, string> = {
 
     // ── Event handlers ───────────────────────────────────────────────────────
     const handleMenuToggle = () => {
-      navMenu.classList.contains("hidden") ? openMenu() : closeMenu();
+      if (navMenu.classList.contains("hidden")) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
     };
 
     const submenuHandlers = new Map<Element, EventListener>();

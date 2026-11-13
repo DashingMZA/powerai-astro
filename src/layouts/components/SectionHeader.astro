@@ -2,7 +2,7 @@
 import Badge from "@/components/Badge.astro";
 interface Props {
   title: string;
-  badge: string;
+  badge?: string;
 }
 const { title, badge } = Astro.props;
 const uid = `sh-${Math.random().toString(36).slice(2, 8)}`;

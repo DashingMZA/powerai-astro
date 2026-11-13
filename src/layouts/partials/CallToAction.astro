@@ -1,8 +1,9 @@
 ---
 import AnimatedButton from "@/components/AnimatedButton.astro";
 import CTAShape from "@/components/shape/CTAShape";
+import type { LegacyPage } from "@/types/index";
 interface Props {
-  data: any;
+  data: LegacyPage;
 }
 const { data } = Astro.props;
 const uid = `cta-${Math.random().toString(36).slice(2, 8)}`;

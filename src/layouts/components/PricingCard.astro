@@ -1,6 +1,11 @@
 ---
+import type { PricingType } from "@/types/index";
+// NOTE: PricingCard is currently unused (no imports anywhere). Its
+// template predates `PricingType` — it reads a legacy `services`
+// list and a `description` — so the prop is `PricingType` plus
+// those two legacy fields.
 interface Props {
-  plan: any;
+  plan: PricingType & { description?: string; services?: string[] };
 }
 const { plan } = Astro.props;
 const uid = `pricingcard-${Math.random().toString(36).slice(2, 8)}`;
@@ -75,7 +80,7 @@ const uid = `pricingcard-${Math.random().toString(36).slice(2, 8)}`;
     )}
     {plan.services && (
       <ul class="flex flex-col gap-3">
-        {plan.services.map((service: any) => (
+        {plan.services.map((service) => (
           <li class="flex items-center gap-3 text-gray">
             <svg
               width="16"

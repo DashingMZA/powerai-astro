@@ -1,7 +1,8 @@
 ---
 import dateFormat from "@/lib/utils/dateFormat";
+import type { BlogCardData } from "@/types/index";
 interface Props {
-  data: any;
+  data: BlogCardData;
 }
 const { data } = Astro.props;
 const { title, image, author, date } = data.frontmatter;

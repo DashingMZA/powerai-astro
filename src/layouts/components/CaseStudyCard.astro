@@ -1,6 +1,14 @@
 ---
+// Only what the card reads: the legacy `CaseStudy` shape and the
+// `{ frontmatter, slug }` objects built in `case-studies/[single].astro`
+// both satisfy this. (The full `CaseStudy` type is not used here:
+// the [single] page maps zod-validated entries whose `date` is a
+// `Date`, not the string `CaseStudy` declares.)
 interface Props {
-  data: any;
+  data: {
+    frontmatter: { title: string; image?: string };
+    slug?: string;
+  };
 }
 const { data } = Astro.props;
 const { title, image } = data.frontmatter;

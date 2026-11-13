@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 
-const ImageFallback = (props: any) => {
+type ImageFallbackProps = {
+  src: string;
+  fallback?: string;
+} & React.ImgHTMLAttributes<HTMLImageElement>;
+
+const ImageFallback = (props: ImageFallbackProps) => {
   const { src, fallback, ...rest } = props;
   const [imgSrc, setImgSrc] = useState(src);
 
