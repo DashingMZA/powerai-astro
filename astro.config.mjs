@@ -12,9 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, fontProviders } from "astro/config";
-import rehypeKatex from "rehype-katex";
 import remarkCollapse from "remark-collapse";
-import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
@@ -153,7 +151,7 @@ export default defineConfig({
     // Last: compresses the statically generated HTML/CSS/JS/images.
     // JavaScript: false — measured 2026-11-12 (see PERFORMANCE.md):
     // terser re-minified 5.68 MB of already Vite-minified JS (139 files,
-    // incl. the 1.5 MB elk/mermaid bundle) for a 15 KB (0.26%) saving,
+    // incl. the 1.5 MB elk/mermaid bundle, removed 2026-11-13) for a 15 KB
     // at a cost of ~50-90 s per build. Vite already minifies JS, so the
     // compress JS pass pays ~100x its saving. HTML/Image/SVG/CSS stay on:
     // they save 2.45 MB images + 339 KB SVG + 283 KB HTML. Do NOT re-enable
@@ -163,15 +161,17 @@ export default defineConfig({
   markdown: {
     // `markdown.remarkPlugins` / `rehypePlugins` are deprecated in Astro 7;
     // plugins go through `unified({...})` from @astrojs/markdown-remark.
-    // remark-math + rehype-katex enable $...$ / $$...$$ math in .md/.mdx.
-    // KaTeX CSS is imported in src/styles/main.css.
+    // remark-math + rehype-katex were removed 2026-11-13 (perf): no
+    // content used $...$ / $$...$$ math (every $ in src/content is
+    // currency), so the KaTeX CSS/fonts were dead weight on every page.
+    // Re-entry: `pnpm add katex rehype-katex remark-math`, restore
+    // remarkMath + rehypeKatex here, and import the KaTeX CSS in
+    // PostSingle.astro only — never back in the global stylesheet.
     processor: unified({
       remarkPlugins: [
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
-        remarkMath,
       ],
-      rehypePlugins: [rehypeKatex],
     }),
     shikiConfig: { theme: "one-dark-pro", wrap: true },
   },
