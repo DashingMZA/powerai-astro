@@ -2,6 +2,15 @@
 
 All notable changes to PowerAI Astro. Dates are commit dates (2026-11-12). This file was created as part of the documentation pass on 2026-11-12; earlier history is summarized from the git log.
 
+## [Unreleased] — ESLint cleanup + build performance audit (2026-11-12)
+
+### Fixed
+
+- **ESLint: 74 errors → 0** (`eslint .` 0 errors / 0 warnings; `astro check` 0/0/0; Prettier pass). All 67 `no-explicit-any` replaced with real types (`src/types/index.ts` shapes, generic `contentParser`, Zod-inferred types) or `unknown` + narrowing; zero `eslint-disable` comments left. Tabs' stale `@ts-ignore`s removed; Youtube's `@ts-ignore` → `@ts-expect-error` (real ts2339 on `<lite-youtube>`). `contentParser.astro` deleted — its typed accessor moved to `contentParser.ts` as `getSingleEntry`; all 7 importers updated. `ImageMod`/`Header` unused expressions became `if` statements (same behaviour). Latent mismatches the `any`s were hiding fixed: nullable `PageHeader` buttons, optional career `job_info` fields, `feature.bullet_points?.map`, icon guard in `WhyChooseUs`.
+- **CI runs ESLint**: `pnpm run lint` step added to `.github/workflows/ci.yml` (after the astro check step).
+- **Build performance — `compress({ JavaScript: false })`**: build audit (full record: `~/workspace/powerai-upgrade/PERF-AUDIT.md`) proved `@playform/compress` added ~115–130 s per build, dominated by terser re-minifying 5.68 MB of already Vite-minified JS for a 15 KB (0.26%) saving. Disabling only the JS pass: wall 162–170 s → 109–116 s, dist +15 KB. HTML/Image/SVG compression stays on (2.45 MB images + 339 KB SVG + 283 KB HTML saved). Compress was **not** removed — see [PERFORMANCE.md](./PERFORMANCE.md) for the measured trade-off.
+- `.sitepins/schema/FIELD-MAPPING.md` prose corrected: placeholder image now exists, blog slug routing is live, single parser is `contentParser.ts`.
+
 ## [Unreleased] — documentation pass (2026-11-12)
 
 ### Added

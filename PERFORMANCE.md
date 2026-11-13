@@ -4,10 +4,26 @@
 
 ## Baseline (verified 2026-11-12)
 
-- **Output is fully static**: `astro build` produced **65 pages** in ~9.6 s, `dist/` only. No server, no per-request rendering.
-- **`astro check`: 0 errors / 0 warnings / 1 hint** (93 files).
+- **Output is fully static**: `astro build` produced **77 pages** (65 + 7 author + 5 category archives), `dist/` only. No server, no per-request rendering.
+- **`astro check`: 0 errors / 0 warnings / 0 hints** (95 files). **`eslint .`: 0 errors / 0 warnings** (CI runs it — see `.github/workflows/ci.yml`).
 - **7 images optimized** per build via `astro:assets` (WebP, `quality="mid"`) — only the images routed through `ImageMod.astro`.
 - **Fonts**: Google Fonts via Astro's `Font` component with `preload` (`Base.astro`), families from `theme.json`. Font loading behavior (FOUT/FOIT) was not measured.
+
+## Build time audit (measured 2026-11-12, full record: `~/workspace/powerai-upgrade/PERF-AUDIT.md`)
+
+Environment: shared sandbox VM, 1.5 CPUs — absolute wall times vary ±50% run to run, so the table reports ranges; the phase shares and deltas are the robust evidence.
+
+| Configuration | Wall time | Compress hook | `dist/` size |
+|---|---|---|---|
+| `compress()` (all types on) | 162–170 s (one contended run: 254 s) | ~115–130 s | 20,239,679 bytes |
+| `compress({ JavaScript: false })` (**current**) | 109–116 s | 33–66 s | ~21 MB |
+| compress disabled (control) | 31–60 s | — | 23,461,634 bytes |
+
+**Root cause: `@playform/compress` was the cost, and inside it the JavaScript (terser) pass dominated** — ~50–90 s re-minifying 5.68 MB of already Vite-minified JS (139 files, incl. the 1.5 MB elk/mermaid bundle) to save 15 KB (0.26%). The other compress passes are cheap for what they save: Images (sharp) ~32–39 s for 2.45 MB, HTML ~7–15 s for 283 KB, SVG ~2–6 s for 339 KB, CSS/JSON ~0 s. Cold vs warm builds differ negligibly (162 s cold vs 165 s warm) — the cost is paid on every build, not just cold ones. The non-compress build is 23–46 s of Astro time, so the pre-compress build itself is not the problem.
+
+**Fix applied: `compress({ JavaScript: false })`** in `astro.config.mjs` — Vite already minifies JS, so the terser pass paid ~100× its saving. Measured effect: wall 162–170 s → 109–116 s (saves ~50–55 s) for +15 KB of dist. HTML/Image/SVG/CSS compression stays on (still earns 2.45 MB images + 339 KB SVG + 283 KB HTML). Compress was **not** removed: dropping it entirely would save another ~60–80 s but give back 3.22 MB of dist. If build time matters more than that later, the option is `compress()` → remove, with the measured trade-off above.
+
+**Known audit caveats (from the audit file):** the Image-off experiment was inconclusive (run under contention from a parallel agent, second run killed); every PNG exists twice byte-identical (`_astro/` + `public/`) and is re-encoded twice; compress's binary-size check skips 31 files that would shrink (~1 MB unsaved) — an upstream quirk, informational only. Cheaper PNG settings were measured and rejected (5.2 s vs 33.5 s, but only 426 KB saved vs 3,410 KB).
 
 ## Hydration inventory — where JavaScript comes from
 
@@ -28,8 +44,7 @@ The site uses Astro islands: most of the page is static HTML, and React componen
 
 ## What is NOT wired (performance-relevant)
 
-- **`@playform/compress` is installed but not wired** — there is no HTML/CSS/JS/image compression step in the build. Adding `compress()` to `astro.config.mjs` is the obvious next step; verify output sizes after adding it.
-- **`rollup-plugin-visualizer` is installed but not wired** — no bundle report is generated. Add it to `vite.plugins` (build-only) to get a real bundle breakdown before optimizing blindly.
+- **`rollup-plugin-visualizer` is wired opt-in only** — set `ANALYZE=true` when building to emit `stats.html` (verified once, then deleted). Normal builds are unaffected.
 - **No `prefetch`, no resource hints** beyond font `preload`.
 
 ## How to measure (follow-up)
@@ -37,8 +52,8 @@ The site uses Astro islands: most of the page is static HTML, and React componen
 ```bash
 pnpm run build && pnpm run preview
 # Lighthouse (Chrome): run on /, /blog, /blog/post-1, /pricing — record LCP, INP, CLS
-# Bundle: add rollup-plugin-visualizer, rebuild, inspect the treemap
+# Bundle: ANALYZE=true pnpm run build, inspect stats.html
 # Images: list dist/ _astro assets by size; compare against public/images sources
 ```
 
-Do not quote CWV targets as "met" until those runs exist. The honest statement today is: static output, islands-only hydration, 65 pages building in ~10 s, and no measured field or lab data.
+Do not quote CWV targets as "met" until those runs exist. The honest statement today is: static output, islands-only hydration, 77 pages building in ~110 s (compress with JS off), and no measured field or lab data.

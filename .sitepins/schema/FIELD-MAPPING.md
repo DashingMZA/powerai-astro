@@ -157,17 +157,20 @@ override or `noindex: true` — the only `noindex` pages are the hardcoded
   known `ImageMod.astro` / `Base.astro` og:image bug class; absolute URLs
   pass through verbatim.
 - One known-bad reference: `changelog` / `about` / `contact` / `pricing`
-  `-index.md` files point at `/images/image-placeholder.png`, which does not
-  exist in `public/images`.
+  `-index.md` files point at `/images/image-placeholder.png`, which ships
+  in `public/images` (added 2026-11-12).
 
 ## Slug / routing
-- Blog, careers, case-studies, integrations, pages: route = filename
-  (minus extension). There is no slug-based routing yet.
-- `blog.slug` and `authors.slug` / `categories.slug` / `tags.slug` are
-  reserved for future custom routing; setting them today changes nothing.
+- Careers, case-studies, integrations, pages: route = filename
+  (minus extension).
+- Blog: route = frontmatter `slug` when set (canonical URL), with the
+  filename URL kept working as an alias (`src/lib/blogUrls.ts`). No post
+  sets `slug` today, so all 20 posts are still filename-routed.
+- `authors.slug` / `categories.slug` / `tags.slug` are reserved for future
+  custom routing; setting them today changes nothing.
 - Drafts (`draft: true`) and `-`-prefixed files are excluded from listings;
   single pages redirect drafts to `/404`. Future-dated entries are hidden
-  by both content parsers (`src/lib/contentParser.ts` and
-  `src/lib/contentParser.astro` both filter by date), so a future-dated post
-  is hidden from listings and single pages alike. Do not rely on
-  future-dating for scheduling without re-verifying after any parser change.
+  by the content parser (`src/lib/contentParser.ts` filters by date), so a
+  future-dated post is hidden from listings and single pages alike. Do not
+  rely on future-dating for scheduling without re-verifying after any
+  parser change.
