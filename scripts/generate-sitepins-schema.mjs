@@ -7,7 +7,7 @@
 //
 // Output per collection `<name>.json`:
 //   $schema / $id / title / description — JSON Schema (draft 2020-12)
-//   x-sitepins — Sitepins/Sketivo metadata: collection name, content path,
+//   x-sitepins — Sitepins metadata: collection name, content path,
 //     file type, frontmatter type, and the collection's index file.
 // The JSON Schema body itself comes from `z.toJSONSchema()` (zod v4) with
 // no post-processing except a human-readable description.
