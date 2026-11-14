@@ -45,6 +45,8 @@ export interface Props {
   meta_title?: string;
   description?: string;
   image?: string;
+  /** Dedicated 1200x630 social card; falls back to `image` when unset. */
+  og_image?: string;
   noindex?: boolean;
   canonical?: string;
   ogType?: "website" | "article";
@@ -62,6 +64,7 @@ const {
   meta_title,
   description,
   image,
+  og_image,
   noindex,
   canonical,
   ogType = "website",
@@ -80,14 +83,15 @@ const pageDescription = plainify(
 // Canonical is ALWAYS emitted: frontmatter override wins, else the
 // current pathname resolved against base_url (no string surgery on it).
 const canonicalHref = canonicalUrl(Astro.url.pathname, canonical);
-// OG image: absolute URLs pass through verbatim; a local path that does
-// not exist in /public/images (e.g. the placeholder image four -index.md
-// files reference) falls back to the site default instead of emitting a
-// 404 og:image.
+// OG image: a dedicated og_image wins (1200x630 social card) when set,
+// else the post's feature image, else the site default. A local path
+// that does not exist in /public/images (e.g. the placeholder image
+// four -index.md files reference) falls back to the site default
+// instead of emitting a 404 og:image.
 const localImages = import.meta.glob(
   "/public/images/**/*.{jpeg,jpg,png,gif,svg,webp,avif}",
 );
-const rawImage = image ? image : defaultSeo.ogImage;
+const rawImage = og_image ? og_image : image ? image : defaultSeo.ogImage;
 // Twitter handle, derived (not invented) from the site's own X profile
 // in src/config/social.json (https://x.com/Dashing_ZB). Absent if no
 // x.com/twitter.com profile is configured there.

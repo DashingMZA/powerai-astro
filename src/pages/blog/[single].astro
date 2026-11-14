@@ -37,8 +37,16 @@ const { post } = Astro.props;
 
 if (post.data.draft) return Astro.redirect("/404");
 
-const { title, meta_title, description, image, author, category, date } =
-  post.data;
+const {
+  title,
+  meta_title,
+  description,
+  image,
+  og_image,
+  author,
+  category,
+  date,
+} = post.data;
 // Canonical is the slug URL when a slug is set, else the filename URL —
 // the same URL BlogCard links, RSS and the sitemap use (see blogUrls.ts).
 const canonical = canonicalUrl(postUrl(post));
@@ -55,6 +63,7 @@ const isoDate = date ? new Date(date).toISOString() : undefined;
   meta_title={meta_title}
   description={description}
   image={image}
+  og_image={og_image}
   canonical={canonical}
   ogType="article"
   article={{
