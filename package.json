@@ -27,7 +27,7 @@
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "3.7.4",
     "@astrojs/vercel": "^11.0.21",
-    "@aws-sdk/client-s3": "^3.1167.0",
+    "@aws-sdk/client-s3": "^3.1168.0",
     "@digi4care/astro-google-tagmanager": "^2.1.0",
     "@justinribeiro/lite-youtube": "^1.9.0",
     "@playform/compress": "^0.2.5",
